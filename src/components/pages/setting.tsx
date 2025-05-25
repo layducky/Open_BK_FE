@@ -12,7 +12,7 @@ const tabs: Array<{
   label: string;
   component: React.FC;
 }> = [
-  { id: "profile", label: "Profile", component: ProfileFrom },
+  // { id: "profile", label: "Profile", component: ProfileFrom },
   { id: "password", label: "Password", component: PasswordForm },
   //   { id: "completedCourses", label: "Completed Courses" },
 ];
