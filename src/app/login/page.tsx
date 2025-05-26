@@ -15,8 +15,8 @@ export default function LoginPage() {
   const { mutate, error } = useMutation({
     mutationFn: (data: any) => login(data),
     onSuccess: () => {
-      window.location.reload();
-      router.push("/");
+      // window.location.reload();
+      // router.push("/");
     },
   });
 

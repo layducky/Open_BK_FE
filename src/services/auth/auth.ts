@@ -9,9 +9,10 @@ export const signUp = async (data: any) => {
 };
 
 export const login = async (data: any) => {
-  const { data: { userID } } = await apiClient.post("/auth/login", data, {
+  const response = await apiClient.post("/auth/login", data, {
     withCredentials: true,
   });
+  const { data: { userID } } = response;
   userID && sessionStorage.setItem("userID", userID);
 };
 
