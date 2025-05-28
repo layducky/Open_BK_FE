@@ -24,8 +24,13 @@ export default function Page({ params }: { params: Promise<{ unitID: string }> }
   const { data: userInfo } = useUser();
 
   const questionContentElements = questionContents?.map((questionContent: QuestionEntity) => (
-    <div key={questionContent.questionID} className="flex p-10 mt-5 border border-solid border-black border-opacity-30">
-      <div className="w-11/12 flex flex-col gap-2">
+    <div key={questionContent.questionID} className="flex flex-col p-2 md:p-10 border border-solid border-black border-opacity-30 rounded-lg shadow-md">
+      <div className="flex justify-end">
+        {userInfo?.role === "COLLAB" &&
+          <DeleteQuesBtn questionID={questionContent.questionID}/>
+        }
+      </div>
+      <div className="flex flex-col gap-2">
         <div>
           <h1 className="font-bold">Question {questionContent.numericalOrder}: {questionContent.content} </h1>
         </div>
@@ -36,7 +41,7 @@ export default function Page({ params }: { params: Promise<{ unitID: string }> }
           C: questionContent.answerC, 
           D: questionContent.answerD 
         }).map(([key, value]) => (
-            <div className="flex gap-5 ml-10 items-center text-gray-500" key={key}>
+            <div className="flex gap-3 ml-2 md:ml-5 items-center text-gray-500" key={key}>
               <div className={`flex justify-center items-center rounded-full w-8 h-8
                  ${questionContent.correctAnswer === key
                  ? "bg-green-500 text-white" : "border border-solid border-gray-500"}`}>
@@ -51,11 +56,6 @@ export default function Page({ params }: { params: Promise<{ unitID: string }> }
           <h1 className="font-bold text-green-600">Explain: <span className="font-normal max-md:max-w-full">{questionContent.explanation}</span></h1>
         </div>
       </div>
-      <div className="w-1/12">
-        {userInfo?.role === "COLLAB" &&
-          <DeleteQuesBtn questionID={questionContent.questionID}/>
-        }
-      </div>
     </div>
   ));
 
@@ -69,20 +69,20 @@ export default function Page({ params }: { params: Promise<{ unitID: string }> }
           </Link>
         </div>
       </div>
-      <div className="flex gap-10">
-        <div className="flex flex-col mt-6 pt-6 ml-10 max-md:ml-4 gap-6 max-h-[100vh] overflow-y-auto rounded-lg border border-solid border-black border-opacity-20 bg-white w-9/12 max-md:w-full transition-all ease-in-out duration-300">
+      <div className="flex gap-10 p-1 md:p-10">
+        <div className="flex flex-col pt-6 md:p-10 gap-6 max-h-[100vh] overflow-y-auto rounded-lg border border-solid border-black border-opacity-20 bg-white w-9/12 max-md:w-full transition-all ease-in-out duration-300">
 
           <div className="flex justify-center items-center">
-            <h1 className="text-5xl font-semibold">Unit Test Overview</h1>
+            <h1 className="text-2xl md:text-5xl font-semibold">Unit Test Overview</h1>
           </div>
           {userInfo?.role === "COLLAB" &&
             <div className="flex justify-end">
-              <div className="w-1/6">
+              <div>
                 <CreateQuesBtn unitID={unitID as string}/>
               </div>
             </div>
           }
-          <div className="ml-20 mr-20 pb-20">
+          <div className="pb-20">
             {
               questionContentElements?.length === 0 ? (
                 <div className="w-full">
@@ -93,7 +93,7 @@ export default function Page({ params }: { params: Promise<{ unitID: string }> }
                   />
                 </div>
               ) : (
-                <div className="question-content">
+                <div className="question-content flex flex-col gap-5">
                   {questionContentElements}
                 </div>
               )
@@ -101,7 +101,7 @@ export default function Page({ params }: { params: Promise<{ unitID: string }> }
           </div>
         </div>
         
-        <div className="w-3/12">
+        <div className="w-3/12 hidden md:block">
           <RightUnitBar questionContents={questionContents} />
         </div>
       </div>
