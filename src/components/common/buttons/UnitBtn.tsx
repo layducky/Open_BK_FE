@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import Modal from "@/components/modals/courseModal";
 import { useMutation } from "@tanstack/react-query";
 import { unitSchema } from "@/lib/validation/unitSchema";
+import { useRouter } from "next/navigation";
 import InputField from "../InputField";
 
 
@@ -112,9 +113,9 @@ export const DeleteUnitBtn: React.FC<{ unitID: string }> = ({ unitID }) => {
 
 
 export const ViewTestButton: React.FC<{ unitID: string }> = ({ unitID }) => {
+    const router = useRouter();
     const handleClick = () => {
-        console.log("Unit ID: " + unitID);
-        if(unitID) window.location.href = `/unit/${unitID}/review`;
+        if(unitID) router.push(`/unit/${unitID}/review`);
     };
 
     return (

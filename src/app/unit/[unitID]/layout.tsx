@@ -1,50 +1,42 @@
 'use client'
+import { ToggleBtn } from '@/components/common/buttons/toggleBtn';
+import { UnitProvider } from '@/context/UnitContext';
 import * as React from 'react'
-import { useCourseData } from '@/hooks/useCourseData';
 
-export default function CourseLayout({
+export default function UnitLayout({
         children,
         params
     }: Readonly<{
         children: React.ReactNode;
-        params: Promise<{ courseID: string }>
+        params: Promise<{ unitID: string }>
     }>) {
-        const [courseID, setCourseID] = React.useState<string | null>(null);
-
+        const [unitID, setUnitId] = React.useState<string | null>(null);
+        const [isLoading, setIsLoading] = React.useState(true);
         React.useEffect(() => {
-            // Giải nén giá trị từ params (là một Promise)
-            const fetchCourseID = async () => {
-                const resolvedParams = await params;
-                setCourseID(resolvedParams.courseID);
+            const fetchUnitId = async () => {
+                setIsLoading(true);
+                const { unitID } = await params;
+                setUnitId(unitID);
+                setIsLoading(false);
             };
-
-            fetchCourseID();
+        
+            fetchUnitId();
         }, [params]);
 
-        const {data: courseData} = useCourseData(courseID as string);
-    
-        
-        // const courseFeatures = [
-        //     { type: "video", text: '95 hours on-demand video' },
-        //     { type: "article", text: '35 articles' },
-        //     { type: "test", text: '2 practice tests' },
-        //     { type: "test", text: 'Assignments' },
-        //     { type: "download", text: '100 downloadble resources' },
-        //     { type: "infinity", text: 'Full lifetime access' },
-        //     { type: "certificate", text: 'Certificate of completion' }
-        //   ]
-
-        // //*Pathname
-        // const tabs = [
-        //     { label: 'Overview', href: `/course/${courseID}/overview` },
-        //     { label: 'Content', href: `/course/${courseID}/content` },
-        //     { label: 'About', href: `/course/${courseID}/about` },
-        //     { label: 'Reviews', href: `/course/${courseID}/review` }
-        // ];
-        // const currentRoute: string = usePathname();
-        return (
-            <main> 
-                {children}
+        if (isLoading) {
+            return (
+            <main className="flex flex-col">
+                <div>Loading...</div>
             </main>
+            );
+        }
+        
+        return (
+            <UnitProvider unitID={unitID}>
+                <main className="flex flex-col">                
+                    <ToggleBtn unitID={unitID as string} />
+                    {children}
+                </main>
+            </UnitProvider>
         )
     }
