@@ -27,7 +27,7 @@ export const useQuestions = (unitID: string) => {
   return useQuery<QuestionEntity[] | undefined>({
     queryKey: ["getAllQuestions", unitID],
     queryFn: () => getAllQuestions(unitID as string),
-    staleTime: Infinity,
+    staleTime: 0,
   });
 }
 

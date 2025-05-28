@@ -9,8 +9,8 @@ export class QuestionEntity {
     answerB?: string;
     answerC?: string;
     answerD?: string;
-    createdAt: string;
-    updatedAt: string;
+    // createdAt: string;
+    // updatedAt: string;
 
     constructor(data: Partial<QuestionEntity>) {
         this.questionID = data.questionID || "";
@@ -23,11 +23,11 @@ export class QuestionEntity {
         this.answerB = data.answerB || "";
         this.answerC = data.answerC || "";
         this.answerD = data.answerD || "";
-        this.createdAt = data.createdAt
-            ? new Date(data.createdAt).toLocaleString("de-DE")
-            : "-";
-        this.updatedAt = data.updatedAt
-            ? new Date(data.updatedAt).toLocaleString("de-DE")
-            : "-";
+        // this.createdAt = data.createdAt
+        //     ? new Date(data.createdAt).toLocaleString("de-DE")
+        //     : "-";
+        // this.updatedAt = data.updatedAt
+        //     ? new Date(data.updatedAt).toLocaleString("de-DE")
+        //     : "-";
     }
 }

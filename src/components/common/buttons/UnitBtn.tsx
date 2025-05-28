@@ -115,7 +115,7 @@ export const DeleteUnitBtn: React.FC<{ unitID: string }> = ({ unitID }) => {
 export const ViewTestButton: React.FC<{ unitID: string }> = ({ unitID }) => {
     const router = useRouter();
     const handleClick = () => {
-        if(unitID) router.push(`/unit/${unitID}/review`);
+        if(unitID) router.push(`/unit/${unitID}/attempt`);
     };
 
     return (

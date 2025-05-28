@@ -12,7 +12,7 @@ export default function UnitReviewPage() {
 
   return (
     <main>
-      <UnitTest unitID={unitID as string} />
+      <UnitTest unitID={unitID as string} mode="review"/>
     </main>
   );
 }
