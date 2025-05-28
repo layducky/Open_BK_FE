@@ -4,10 +4,11 @@ import { useState } from "react";
 import { useQuestions } from "@/hooks/useCourses";
 import { useUser } from "@/hooks/useUser";
 import { RightUnitBar } from "@/components/common/RightUnitBar";
-import { CreateQuesBtn } from "@/components/common/buttons/QuesBtn";
+import { CreateQuesBtn, SubmitTestBtn } from "@/components/common/buttons/QuesBtn";
 import { QuestionEntity } from "@/domain/question.entity";
 import QuestionItem from "@/components/common/QuestionItem";
 import { motion, AnimatePresence } from "framer-motion";
+import GradientButton from "@/components/common/buttons/GradientButton";
 
 interface UnitTestProps {
   unitID: string;
@@ -18,6 +19,10 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
   const { data: questionContents, isLoading, error, refetch } = useQuestions(unitID);
   const { data: userInfo } = useUser();
   const [newQuestionIds, setNewQuestionIds] = useState<string[]>([]);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+
+  if (isLoading) return <div>Loading questions...</div>;
+  if (error) return <div>Error loading questions: {error.message}</div>;
 
   const handleQuestionCreated = () => {
     if (Array.isArray(questionContents) && questionContents.length > 0) {
@@ -29,9 +34,9 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
     }
   };
 
-  if (isLoading) return <div>Loading questions...</div>;
-  if (error) return <div>Error loading questions: {error.message}</div>;
-
+  const handleAnswerChange = (questionID: string, selected: string) => {
+    setAnswers(prev => ({ ...prev, [questionID]: selected }));
+  };
   const questionContentElements = Array.isArray(questionContents) ? (
     <AnimatePresence>
       {questionContents.map((questionContent: QuestionEntity) => (
@@ -47,6 +52,8 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
             mode={mode}
             isCollab={userInfo?.role === "COLLAB"}
             refetchQuestions={refetch}
+            onAnswerChange={handleAnswerChange}
+            // selectedAnswer={answers[questionContent.questionID]}
           />
         </motion.div>
       ))}
@@ -67,7 +74,7 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
               <CreateQuesBtn unitID={unitID} onQuestionCreated={handleQuestionCreated}  refetchQuestions={refetch} />
             </div>
           )}
-          <div className="pb-20">
+          <div>
             {Array.isArray(questionContents) && questionContents.length === 0 ? (
               <div className="w-full">
                 <img
@@ -81,6 +88,9 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
                 {questionContentElements}
               </div>
             )}
+          </div>
+          <div className="flex justify-center items-center mt-10">
+            <SubmitTestBtn testID={unitID} answers={answers}/>
           </div>
         </div>
         <div className="w-3/12 hidden md:block">

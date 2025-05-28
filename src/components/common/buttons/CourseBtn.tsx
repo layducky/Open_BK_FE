@@ -9,6 +9,7 @@ import Modal from "@/components/modals/courseModal";
 import { useMutation } from "@tanstack/react-query";
 import { courseSchema } from "@/lib/validation/courseSchema";
 import InputField from "../InputField";
+import GradientButton from "./GradientButton";
 
 
 export const CreateCourseBtn: React.FC = () => {
@@ -81,14 +82,7 @@ export const CreateCourseBtn: React.FC = () => {
 
     return (
         <>
-            <button
-            onClick={handleClick}
-            className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
-        >
-            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-               Create New Course
-            </span>
-        </button>
+            <GradientButton onClick={handleClick} text="Create New Course" />
             <Modal modelTitle="Create New Course" isOpen={isOpen} onClose={onClose}>
                 <form onSubmit={handleSubmit((data) => mutate(data))} className="space-y-6">
                     {formFields.map(({ label, id, placeholder, disabled }) => (
@@ -140,16 +134,7 @@ export const DeleteCourseBtn: React.FC<{ courseID: string }> = ({ courseID }) =>
     };
 
     return (
-        <>
-            <button
-            onClick={handleClick}
-            className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
-        >
-                <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                    Delete 
-                </span>
-            </button>
-        </>
+        <GradientButton onClick={handleClick} text="Delete" />
     );
 };
 

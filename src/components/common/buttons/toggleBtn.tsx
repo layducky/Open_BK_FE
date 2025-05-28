@@ -37,7 +37,7 @@ export const ToggleBtn = ({ unitID }: { unitID: string }) => {
           className="absolute top-0 left-0 w-5 h-5 bg-white rounded-full border border-slate-300 shadow-sm transition-transform duration-300 peer-checked:translate-x-6 peer-checked:border-slate-800 cursor-pointer"
         />
       </div>
-      <label htmlFor="switch-component-desc" className="text-sm cursor-pointer">
+      <label className="text-sm cursor-pointer">
         <div>
           <p className="font-medium font-semibold">Edit Mode</p>
           <p className="text-slate-500">You'll be able to edit your own course.</p>

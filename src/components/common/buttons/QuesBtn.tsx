@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useQueryClient } from "@tanstack/react-query"; // Import useQueryClient
 import Modal from "@/components/modals/courseModal";
 import { questionSchema } from "@/lib/validation/questionSchema";
 import InputField from "../InputField";
 import { useQuestionMutations } from "@/hooks/useQuestionMutations";
 import GradientButton from "@/components/common/buttons/GradientButton";
+import { useTestMutations } from "@/hooks/useTestMutation";
 
 interface CreateQuesBtnProps {
   unitID: string;
@@ -140,3 +140,25 @@ export const DeleteQuesBtn: React.FC<DeleteQuesBtnProps> = ({ questionID, unitID
     />
   );
 };
+
+interface SubmitTestBtnProps {
+  testID: string;
+  answers: Record<string, string>;
+}
+
+export const SubmitTestBtn: React.FC<SubmitTestBtnProps> = ({ testID, answers }) => {
+  const { submitAnswersMutation } = useTestMutations(testID);
+  
+  const handleSubmitAnswers = () => {
+    console.log("Submitted Answers:", answers);
+    
+    submitAnswersMutation.mutate({
+      testID: testID,
+      answers: answers,
+    });
+  };
+
+  return (
+    <GradientButton onClick={handleSubmitAnswers} text="Submit" disabled={submitAnswersMutation.isPending} />
+  );
+}
