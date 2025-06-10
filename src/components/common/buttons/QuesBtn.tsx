@@ -60,10 +60,10 @@ export const CreateQuesBtn: React.FC<CreateQuesBtnProps> = ({ unitID, onQuestion
     { label: "Content", type: "text", id: "content", placeholder: "Content", disabled: false },
     { label: "Explanation", type: "text", id: "explanation", placeholder: "Explanation", disabled: false },
     {
-      label: "Correct Answer",
+      label: "Correct Ans",
       type: "select",
-      id: "correctAnswer",
-      placeholder: "Select Correct Answer",
+      id: "correctAns",
+      placeholder: "Select Correct Ans",
       disabled: false,
       options: [
         { value: "A", label: "A" },
@@ -72,10 +72,10 @@ export const CreateQuesBtn: React.FC<CreateQuesBtnProps> = ({ unitID, onQuestion
         { value: "D", label: "D" },
       ],
     },
-    { label: "Answer A", type: "text", id: "answerA", placeholder: "Enter Answer A", disabled: false },
-    { label: "Answer B", type: "text", id: "answerB", placeholder: "Enter Answer B", disabled: false },
-    { label: "Answer C", type: "text", id: "answerC", placeholder: "Enter Answer C", disabled: false },
-    { label: "Answer D", type: "text", id: "answerD", placeholder: "Enter Answer D", disabled: false },
+    { label: "Ans A", type: "text", id: "ansA", placeholder: "Enter Ans A", disabled: false },
+    { label: "Ans B", type: "text", id: "ansB", placeholder: "Enter Ans B", disabled: false },
+    { label: "Ans C", type: "text", id: "ansC", placeholder: "Enter Ans C", disabled: false },
+    { label: "Ans D", type: "text", id: "ansD", placeholder: "Enter Ans D", disabled: false },
   ];
 
   return (
@@ -143,22 +143,22 @@ export const DeleteQuesBtn: React.FC<DeleteQuesBtnProps> = ({ questionID, unitID
 
 interface SubmitTestBtnProps {
   testID: string;
-  answers: Record<string, string>;
+  anss: Record<string, string>;
 }
 
-export const SubmitTestBtn: React.FC<SubmitTestBtnProps> = ({ testID, answers }) => {
-  const { submitAnswersMutation } = useTestMutations(testID);
+export const SubmitTestBtn: React.FC<SubmitTestBtnProps> = ({ testID, anss }) => {
+  const { submitAnssMutation } = useTestMutations(testID);
   
-  const handleSubmitAnswers = () => {
-    console.log("Submitted Answers:", answers);
+  const handleSubmitAnss = () => {
+    console.log("Submitted Anss:", anss);
     
-    submitAnswersMutation.mutate({
+    submitAnssMutation.mutate({
       testID: testID,
-      answers: answers,
+      anss: anss,
     });
   };
 
   return (
-    <GradientButton onClick={handleSubmitAnswers} text="Submit" disabled={submitAnswersMutation.isPending} />
+    <GradientButton onClick={handleSubmitAnss} text="Submit" disabled={submitAnssMutation.isPending} />
   );
 }

@@ -4,11 +4,11 @@ export class QuestionEntity {
     numericalOrder: number;
     content?: string;
     explanation?: string;
-    correctAnswer: string;
-    answerA?: string;
-    answerB?: string;
-    answerC?: string;
-    answerD?: string;
+    correctAns: string;
+    ansA?: string;
+    ansB?: string;
+    ansC?: string;
+    ansD?: string;
     // createdAt: string;
     // updatedAt: string;
 
@@ -18,11 +18,11 @@ export class QuestionEntity {
         this.numericalOrder = data.numericalOrder || 0;
         this.content = data.content || "";
         this.explanation = data.explanation || "";
-        this.correctAnswer = data.correctAnswer || "";
-        this.answerA = data.answerA || "";
-        this.answerB = data.answerB || "";
-        this.answerC = data.answerC || "";
-        this.answerD = data.answerD || "";
+        this.correctAns = data.correctAns || "";
+        this.ansA = data.ansA || "";
+        this.ansB = data.ansB || "";
+        this.ansC = data.ansC || "";
+        this.ansD = data.ansD || "";
         // this.createdAt = data.createdAt
         //     ? new Date(data.createdAt).toLocaleString("de-DE")
         //     : "-";

@@ -1,7 +1,7 @@
 
 import { apiClientWithAuth } from "@/services/apiClient";
 
-const url = `${process.env.NEXT_PUBLIC_API_URL}/course/content/question/`;
+const url = `${process.env.NEXT_PUBLIC_API_URL}/course/collab/question/`;
 
 const createQuestion = async (questionData: any) => {
   try {
@@ -10,22 +10,22 @@ const createQuestion = async (questionData: any) => {
       numericalOrder,
       content,
       explanation,
-      correctAnswer,
-      answerA,
-      answerB,
-      answerC,
-      answerD,
+      correctAns,
+      ansA,
+      ansB,
+      ansC,
+      ansD,
     } = questionData;
 
     const res = await apiClientWithAuth.post(`${url}${unitID}`, {
       numericalOrder,
       content,
       explanation,
-      correctAnswer,
-      answerA,
-      answerB,
-      answerC,
-      answerD,
+      correctAns,
+      ansA,
+      ansB,
+      ansC,
+      ansD,
     });
 
     return res.data;
@@ -60,21 +60,21 @@ const updateQuestion = async (
   questionID: string,
   content: string,
   explanation: string,
-  correctAnswer: string,
-  answerA: string,
-  answerB: string,
-  answerC: string,
-  answerD: string
+  correctAns: string,
+  ansA: string,
+  ansB: string,
+  ansC: string,
+  ansD: string
 ) => {
   try {
     const res = await apiClientWithAuth.put(`${url}${questionID}`, {
       content,
       explanation,
-      correctAnswer,
-      answerA,
-      answerB,
-      answerC,
-      answerD,
+      correctAns,
+      ansA,
+      ansB,
+      ansC,
+      ansD,
     });
 
     return res.data;

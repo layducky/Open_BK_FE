@@ -8,15 +8,15 @@ interface QuestionItemProps {
   mode: "attempt" | "review";
   isCollab: boolean;
   refetchQuestions?: () => void;
-  onAnswerChange?: (questionID: string, answer: string) => void;
+  onAnsChange?: (questionID: string, ans: string) => void;
 }
 
-const QuestionItem = ({ question, mode, isCollab, refetchQuestions, onAnswerChange }: QuestionItemProps) => {
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null); // For attempt mode
+const QuestionItem = ({ question, mode, isCollab, refetchQuestions, onAnsChange }: QuestionItemProps) => {
+  const [selectedAns, setSelectedAns] = useState<string | null>(null); // For attempt mode
 
-  const handleAnswerSelect = (key:string) => {
-    onAnswerChange?.(question.questionID, key)
-    setSelectedAnswer(key);
+  const handleAnsSelect = (key:string) => {
+    onAnsChange?.(question.questionID, key)
+    setSelectedAns(key);
   };
 
   return (
@@ -34,10 +34,10 @@ const QuestionItem = ({ question, mode, isCollab, refetchQuestions, onAnswerChan
         </div>
 
         {Object.entries({
-          A: question.answerA,
-          B: question.answerB,
-          C: question.answerC,
-          D: question.answerD,
+          A: question.ansA,
+          B: question.ansB,
+          C: question.ansC,
+          D: question.ansD,
         }).map(([key, value]) => (
           <div
             className="flex gap-3 ml-2 md:ml-5 items-center text-gray-500"
@@ -49,8 +49,8 @@ const QuestionItem = ({ question, mode, isCollab, refetchQuestions, onAnswerChan
                   type="radio"
                   name={`question-${question.questionID}`}
                   value={key}
-                  checked={selectedAnswer === key}
-                  onChange={() => handleAnswerSelect(key)}
+                  checked={selectedAns === key}
+                  onChange={() => handleAnsSelect(key)}
                   className="w-5 h-5"
                 />
                 <p>{value}</p>
@@ -59,7 +59,7 @@ const QuestionItem = ({ question, mode, isCollab, refetchQuestions, onAnswerChan
               <>
                 <div
                   className={`flex justify-center items-center rounded-full w-8 h-8 ${
-                    question.correctAnswer === key
+                    question.correctAns === key
                       ? "bg-green-500 text-white"
                       : "border border-solid border-gray-500"
                   }`}
@@ -68,7 +68,7 @@ const QuestionItem = ({ question, mode, isCollab, refetchQuestions, onAnswerChan
                 </div>
                 <p
                   className={
-                    question.correctAnswer === key
+                    question.correctAns === key
                       ? "text-green-500 font-semibold"
                       : ""
                   }

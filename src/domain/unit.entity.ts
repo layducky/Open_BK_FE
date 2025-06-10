@@ -4,7 +4,7 @@ export class UnitEntity {
     numericalOrder?: number; 
     unitName?: string; 
     description?: string;
-    numberOfQuestions?: number;
+    numQuests?: number;
     createdAt: string;
     updatedAt: string;
 
@@ -14,7 +14,7 @@ export class UnitEntity {
         this.numericalOrder = data.numericalOrder || 0;
         this.unitName = data.unitName || "";
         this.description = data.description || "";
-        this.numberOfQuestions = data.numberOfQuestions || 0;
+        this.numQuests = data.numQuests || 0;
         this.createdAt = data.createdAt
             ? new Date(data.createdAt).toLocaleString("de-DE")
             : "-";

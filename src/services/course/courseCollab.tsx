@@ -24,7 +24,7 @@ const createCourse = async (courseData: any) => {
 
 const getAllOwnedCourses = async (authorID: string) => {
   try {
-    const { data } = await apiClientWithAuth.get(`${url}/courses/${authorID}`);
+    const { data } = await apiClientWithAuth.get(`${url}`);
     return data;
   } catch (error: any) {
     console.error("Get All Owned Courses Error:", error);

@@ -1,21 +1,21 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
-import { submitAnswers } from "@/services/course/submitTest";
+import { submitAnss } from "@/services/course/submitTest";
 
 export const useTestMutations = (testID: string) => {
   
-  const submitAnswersMutation = useMutation({
-    mutationFn: ({ testID, answers }: { testID: string, answers: Record<string, string> }) =>
-      submitAnswers(testID, answers),
+  const submitAnssMutation = useMutation({
+    mutationFn: ({ testID, anss }: { testID: string, anss: Record<string, string> }) =>
+      submitAnss(testID, anss),
     onSuccess: () => {
-      toast.success("Answers submitted successfully!");
+      toast.success("Anss submitted successfully!");
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to submit answers");
+      toast.error(error.message || "Failed to submit anss");
     },
   });
 
   return {
-    submitAnswersMutation,
+    submitAnssMutation,
   };
 }

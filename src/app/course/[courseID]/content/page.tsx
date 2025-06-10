@@ -50,7 +50,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
 
                   {[
                     { type: "certificate", text: unit.description || "" },
-                    { type: "test", text: `Number of questions: ${unit.numberOfQuestions ?? 0}` },
+                    { type: "test", text: `Number of questions: ${unit.numQuests ?? 0}` },
                     { type: "download", text: `Created at: ${unit.createdAt}` },
                     { type: "infinity", text: `Updated at: ${unit.updatedAt}` },
                   ].map((item, itemIndex) => (

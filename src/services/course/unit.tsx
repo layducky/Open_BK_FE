@@ -1,6 +1,6 @@
 import { apiClient, apiClientWithAuth } from "@/services/apiClient";
 
-const url = `${process.env.NEXT_PUBLIC_API_URL}/course/content/unit/`;
+const url = `${process.env.NEXT_PUBLIC_API_URL}/course/collab/unit/`;
 
 // Tạo mới một unit
 const createUnit = async ( unitData: any ) => {
@@ -50,14 +50,14 @@ const getAllUnits = async ( courseID: string) => {
 //   unitName: string,
 //   description: string,
 //   numericalOrder: number,
-//   numberOfQuestions: number
+//   numQuests: number
 // ) => {
 //   try {
 //     const res = await apiClient.put(`${url}/${unitID}`, {
 //       unitName,
 //       description,
 //       numericalOrder,
-//       numberOfQuestions,
+//       numQuests,
 //     });
 
 //     if (res.status === 200) {

@@ -1,13 +1,13 @@
 import { apiClientWithAuth } from "../apiClient";
 
-export const submitAnswers = async (testID: string, answers: Record<string, string>) => {
+export const submitAnss = async (testID: string, anss: Record<string, string>) => {
     try {
         const res = await apiClientWithAuth.post(`/test/${testID}/submit`, {
-            answers,
+            anss,
         });
 
         return res.data;
     } catch (error) {
-        throw new Error("Failed to submit answers");
+        throw new Error("Failed to submit anss");
     }
 };

@@ -19,7 +19,7 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
   const { data: questionContents, isLoading, error, refetch } = useQuestions(unitID);
   const { data: userInfo } = useUser();
   const [newQuestionIds, setNewQuestionIds] = useState<string[]>([]);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [anss, setAnss] = useState<Record<string, string>>({});
 
   if (isLoading) return <div>Loading questions...</div>;
   if (error) return <div>Error loading questions: {error.message}</div>;
@@ -34,8 +34,8 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
     }
   };
 
-  const handleAnswerChange = (questionID: string, selected: string) => {
-    setAnswers(prev => ({ ...prev, [questionID]: selected }));
+  const handleAnsChange = (questionID: string, selected: string) => {
+    setAnss(prev => ({ ...prev, [questionID]: selected }));
   };
   const questionContentElements = Array.isArray(questionContents) ? (
     <AnimatePresence>
@@ -52,8 +52,8 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
             mode={mode}
             isCollab={userInfo?.role === "COLLAB"}
             refetchQuestions={refetch}
-            onAnswerChange={handleAnswerChange}
-            // selectedAnswer={answers[questionContent.questionID]}
+            onAnsChange={handleAnsChange}
+            // selectedAns={anss[questionContent.questionID]}
           />
         </motion.div>
       ))}
@@ -90,7 +90,7 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
             )}
           </div>
           <div className="flex justify-center items-center mt-10">
-            <SubmitTestBtn testID={unitID} answers={answers}/>
+            <SubmitTestBtn testID={unitID} anss={anss}/>
           </div>
         </div>
         <div className="w-3/12 hidden md:block">

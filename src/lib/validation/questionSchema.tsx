@@ -15,25 +15,25 @@ export const questionSchema = yup.object().shape({
     .string()
     .required("Explanation is required"),
 
-  correctAnswer: yup
+  correctAns: yup
     .string()
-    .oneOf(["A", "B", "C", "D"], "Correct Answer must be one of A, B, C, or D")
-    .required("Correct Answer is required"),
+    .oneOf(["A", "B", "C", "D"], "Correct Ans must be one of A, B, C, or D")
+    .required("Correct Ans is required"),
 
-  answerA: yup
+  ansA: yup
     .string()
-    .required("Answer A is required"),
+    .required("Ans A is required"),
 
-  answerB: yup
+  ansB: yup
     .string()
-    .required("Answer B is required"),
+    .required("Ans B is required"),
 
-  answerC: yup
+  ansC: yup
     .string()
-    .required("Answer C is required"),
+    .required("Ans C is required"),
 
-  answerD: yup
+  ansD: yup
     .string()
-    .required("Answer D is required"),
+    .required("Ans D is required"),
 });
 
