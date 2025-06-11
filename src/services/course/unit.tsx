@@ -17,15 +17,15 @@ const createUnit = async ( unitData: any ) => {
     return { message: "Network error" };
   }
 };
-
-const getAllUnits = async ( courseID: string) => {
+const getAllUnits = async (courseID?: string) => {
+  if (!courseID) {
+    return [];
+  }
   try {
     const res = await apiClient.get(`${url}all/${courseID}`);
-
-    return res.data;
-
+    return res.data || [];
   } catch (error) {
-    return { message: "Network error" };
+    return [];
   }
 };
 

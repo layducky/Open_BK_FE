@@ -9,6 +9,8 @@ export const LogoutButton = () => {
   const { mutate } = useMutation({
     mutationFn: () => logout(),
     onSuccess: () => {
+      sessionStorage.removeItem("userID");
+      sessionStorage.removeItem("accessToken");
       window.location.reload();
       router.push("/");
     },

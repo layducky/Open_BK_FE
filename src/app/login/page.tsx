@@ -14,7 +14,10 @@ export default function LoginPage() {
 
   const { mutate, error } = useMutation({
     mutationFn: (data: any) => login(data),
-    onSuccess: () => {
+    onSuccess: (response) => {
+      const { userID, accessToken } = response;
+      userID && sessionStorage.setItem("userID", userID);
+      accessToken && sessionStorage.setItem("accessToken", accessToken);
       window.location.reload();
       router.push("/");
     },

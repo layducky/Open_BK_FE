@@ -6,7 +6,6 @@ import { EnrolledFootBar } from "./enrolledFootBar";
 import { CollabFootBar } from "./collabFootBar";
 
 export const CourseCard: React.FC<{ course: Course | null, type?: string }> = ({ course, type }) => {
-  console.log(course);
   return (
     <Link href={`/course/${course?.courseID}/overview`}>
       <div

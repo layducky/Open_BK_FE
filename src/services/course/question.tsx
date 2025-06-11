@@ -36,6 +36,10 @@ const createQuestion = async (questionData: any) => {
 };
 
 const getAllQuestions = async (unitID: string) => {
+  if (!unitID) {
+    return [];
+  }
+
   try {
     const res = await apiClientWithAuth.get(`${url}all/${unitID}`);
     return res.data;
@@ -47,6 +51,9 @@ const getAllQuestions = async (unitID: string) => {
 
 
 const getQuestionById = async (questionID: string) => {
+  if (!questionID) {
+    return {};
+  }
   try {
     const res = await apiClientWithAuth.get(`${url}${questionID}`);
     return res.data;

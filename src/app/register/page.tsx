@@ -17,7 +17,10 @@ export default function SignupPage() {
         email: data.email,
         password: data.password,
       }),
-    onSuccess: () => {
+    onSuccess: (response) => {
+      const { userID, accessToken } = response;
+      userID && sessionStorage.setItem("userID", userID);
+      accessToken && sessionStorage.setItem("accessToken", accessToken);
       window.location.reload();
       router.push("/");
     }

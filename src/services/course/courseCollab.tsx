@@ -71,17 +71,17 @@ const deleteCourse = async (courseID: string) => {
   }
 };
 
-const deleteLearnerFromCourse = async (learnerID: string, courseID: string) => {
-  try {
-    const { data } = await apiClientWithAuth.delete(
-      `${url}/remove-learner/${courseID}/${learnerID}`
-    );
-    return data;
-  } catch (error: any) {
-    console.error("Delete Learner From Course Error:", error);
-    return error.response ? error.response.data : { message: "Network error" };
-  }
-};
+// const deleteLearnerFromCourse = async (learnerID: string, courseID: string) => {
+//   try {
+//     const { data } = await apiClientWithAuth.delete(
+//       `${url}/learner/${courseID}/${learnerID}`
+//     );
+//     return data;
+//   } catch (error: any) {
+//     console.error("Delete Learner From Course Error:", error);
+//     return error.response ? error.response.data : { message: "Network error" };
+//   }
+// };
 
 export {
   createCourse,
@@ -89,5 +89,5 @@ export {
   getAllLearners,
   updateCourse,
   deleteCourse,
-  deleteLearnerFromCourse,
+  // deleteLearnerFromCourse,
 };

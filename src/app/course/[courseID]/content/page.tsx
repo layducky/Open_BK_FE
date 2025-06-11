@@ -35,38 +35,38 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
         }
       </div>
       <Accordion type="single" collapsible>
-        {courseContent?.map((unit, index) => (
+        {(courseContent && courseContent.map((unit, index) => (
           <AccordionItem key={index} value={`unit-${unit.unitID}`}>
-            <AccordionTrigger className="text-xl">{unit.numericalOrder}. {unit.unitName}</AccordionTrigger>
-            <AccordionContent>
-              <div className="flex flex-col md:flex-row">
-                <div className="w-full md:hidden flex justify-end">
-                  { unit.unitID 
-                  && <ViewTestButton unitID={unit.unitID} /> }
-                  {unit.unitID && userInfo?.role === "COLLAB" 
-                  && <DeleteUnitBtn unitID={unit.unitID} /> }
-                </div>
-                <div className="w-full md:w-4/6">
+        <AccordionTrigger className="text-xl">{unit.numericalOrder}. {unit.unitName}</AccordionTrigger>
+        <AccordionContent>
+          <div className="flex flex-col md:flex-row">
+            <div className="w-full md:hidden flex justify-end">
+          { unit.unitID 
+          && <ViewTestButton unitID={unit.unitID} /> }
+          {unit.unitID && userInfo?.role === "COLLAB" 
+          && <DeleteUnitBtn unitID={unit.unitID} /> }
+            </div>
+            <div className="w-full md:w-4/6">
 
-                  {[
-                    { type: "certificate", text: unit.description || "" },
-                    { type: "test", text: `Number of questions: ${unit.numQuests ?? 0}` },
-                    { type: "download", text: `Created at: ${unit.createdAt}` },
-                    { type: "infinity", text: `Updated at: ${unit.updatedAt}` },
-                  ].map((item, itemIndex) => (
-                    <BulletItem key={itemIndex} {...item} />
-                  ))}
-                </div>
-                <div className="hidden sm:block md:w-2/6">
-                  { unit.unitID 
-                    && <ViewTestButton unitID={unit.unitID} />}
-                  {unit.unitID && userInfo?.role === "COLLAB" 
-                    && <DeleteUnitBtn unitID={unit.unitID} />}
-                </div>
-              </div>
-            </AccordionContent>
+          {[
+            { type: "certificate", text: unit.description || "" },
+            { type: "test", text: `Number of questions: ${unit.numQuests ?? 0}` },
+            { type: "download", text: `Created at: ${unit.createdAt}` },
+            { type: "infinity", text: `Updated at: ${unit.updatedAt}` },
+          ].map((item, itemIndex) => (
+            <BulletItem key={itemIndex} {...item} />
+          ))}
+            </div>
+            <div className="hidden sm:block md:w-2/6">
+          { unit.unitID 
+            && <ViewTestButton unitID={unit.unitID} />}
+          {unit.unitID && userInfo?.role === "COLLAB" 
+            && <DeleteUnitBtn unitID={unit.unitID} />}
+            </div>
+          </div>
+        </AccordionContent>
           </AccordionItem>
-        ))}
+        )))}
       </Accordion>
     </div>
   );

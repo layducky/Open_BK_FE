@@ -16,7 +16,7 @@ export const useCourses = () => {
 };
 
 export const useUnits = (courseID: string) => {
-  return useQuery<UnitEntity[] | undefined>({
+  return useQuery<UnitEntity[]>({
     queryKey: ["getAllUnits", courseID],
     queryFn: () => getAllUnits(courseID as string),
     staleTime: Infinity,
@@ -24,7 +24,7 @@ export const useUnits = (courseID: string) => {
 }
 
 export const useQuestions = (unitID: string) => {
-  return useQuery<QuestionEntity[] | undefined>({
+  return useQuery<QuestionEntity[]>({
     queryKey: ["getAllQuestions", unitID],
     queryFn: () => getAllQuestions(unitID as string),
     staleTime: 0,
