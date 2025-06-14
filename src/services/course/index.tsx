@@ -1,6 +1,6 @@
 import { apiClient } from "@/services/apiClient";
 
-const url = `${process.env.NEXT_PUBLIC_API_URL}/course/public`;
+const url = `/course/public`;
 
 const getAllCourses = async () => {
   try {

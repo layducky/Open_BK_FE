@@ -1,7 +1,6 @@
 import { apiClientWithAuth } from "@/services/apiClient";
-import { EOF } from "dns";
 
-const url = `${process.env.NEXT_PUBLIC_API_URL}/course/enroll`;
+const url = `/course/enroll`;
 
 const enrollCourse = async (learnerID: string, courseID: string) => {
   try {

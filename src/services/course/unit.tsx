@@ -1,6 +1,6 @@
 import { apiClient, apiClientWithAuth } from "@/services/apiClient";
 
-const url = `${process.env.NEXT_PUBLIC_API_URL}/course/collab/unit/`;
+const url = `/course/collab/unit/`;
 
 // Tạo mới một unit
 const createUnit = async ( unitData: any ) => {
@@ -14,6 +14,7 @@ const createUnit = async ( unitData: any ) => {
     return res.data;
 
   } catch (error) {
+    console.log(error);
     return { message: "Network error" };
   }
 };

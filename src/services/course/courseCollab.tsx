@@ -1,6 +1,6 @@
 import { apiClientWithAuth } from "@/services/apiClient";
 
-const url = `${process.env.NEXT_PUBLIC_API_URL}/course/collab`;
+const url = `/course/collab`;
 
 const createCourse = async (courseData: any) => {
   try {

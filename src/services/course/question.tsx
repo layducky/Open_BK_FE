@@ -1,7 +1,7 @@
 
 import { apiClientWithAuth } from "@/services/apiClient";
 
-const url = `${process.env.NEXT_PUBLIC_API_URL}/course/collab/question/`;
+const url = `/course/collab/question/`;
 
 const createQuestion = async (questionData: any) => {
   try {
