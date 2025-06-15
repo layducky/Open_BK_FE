@@ -3,7 +3,7 @@ import { apiClient, apiClientWithAuth } from "@/services/apiClient";
 const url = `/course/collab/unit/`;
 
 // Tạo mới một unit
-const createUnit = async ( unitData: any ) => {
+const createUnit = async (unitData: any) => {
   try {
     const { courseID, unitName, description, numericalOrder } = unitData;
     const res = await apiClientWithAuth.post(`${url}${courseID}`, {
@@ -11,11 +11,12 @@ const createUnit = async ( unitData: any ) => {
       unitName,
       description,
     });
+    if (res.status !== 201) {
+      throw new Error(res.data?.message || "Failed to create unit");
+    }
     return res.data;
-
   } catch (error) {
-    console.log(error);
-    return { message: "Network error" };
+    return { error };
   }
 };
 const getAllUnits = async (courseID?: string) => {
@@ -24,9 +25,12 @@ const getAllUnits = async (courseID?: string) => {
   }
   try {
     const res = await apiClient.get(`${url}all/${courseID}`);
+    if (res.status !== 200) {
+      throw [];
+    }
     return res.data || [];
   } catch (error) {
-    return [];
+    return []
   }
 };
 
@@ -70,18 +74,18 @@ const getAllUnits = async (courseID?: string) => {
 //     return { message: "Network error" };
 //   }
 // };
-
 const deleteUnit = async (unitID: string) => {
   try {
-    const res = await apiClient.delete(`${url}/${unitID}`);
+    const res = await apiClientWithAuth.delete(`${url}/${unitID}`);
 
     if (res.status === 200) {
       return res.data;
     } else {
-      return res.data;
+      throw new Error(res.data?.message || "Failed to delete unit");
     }
   } catch (error) {
-    return { message: "Network error" };
+    console.log(error);
+    return { error };
   }
 };
 

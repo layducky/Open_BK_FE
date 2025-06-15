@@ -1,7 +1,7 @@
 "use client";
 
 import { createUnit, deleteUnit } from "@/services/course/unit";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import Modal from "@/components/modals/courseModal";
@@ -22,10 +22,10 @@ export const CreateUnitBtn: React.FC<{ courseID: string }> = ({ courseID }) => {
             description: data.description,
             numericalOrder: data.numericalOrder
         }),
-        onSuccess: () => {
-            alert("Unit created successfully!");
+        onSuccess: ( response ) => {
+            alert(response.message || response.error);
             setIsOpen(false);
-            window.location.reload();
+            // window.location.reload();
         },
     });
 
@@ -60,7 +60,7 @@ export const CreateUnitBtn: React.FC<{ courseID: string }> = ({ courseID }) => {
             className="inline-flex items-center justify-center p-0.5 mb-2 me-2 text-sm font-medium text-black rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
         >
             <span className="relative px-2 md:px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-               Create New Unit
+               ➕ New Unit
             </span>
         </button>
             <Modal modelTitle="Create New Unit" isOpen={isOpen} onClose={onClose}>
@@ -99,9 +99,9 @@ export const DeleteUnitBtn: React.FC<{ unitID: string }> = ({ unitID }) => {
     };
 
     return (
-        <>
-            <GradientButton onClick={handleClick} text="Delete" />
-        </>
+        // <div>
+            <GradientButton onClick={handleClick} text="🗑" />
+        // </div>
     );
 };
 
@@ -112,7 +112,63 @@ export const ViewTestButton: React.FC<{ unitID: string }> = ({ unitID }) => {
         if(unitID) router.push(`/unit/${unitID}/attempt`);
     };
 
-    return (        
-        <GradientButton onClick={handleClick} text="View Test"/>
+    return (
+        // <div>
+            <GradientButton onClick={handleClick} text="🔎 Test"/>
+        // </div>
     );
 };
+
+
+const options = [
+  { label: "Edit description", action: deleteUnit, color: "hover:bg-gray-100", textColor: "hover:text-black-800" },
+  { label: "Upload TEST", action: deleteUnit, color: "hover:bg-green-100", textColor: "hover:text-black-800" },
+  { label: "Upload LINK", action: deleteUnit, color: "hover:bg-blue-100", textColor: "hover:text-black-800" },
+  { label: "Upload FILE", action: deleteUnit, color: "hover:bg-orange-100", textColor: "hover:text-black-800" },
+  { label: "Upload VIDEO", action: deleteUnit, color: "hover:bg-yellow-100", textColor: "hover:text-black-800" },
+  { label: "DELETE UNIT", action: deleteUnit, color: "hover:bg-red-500", textColor: "hover:text-white" },
+];
+
+export default function ActionDropdown({unitID} : {unitID: string}) {
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative inline-block text-left w-full md:w-[10rem]" ref={dropdownRef}>
+      <button
+      onClick={() => setOpen((prev) => !prev)}
+      className="p-2 w-full text-black bg-transparent border-none hover:bg-gray-200 hover:font-semibold transition duration-150 rounded"
+      >
+      ⋮ Actions
+      </button>
+
+      {open && (
+      <div className="absolute max-h-[8rem] overflow-y-auto w-full bg-white border border-gray-200 rounded shadow-lg z-10">
+        {options.map(({ label, action, color, textColor }) => (
+        <button
+          key={label}
+          onClick={() => {
+          action(unitID);
+          setOpen(false);
+          }}
+          className={`w-full text-left p-2 text-sm text-black hover:font-semibold ${color} ${textColor}`}
+        >
+          {label}
+        </button>
+        ))}
+      </div>
+      )}
+    </div>
+  );
+}
