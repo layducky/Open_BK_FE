@@ -2,7 +2,7 @@
 import SettingsPage from "@/components/pages/setting";
 import { useUser } from "@/hooks/useUser";
 import { useState, useEffect } from "react";
-import { UserEntity } from "@/domain/user.entity";
+import { UserEntity } from "@/type/user.entity";
 const SettingsCollaborator: React.FC = () => {
   const { data , isLoading, isError } = useUser();
   const [state, setState] = useState<{

@@ -1,4 +1,4 @@
-import { QuestionEntity } from '@/domain/question.entity';
+import { QuestionEntity } from '@/type/question.entity';
 import React from 'react';
 
 export const RightUnitBar = ({questionContents} : {questionContents: any}) => {

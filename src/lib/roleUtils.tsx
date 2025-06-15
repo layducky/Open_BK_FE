@@ -1,4 +1,4 @@
-import { UserEntity } from "@/domain/user.entity";
+import { UserEntity } from "@/type/user.entity";
 
 export const roleString = ((role: UserEntity["role"]) => {
   switch (role) {

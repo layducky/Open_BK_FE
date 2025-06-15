@@ -1,4 +1,4 @@
-import { EnrolledCourseEntity } from "@/domain/course.entity";
+import { EnrolledCourseEntity } from "@/type/course.entity";
 import { CourseCard } from "../common/cards/courseCard";
 import React from "react";
 

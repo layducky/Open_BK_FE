@@ -1,4 +1,4 @@
-import { UserEntity } from "@/domain/user.entity";
+import { UserEntity } from "@/type/user.entity";
 import { apiClientWithAuth } from "@/services/apiClient";
 import { getFromSessionStorage } from '../hooks/getStorage';
 export const getUserInfo = async (): Promise<UserEntity | null> => {

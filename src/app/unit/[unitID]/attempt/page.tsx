@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useUnit } from '@/context/UnitContext';
-import UnitTest from "@/components/pages/settingTabs/unitTest";
+import UnitTest from "@/components/pages/unitTest";
 
 export default function UnitAttemptPage() {
   const { unitID } = useUnit();

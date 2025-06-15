@@ -5,7 +5,7 @@ import { ProfileFrom } from "./settingTabs/ProfileForm";
 import { PasswordForm } from "./settingTabs/PasswordForm";
 import { FaCamera } from "react-icons/fa";
 import { useModal } from "@/context/ModalContext";
-import { UserEntity } from "@/domain/user.entity";
+import { UserEntity } from "@/type/user.entity";
 
 const tabs: Array<{
   id: string;

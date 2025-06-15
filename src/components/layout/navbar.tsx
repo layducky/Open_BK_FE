@@ -8,7 +8,7 @@ import SigninButton from "../common/buttons/SigninButton";
 import SignupButton from "../common/buttons/SignupButton";
 import { roleString } from "@/lib/roleUtils";
 import { useUser } from "@/hooks/useUser";
-import { UserEntity } from "@/domain/user.entity";
+import { UserEntity } from "@/type/user.entity";
 import { LogoutButton } from "../common/buttons/logoutButton";
 
 const CartCount: React.FC = () => {

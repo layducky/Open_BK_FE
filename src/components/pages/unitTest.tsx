@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useQuestions } from "@/hooks/useCourses";
 import { useUser } from "@/hooks/useUser";
 import { RightUnitBar } from "@/components/common/RightUnitBar";
-import { CreateQuesBtn, SubmitTestBtn } from "@/components/common/buttons/QuesBtn";
-import { QuestionEntity } from "@/domain/question.entity";
+import { CreateQuesBtn } from "@/components/common/buttons/QuesBtn";
+import { QuestionEntity } from "@/type/question.entity";
 import QuestionItem from "@/components/common/QuestionItem";
 import { motion, AnimatePresence } from "framer-motion";
 import GradientButton from "@/components/common/buttons/GradientButton";
@@ -18,7 +18,7 @@ interface UnitTestProps {
 const UnitTest = ({ unitID, mode }: UnitTestProps) => {
   const { data: questionContents, isLoading, error, refetch } = useQuestions(unitID);
   const { data: userInfo } = useUser();
-  const [newQuestionIds, setNewQuestionIds] = useState<string[]>([]);
+  const [newQuestionIDs, setNewQuestionIDs] = useState<string[]>([]);
   const [anss, setAnss] = useState<Record<string, string>>({});
 
   if (isLoading) return <div>Loading questions...</div>;
@@ -26,10 +26,10 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
 
   const handleQuestionCreated = () => {
     if (Array.isArray(questionContents) && questionContents.length > 0) {
-      const newQuestionId = questionContents[questionContents.length - 1].questionID;
-      setNewQuestionIds((prev) => [...prev, newQuestionId]);
+      const newQuestionID = questionContents[questionContents.length - 1].questionID;
+      setNewQuestionIDs((prev) => [...prev, newQuestionID]);
       setTimeout(() => {
-        setNewQuestionIds((prev) => prev.filter((id) => id !== newQuestionId));
+        setNewQuestionIDs((prev) => prev.filter((id) => id !== newQuestionID));
       }, 1000);
     }
   };
@@ -42,7 +42,7 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
       {questionContents.map((questionContent: QuestionEntity) => (
         <motion.div
           key={questionContent.questionID}
-          initial={newQuestionIds.includes(questionContent.questionID) ? { opacity: 0, y: 20 } : false}
+          initial={newQuestionIDs.includes(questionContent.questionID) ? { opacity: 0, y: 20 } : false}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
@@ -71,7 +71,7 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
           </div>
           {userInfo?.role === "COLLAB" && mode === "review" && (
             <div className="flex justify-end">
-              <CreateQuesBtn unitID={unitID} onQuestionCreated={handleQuestionCreated}  refetchQuestions={refetch} />
+              <CreateQuesBtn unitID={unitID} onQuestionCreated={handleQuestionCreated} refetchQuestions={refetch} />
             </div>
           )}
           <div>
@@ -90,7 +90,7 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
             )}
           </div>
           <div className="flex justify-center items-center mt-10">
-            <SubmitTestBtn testID={unitID} anss={anss}/>
+            {/* <SubmitTestBtn testID={unitID} anss={anss}/> */}
           </div>
         </div>
         <div className="w-3/12 hidden md:block">

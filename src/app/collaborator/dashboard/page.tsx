@@ -1,7 +1,7 @@
 'use client';
 import DashboardPage from "@/components/pages/dashboard";
 import { useState, useEffect } from "react";
-import { PublicCourseEntity } from "@/domain/course.entity";
+import { PublicCourseEntity } from "@/type/course.entity";
 import { useCollabCourses } from "@/hooks/useCollabCourse";
 const DashboardCollaborator: React.FC = () => {
   const { data, isLoading, isError } = (useCollabCourses());

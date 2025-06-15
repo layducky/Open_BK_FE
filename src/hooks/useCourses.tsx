@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { getQueryClient } from "@/app/providers";
-import { PublicCourseEntity } from "@/domain/course.entity";
-import { UnitEntity } from "@/domain/unit.entity";
-import { QuestionEntity } from "@/domain/question.entity";
+import { PublicCourseEntity } from "@/type/course.entity";
+import { UnitEntity } from "@/type/unit.entity";
+import { QuestionEntity } from "@/type/question.entity";
 import { getAllCourses } from "@/services/course";
 import { getAllUnits } from "@/services/course/unit";
 import { getAllQuestions } from "@/services/course/question";

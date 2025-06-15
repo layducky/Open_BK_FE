@@ -2,7 +2,7 @@
 import EnrolledCoursesPage from "@/components/pages/enrolled-courses";
 import { useEnrolledCourses } from "@/hooks/useEnrollCourse";
 import { useState, useEffect } from "react";
-import { EnrolledCourseEntity } from "@/domain/course.entity";
+import { EnrolledCourseEntity } from "@/type/course.entity";
 const EnrolledCourseLearner: React.FC = () => {
   const { data, isLoading, isError } = useEnrolledCourses();
   const [state, setState] = useState<{

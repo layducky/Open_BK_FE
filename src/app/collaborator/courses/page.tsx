@@ -1,7 +1,7 @@
 'use client';
 import CollabCoursesPage from "@/components/pages/collab-course";
 import { useState, useEffect } from "react";
-import { PublicCourseEntity } from "@/domain/course.entity";
+import { PublicCourseEntity } from "@/type/course.entity";
 import { useCollabCourses } from "@/hooks/useCollabCourse";
 const CoursesCollaborator: React.FC = () => {
   const { data, isLoading, isError } = (useCollabCourses());

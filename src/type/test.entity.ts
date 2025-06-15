@@ -1,20 +1,20 @@
-export class UnitEntity {
+export class TestEntity {
+    testID?: string;
     unitID?: string;
-    courseID?: string;
-    numericalOrder?: number; 
-    unitName?: string; 
-    description?: string;
+    testName?: string;
     numQuests?: number;
+    duration?: number;
+    description?: string;
     createdAt: string;
     updatedAt: string;
 
-    constructor(data: Partial<UnitEntity>) {
+    constructor(data: Partial<TestEntity>) {
+        this.testID = data.testID || "";
         this.unitID = data.unitID || "";
-        this.courseID = data.courseID || "";
-        this.numericalOrder = data.numericalOrder || 0;
-        this.unitName = data.unitName || "";
-        this.description = data.description || "";
+        this.testName = data.testName || "";
         this.numQuests = data.numQuests || 0;
+        this.duration = data.duration || 0;
+        this.description = data.description || "";
         this.createdAt = data.createdAt
             ? new Date(data.createdAt).toLocaleString("de-DE")
             : "-";

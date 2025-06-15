@@ -2,7 +2,7 @@
 import { useUser } from "@/hooks/useUser";
 import { useState, useEffect } from "react";
 
-import { UserEntity } from "@/domain/user.entity";
+import { UserEntity } from "@/type/user.entity";
 const Profile: React.FC = () => {
   const [profile, setProfile] = useState<UserEntity>();
   const { data: user, isLoading, isError } = useUser();

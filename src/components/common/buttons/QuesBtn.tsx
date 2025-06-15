@@ -46,7 +46,7 @@ export const CreateQuesBtn: React.FC<CreateQuesBtnProps> = ({ unitID, onQuestion
       { ...data, unitID, questionID: "" },
       {
         onSuccess: () => {
-            refetchQuestions?.(); 
+          refetchQuestions?.(); 
           onQuestionCreated?.();
           onClose();
         },
@@ -146,19 +146,19 @@ interface SubmitTestBtnProps {
   anss: Record<string, string>;
 }
 
-export const SubmitTestBtn: React.FC<SubmitTestBtnProps> = ({ testID, anss }) => {
-  const { submitAnssMutation } = useTestMutations(testID);
+// export const SubmitTestBtn: React.FC<SubmitTestBtnProps> = ({ testID, anss }) => {
+//   const { submitAnssMutation } = useTestMutations(testID);
   
-  const handleSubmitAnss = () => {
-    console.log("Submitted Anss:", anss);
+//   const handleSubmitAnss = () => {
+//     console.log("Submitted Anss:", anss);
     
-    submitAnssMutation.mutate({
-      testID: testID,
-      anss: anss,
-    });
-  };
+//     submitAnssMutation.mutate({
+//       testID: testID,
+//       anss: anss,
+//     });
+//   };
 
-  return (
-    <GradientButton onClick={handleSubmitAnss} text="Submit" disabled={submitAnssMutation.isPending} />
-  );
-}
+//   return (
+//     <GradientButton onClick={handleSubmitAnss} text="Submit" disabled={submitAnssMutation.isPending} />
+//   );
+// }

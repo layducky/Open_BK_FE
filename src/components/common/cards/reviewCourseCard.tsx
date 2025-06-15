@@ -1,7 +1,7 @@
 'use client'
 import { BulletItem } from '@/components/ui/bulletItem';
 import { ButtonClick } from '@/components/common/buttons/button';
-import { PublicCourseEntity } from "@/domain/course.entity";
+import { PublicCourseEntity } from "@/type/course.entity";
 import { CourseInfoBar } from '@/components/ui/infoBar';
 
 const courseFeatures = [

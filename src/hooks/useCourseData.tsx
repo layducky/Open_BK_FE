@@ -1,8 +1,8 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { getQueryClient } from "@/app/providers";
-import { PublicCourseEntity } from "@/domain/course.entity";
-import { UnitEntity } from "@/domain/unit.entity";
+import { PublicCourseEntity } from "@/type/course.entity";
+import { UnitEntity } from "@/type/unit.entity";
 import { getCourseById } from "@/services/course";
 // import { getUnitById } from "@/services/course/unit";
 

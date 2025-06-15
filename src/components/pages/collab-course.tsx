@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Pagination from "@/components/common/pagination";
-import { PublicCourseEntity } from "@/domain/course.entity";
+import { PublicCourseEntity } from "@/type/course.entity";
 import { RenderPublicCourses } from "../ui/renderPublicCourses";
 import { CreateCourseBtn } from "../common/buttons/CourseBtn";
 const tabs = [

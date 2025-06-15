@@ -1,26 +1,43 @@
 'use client';
 import * as React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { BulletItem } from "@/components/ui/bulletItem";
-import { useUnits } from "@/hooks/useCourses";
-import ActionDropdown, { ViewTestButton } from "@/components/common/buttons/UnitBtn";
 import { useUser } from "@/hooks/useUser";
-import { CreateUnitBtn, DeleteUnitBtn } from "@/components/common/buttons/UnitBtn";
+import { useUnits } from "@/hooks/useCourses";
+import ActionDropdown from "@/components/common/buttons/UnitBtn";
+import { CreateUnitBtn } from "@/components/common/buttons/UnitBtn";
+
+
 
 export default function CourseContentPage({ params }: { params: Promise<{ courseID: string }> }) {
-  const [courseId, setCourseId] = React.useState<string | null>(null);
+  const [courseID, setCourseID] = React.useState<string | null>(null);
+  const [newUnitIDs, setNewUnitIDs] = React.useState<string[]>([]);
 
   React.useEffect(() => {
-    const fetchCourseId = async () => {
+    const fetchCourseID = async () => {
       const { courseID } = await params;
-      setCourseId(courseID);
+      setCourseID(courseID);
     };
 
-    fetchCourseId();
+    fetchCourseID();
   }, [params]);
 
-  const { data: courseContent } = useUnits(courseId as string);
+  const { data: unitContents, isLoading, error, refetch } = useUnits(courseID as string);
   const { data: userInfo } = useUser();
+  if (isLoading) return <div>Loading units...</div>;
+  if (error) return <div>Error loading units: {error.message}</div>;
+
+
+  const handleUnitCreated = () => {
+    if (Array.isArray(unitContents) && unitContents.length > 0) {
+      const newUnitID = unitContents[unitContents.length - 1].unitID;
+      setNewUnitIDs(prev => [...prev, newUnitID]);
+      setTimeout(() => {
+        setNewUnitIDs(prev => prev.filter(id => id !== newUnitID));
+      }, 1000);
+    }
+  };
 
   return (
     <div>
@@ -30,49 +47,59 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
         </div>
         {userInfo?.role === "COLLAB" &&
           <div className="w-1/6">
-            <CreateUnitBtn courseID={courseId as string}/>
+            <CreateUnitBtn courseID={courseID as string} onUnitCreated={handleUnitCreated} refetchUnits={refetch} />
           </div>
         }
       </div>
       <Accordion type="single" collapsible>
-        {courseContent && courseContent.map((unit, index) => (
-          <AccordionItem key={index} value={`unit-${unit.unitID}`}>
-            <AccordionTrigger className="text-xl">{unit.numericalOrder}. {unit.unitName}</AccordionTrigger>
-            <AccordionContent>
-                <div className="flex flex-col min-h-[10rem]">
-                  <div className="flex flex-col md:flex-row w-full border-b-2 border-dotted border-solid border-gray-300 pb-4">
-                    <div className="w-full md:hidden flex justify-center">
-                      { unit.unitID && userInfo?.role === "COLLAB"
-                      && <ActionDropdown unitID={unit.unitID} /> }
-                    </div>                    
-                    <div className="w-full md:w-1/2">
-                      {[
-                      { type: "download", text: `Created at: ${unit.createdAt}` },
-                      { type: "infinity", text: `Updated at: ${unit.updatedAt}` },
-                      ].map((item, itemIndex) => (
-                      <BulletItem key={itemIndex} {...item} />
-                      ))}
+        <AnimatePresence>
+          {unitContents && unitContents.map((unit) => (
+            <motion.div
+              key={unit.unitID}
+              initial={newUnitIDs.includes(unit.unitID) ? { opacity: 0, y: 20 } : false}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+            <AccordionItem value={`unit-${unit.unitID}`}>
+              <AccordionTrigger className="text-xl">{unit.numericalOrder}. {unit.unitName}</AccordionTrigger>
+              <AccordionContent>
+                  <div className="flex flex-col min-h-[10rem]">
+                    <div className="flex flex-col md:flex-row w-full border-b-2 border-dotted border-solid border-gray-300 pb-4">
+                      <div className="w-full md:hidden flex justify-center">
+                        { unit.unitID && userInfo?.role === "COLLAB"
+                        && <ActionDropdown unitID={unit.unitID} refetchUnits={refetch} /> }
+                      </div>                    
+                      <div className="w-full md:w-1/2">
+                        {[
+                        { type: "download", text: `Created at: ${unit.createdAt}` },
+                        { type: "infinity", text: `Updated at: ${unit.updatedAt}` },
+                        ].map((item, itemIndex) => (
+                        <BulletItem key={itemIndex} {...item} />
+                        ))}
+                      </div>
+                      <div className="hidden md:flex md:w-1/2 justify-end">
+                        { unit.unitID && userInfo?.role === "COLLAB"
+                        && <ActionDropdown unitID={unit.unitID} /> }
+                      </div>
                     </div>
-                    <div className="hidden md:flex md:w-1/2 justify-end">
-                      { unit.unitID && userInfo?.role === "COLLAB"
-                      && <ActionDropdown unitID={unit.unitID} /> }
-                    </div>
-                  </div>
 
-                  <div>
-                    <div className="w-full md:w-1/2 py-4">
-                      {[
-                      { type: "certificate", text: unit.description || "" },
-                      { type: "test", text: `Number of questions: ${unit.numQuests ?? 0}` },
-                      ].map((item, itemIndex) => (
-                      <BulletItem key={itemIndex} {...item} />
-                      ))}
+                    <div>
+                      <div className="w-full md:w-1/2 py-4">
+                        {[
+                        { type: "certificate", text: unit.description || "" },
+                        ].map((item, itemIndex) => (
+                        <BulletItem key={itemIndex} {...item} />
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
+              </AccordionContent>
+            </AccordionItem>
+          
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </Accordion>
     </div>
   );

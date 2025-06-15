@@ -1,6 +1,6 @@
 import Star from "@/public/svg/star.svg";
 import Link from "next/link";
-import { Course } from "@/domain/course.entity";
+import { Course } from "@/type/course.entity";
 import { PublicFootBar } from "./publicFootBar";
 import { EnrolledFootBar } from "./enrolledFootBar";
 import { CollabFootBar } from "./collabFootBar";

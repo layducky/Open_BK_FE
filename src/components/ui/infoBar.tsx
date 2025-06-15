@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 import { roleString } from "@/lib/roleUtils";
 import { useUser } from "@/hooks/useUser";
-import { PublicCourseEntity } from "@/domain/course.entity";
+import { PublicCourseEntity } from "@/type/course.entity";
 
 export const UserInforBar = () => {
   const { data: user } = useUser();

@@ -1,6 +1,6 @@
 // components/common/QuestionItem.tsx
 import { useState } from "react";
-import { QuestionEntity } from "@/domain/question.entity";
+import { QuestionEntity } from "@/type/question.entity";
 import { DeleteQuesBtn } from "@/components/common/buttons/QuesBtn";
 
 interface QuestionItemProps {

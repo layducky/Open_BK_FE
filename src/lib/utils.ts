@@ -1,8 +1,8 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { PublicCourseEntity } from "@/domain/course.entity";
-import { EnrolledCourseEntity } from "@/domain/course.entity";
-import { Course } from "@/domain/course.entity";
+import { PublicCourseEntity } from "@/type/course.entity";
+import { EnrolledCourseEntity } from "@/type/course.entity";
+import { Course } from "@/type/course.entity";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

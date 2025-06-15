@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Pagination from "@/components/common/pagination";
 import { CourseCard }from "@/components/common/cards/courseCard";
-import { EnrolledCourseEntity } from "@/domain/course.entity";
+import { EnrolledCourseEntity } from "@/type/course.entity";
 import { RenderEnrollCourses } from "../ui/renderEnrollCourses";
 
 const ITEMS_PER_PAGE = 21;
