@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import Modal from "@/components/modals/courseModal";x
+import Modal from "@/components/modals/courseModal";
 import { questionSchema } from "@/lib/validation/questionSchema";
 import InputField from "../InputField";
 import { useQuestionMutations } from "@/hooks/mutations/useQuestionMutations";
