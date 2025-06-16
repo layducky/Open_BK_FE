@@ -7,7 +7,7 @@ import Link from "next/link";
 import SigninButton from "../common/buttons/SigninButton";
 import SignupButton from "../common/buttons/SignupButton";
 import { roleString } from "@/lib/roleUtils";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/querys/useUser";
 import { UserEntity } from "@/type/user.entity";
 import { LogoutButton } from "../common/buttons/logoutButton";
 

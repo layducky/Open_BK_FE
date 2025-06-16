@@ -3,8 +3,8 @@ import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { BulletItem } from "@/components/ui/bulletItem";
-import { useUser } from "@/hooks/useUser";
-import { useUnits } from "@/hooks/useCourses";
+import { useUser } from "@/hooks/querys/useUser";
+import { useUnits } from "@/hooks/querys/useCourses";
 import ActionDropdown from "@/components/common/buttons/UnitBtn";
 import { CreateUnitBtn } from "@/components/common/buttons/UnitBtn";
 
@@ -29,16 +29,6 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
   if (error) return <div>Error loading units: {error.message}</div>;
 
 
-  const handleUnitCreated = () => {
-    if (Array.isArray(unitContents) && unitContents.length > 0) {
-      const newUnitID = unitContents[unitContents.length - 1].unitID;
-      setNewUnitIDs(prev => [...prev, newUnitID]);
-      setTimeout(() => {
-        setNewUnitIDs(prev => prev.filter(id => id !== newUnitID));
-      }, 1000);
-    }
-  };
-
   return (
     <div>
       <div className="flex">
@@ -47,7 +37,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
         </div>
         {userInfo?.role === "COLLAB" &&
           <div className="w-1/6">
-            <CreateUnitBtn courseID={courseID as string} onUnitCreated={handleUnitCreated} refetchUnits={refetch} />
+            <CreateUnitBtn courseID={courseID as string} refetchUnits={refetch} />
           </div>
         }
       </div>
@@ -68,7 +58,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                     <div className="flex flex-col md:flex-row w-full border-b-2 border-dotted border-solid border-gray-300 pb-4">
                       <div className="w-full md:hidden flex justify-center">
                         { unit.unitID && userInfo?.role === "COLLAB"
-                        && <ActionDropdown unitID={unit.unitID} refetchUnits={refetch} /> }
+                        && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch} /> }
                       </div>                    
                       <div className="w-full md:w-1/2">
                         {[
@@ -80,7 +70,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                       </div>
                       <div className="hidden md:flex md:w-1/2 justify-end">
                         { unit.unitID && userInfo?.role === "COLLAB"
-                        && <ActionDropdown unitID={unit.unitID} /> }
+                        && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch}/> }
                       </div>
                     </div>
 

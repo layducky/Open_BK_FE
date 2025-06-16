@@ -1,6 +1,6 @@
 'use client';
 import DashboardPage from "@/components/pages/dashboard";
-import { useEnrolledCourses } from "@/hooks/useEnrollCourse";
+import { useEnrolledCourses } from "@/hooks/querys/useEnrollCourse";
 import { useState, useEffect } from "react";
 import { EnrolledCourseEntity } from "@/type/course.entity";
 const DashboardLearner: React.FC = () => {

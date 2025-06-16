@@ -3,7 +3,7 @@
 import * as React from 'react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useCourseData } from '@/hooks/useCourseData';
+import { useCourseData } from '@/hooks/querys/useCourseData';
 import { CourseInfoBar } from '@/components/ui/infoBar';
 import { ReviewCourseCard } from '@/components/common/cards/reviewCourseCard';
 

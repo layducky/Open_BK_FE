@@ -1,7 +1,7 @@
 'use client';
 import { useQuery } from "@tanstack/react-query";
 import { getAllEnrolledCourses } from "@/services/course/courseEnroll";
-import { getFromSessionStorage } from "./getStorage";
+import { getFromSessionStorage } from "../getStorage";
 export const useEnrolledCourses = () => {
   const learnerID = getFromSessionStorage("userID"); 
 

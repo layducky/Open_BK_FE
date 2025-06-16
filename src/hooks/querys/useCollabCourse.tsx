@@ -1,7 +1,7 @@
 'use client';
 import { useQuery } from "@tanstack/react-query";
 import { getAllOwnedCourses } from "@/services/course/courseCollab";
-import { getFromSessionStorage } from "./getStorage";
+import { getFromSessionStorage } from "../getStorage";
 
 export const useCollabCourses = () => {
   const authorID = getFromSessionStorage("userID"); 

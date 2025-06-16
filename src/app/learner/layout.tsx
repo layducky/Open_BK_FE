@@ -1,8 +1,8 @@
 "use client";
 import { UserInforBar } from "@/components/ui/infoBar";
 import LeftBar from "@/components/layout/leftBar";
-import { prefetchUser } from "@/hooks/useUser";
-import { prefetchCourses } from "@/hooks/useCourses";
+import { prefetchUser } from "@/hooks/querys/useUser";
+import { prefetchCourses } from "@/hooks/querys/useCourses";
 
 export default function DashboardLayout({
   children,

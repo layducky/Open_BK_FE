@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useQuestions } from "@/hooks/useCourses";
-import { useUser } from "@/hooks/useUser";
+import { useQuestions } from "@/hooks/querys/useCourses";
+import { useUser } from "@/hooks/querys/useUser";
 import { RightUnitBar } from "@/components/common/RightUnitBar";
 import { CreateQuesBtn } from "@/components/common/buttons/QuesBtn";
 import { QuestionEntity } from "@/type/question.entity";

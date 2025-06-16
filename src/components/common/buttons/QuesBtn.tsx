@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import Modal from "@/components/modals/courseModal";
+import Modal from "@/components/modals/courseModal";x
 import { questionSchema } from "@/lib/validation/questionSchema";
 import InputField from "../InputField";
-import { useQuestionMutations } from "@/hooks/useQuestionMutations";
+import { useQuestionMutations } from "@/hooks/mutations/useQuestionMutations";
 import GradientButton from "@/components/common/buttons/GradientButton";
-import { useTestMutations } from "@/hooks/useTestMutation";
+import { useTestMutations } from "@/hooks/mutations/useTestMutation";
 
 interface CreateQuesBtnProps {
   unitID: string;
@@ -126,7 +126,7 @@ export const DeleteQuesBtn: React.FC<DeleteQuesBtnProps> = ({ questionID, unitID
     if (confirm("Are you sure you want to delete this question?")) {
       deleteMutation.mutate(questionID, {
         onSuccess: () => {
-            refetchQuestions?.();
+          refetchQuestions?.();
         },
       });
     }

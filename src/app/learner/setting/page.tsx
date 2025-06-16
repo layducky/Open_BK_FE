@@ -1,6 +1,6 @@
 'use client';
 import SettingsPage from "@/components/pages/setting";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/querys/useUser";
 import { useState, useEffect } from "react";
 import { UserEntity } from "@/type/user.entity";
 const SettingsLearner: React.FC = () => {

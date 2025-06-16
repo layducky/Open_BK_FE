@@ -1,6 +1,6 @@
 'use client';
 import EnrolledCoursesPage from "@/components/pages/enrolled-courses";
-import { useEnrolledCourses } from "@/hooks/useEnrollCourse";
+import { useEnrolledCourses } from "@/hooks/querys/useEnrollCourse";
 import { useState, useEffect } from "react";
 import { EnrolledCourseEntity } from "@/type/course.entity";
 const EnrolledCourseLearner: React.FC = () => {

@@ -2,7 +2,7 @@
 import * as React from "react";
 import { BulletItem } from "@/components/ui/bulletItem";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/querys/useUser";
 
 export default function Page({
   params

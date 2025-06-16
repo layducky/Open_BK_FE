@@ -2,7 +2,7 @@
 import * as React from "react";
 import { LeftBarButton } from "../common/buttons/leftBarButton";
 import { roleString } from "@/lib/roleUtils";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/querys/useUser";
 
 const LeftBar: React.FC = () => {
   const { data: user } = useUser();

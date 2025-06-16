@@ -2,7 +2,7 @@
 import CollabCoursesPage from "@/components/pages/collab-course";
 import { useState, useEffect } from "react";
 import { PublicCourseEntity } from "@/type/course.entity";
-import { useCollabCourses } from "@/hooks/useCollabCourse";
+import { useCollabCourses } from "@/hooks/querys/useCollabCourse";
 const CoursesCollaborator: React.FC = () => {
   const { data, isLoading, isError } = (useCollabCourses());
   const [state, setState] = useState<{

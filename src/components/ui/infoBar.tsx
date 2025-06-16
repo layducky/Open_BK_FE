@@ -1,7 +1,7 @@
 "use client";
 import { Suspense } from "react";
 import { roleString } from "@/lib/roleUtils";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/hooks/querys/useUser";
 import { PublicCourseEntity } from "@/type/course.entity";
 
 export const UserInforBar = () => {
