@@ -9,8 +9,8 @@ import { useHandleUnit } from "@/hooks/handleMutations/handleUnit";
 
 type CreateUnitModalProps = {
   courseID: string;
-  onUnitCreated?: () => void;
   refetchUnits?: () => void;
+  setNewUnitID: (id: string) => void;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 };
@@ -33,9 +33,9 @@ const formFields = [
 ];
 
 const CreateUnitModal: React.FC<CreateUnitModalProps> = ({
-  courseID, refetchUnits, isOpen, setIsOpen
+  courseID, refetchUnits, setNewUnitID, isOpen, setIsOpen
 }) => {
-  const { handleCreateUnit } = useHandleUnit({courseID, refetchUnits, setIsOpen});
+  const { handleCreateUnit } = useHandleUnit({courseID, refetchUnits, setNewUnitID, setIsOpen});
 
   const {
     register,

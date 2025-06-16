@@ -1,19 +1,22 @@
 import { useUnitMutations } from "@/hooks/mutations/useUnitMutation";
+import { UnitEntity } from "@/type/unit.entity";
 
 interface HandleUnitProps {
     courseID: string;
     refetchUnits?: () => void;
+    setNewUnitID?: (id: string) => void;
     setIsOpen: (open: boolean) => void;
 }
 
-export const useHandleUnit = ({ courseID, refetchUnits, setIsOpen }: HandleUnitProps) => {
+export const useHandleUnit = ({ courseID, refetchUnits, setNewUnitID, setIsOpen }: HandleUnitProps) => {
     const { createMutation, deleteMutation } = useUnitMutations(courseID);
 
     const handleCreateUnit = (data: any) => {
-        createMutation.mutate(
-            { ...data, courseID },
-            {
-            onSuccess: () => {
+        createMutation.mutate(data, {
+            onSuccess: (newUnit) => {
+                if (setNewUnitID && newUnit?.unitID) {
+                    setNewUnitID(newUnit.unitID);
+                }
                 refetchUnits?.();
             },
             onError: (error) => {

@@ -10,12 +10,12 @@ import CreateUnitModal from "../../modals/createUnit";
 
 interface CreateUnitBtnProps {
   courseID: string;
-  onUnitCreated?: () => void;
   refetchUnits?: () => void;
+  setNewUnitID: (newUnitID: string) => void;
 }
 
 
-export function CreateUnitBtn({ courseID, onUnitCreated, refetchUnits }: CreateUnitBtnProps) {
+export function CreateUnitBtn({ courseID, refetchUnits, setNewUnitID }: CreateUnitBtnProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -30,8 +30,8 @@ export function CreateUnitBtn({ courseID, onUnitCreated, refetchUnits }: CreateU
       </button>
       <CreateUnitModal
         courseID={courseID}
-        onUnitCreated={onUnitCreated}
         refetchUnits={refetchUnits}
+        setNewUnitID={setNewUnitID}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       />

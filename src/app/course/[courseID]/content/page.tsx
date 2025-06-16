@@ -12,7 +12,7 @@ import { CreateUnitBtn } from "@/components/common/buttons/UnitBtn";
 
 export default function CourseContentPage({ params }: { params: Promise<{ courseID: string }> }) {
   const [courseID, setCourseID] = React.useState<string | null>(null);
-  const [newUnitIDs, setNewUnitIDs] = React.useState<string[]>([]);
+  const [newUnitID, setNewUnitID] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const fetchCourseID = async () => {
@@ -25,9 +25,22 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
 
   const { data: unitContents, isLoading, error, refetch } = useUnits(courseID as string);
   const { data: userInfo } = useUser();
+
+  React.useEffect(() => {
+    const fetchNewUnitID = async () => {
+      if (Array.isArray(unitContents) && unitContents.length > 0) {
+        setNewUnitID(newUnitID);
+        setTimeout(() => {
+          setNewUnitID(null);
+        }, 1000);
+      }
+    };
+
+    fetchNewUnitID();
+  }, [newUnitID, unitContents]);
+
   if (isLoading) return <div>Loading units...</div>;
   if (error) return <div>Error loading units: {error.message}</div>;
-
 
   return (
     <div>
@@ -37,7 +50,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
         </div>
         {userInfo?.role === "COLLAB" &&
           <div className="w-1/6">
-            <CreateUnitBtn courseID={courseID as string} refetchUnits={refetch} />
+            <CreateUnitBtn courseID={courseID as string} setNewUnitID={setNewUnitID} refetchUnits={refetch}/>
           </div>
         }
       </div>
@@ -46,7 +59,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
           {unitContents && unitContents.map((unit) => (
             <motion.div
               key={unit.unitID}
-              initial={newUnitIDs.includes(unit.unitID) ? { opacity: 0, y: 20 } : false}
+              initial={unit.unitID === newUnitID ? { opacity: 0, y: 20 } : false}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
@@ -54,39 +67,39 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
             <AccordionItem value={`unit-${unit.unitID}`}>
               <AccordionTrigger className="text-xl">{unit.numericalOrder}. {unit.unitName}</AccordionTrigger>
               <AccordionContent>
-                  <div className="flex flex-col min-h-[10rem]">
-                    <div className="flex flex-col md:flex-row w-full border-b-2 border-dotted border-solid border-gray-300 pb-4">
-                      <div className="w-full md:hidden flex justify-center">
-                        { unit.unitID && userInfo?.role === "COLLAB"
-                        && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch} /> }
-                      </div>                    
-                      <div className="w-full md:w-1/2">
-                        {[
-                        { type: "download", text: `Created at: ${unit.createdAt}` },
-                        { type: "infinity", text: `Updated at: ${unit.updatedAt}` },
-                        ].map((item, itemIndex) => (
-                        <BulletItem key={itemIndex} {...item} />
-                        ))}
-                      </div>
-                      <div className="hidden md:flex md:w-1/2 justify-end">
-                        { unit.unitID && userInfo?.role === "COLLAB"
-                        && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch}/> }
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="w-full md:w-1/2 py-4">
-                        {[
-                        { type: "certificate", text: unit.description || "" },
-                        ].map((item, itemIndex) => (
-                        <BulletItem key={itemIndex} {...item} />
-                        ))}
-                      </div>
-                    </div>
+                <div className="flex flex-col min-h-[10rem]">
+                <div className="flex flex-col md:flex-row w-full border-b-2 border-dotted border-solid border-gray-300 pb-4">
+                  <div className="w-full md:hidden flex justify-center">
+                  { unit.unitID && userInfo?.role === "COLLAB"
+                  && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch} /> }
+                  </div>                    
+                  <div className="w-full md:w-1/2">
+                  {[
+                  { type: "download", text: `Created at: ${unit.createdAt}` },
+                  { type: "infinity", text: `Updated at: ${unit.updatedAt}` },
+                  ].map((item, itemIndex) => (
+                  <BulletItem key={itemIndex} {...item} />
+                  ))}
                   </div>
+                  <div className="hidden md:flex md:w-1/2 justify-end">
+                  { unit.unitID && userInfo?.role === "COLLAB"
+                  && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch}/> }
+                  </div>
+                </div>
+
+                <div>
+                  <div className="w-full md:w-1/2 py-4">
+                  {[
+                  { type: "certificate", text: unit.description || "" },
+                  ].map((item, itemIndex) => (
+                  <BulletItem key={itemIndex} {...item} />
+                  ))}
+                  </div>
+                </div>
+                </div>
               </AccordionContent>
             </AccordionItem>
-          
+            
             </motion.div>
           ))}
         </AnimatePresence>
