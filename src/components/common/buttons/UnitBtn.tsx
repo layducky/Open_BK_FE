@@ -6,6 +6,8 @@ import GradientButton from "./GradientButton";
 import { useHandleUnit } from "@/hooks/handleMutations/handleUnit";
 import { useUnitMutations } from "@/hooks/mutations/useUnitMutation";
 import CreateUnitModal from "../../modals/createUnit";
+import { useHandleTest } from "@/hooks/handleMutations/handleTest";
+import CreateTestModal from "@/components/modals/createTest";
 
 
 interface CreateUnitBtnProps {
@@ -60,12 +62,13 @@ interface ActionDropdownProps {
 
 export default function ActionDropdown({courseID, unitID, refetchUnits} : ActionDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const { handleDeleteUnit } = useHandleUnit({courseID, refetchUnits, setIsOpen});
+  const { handleDeleteUnit } = useHandleUnit({courseID, refetchUnits});
 
   const options = [
     { label: "Edit description", action: () => {}, color: "hover:bg-gray-100", textColor: "hover:text-black-800" },
-    { label: "Upload TEST", action: () => {}, color: "hover:bg-green-100", textColor: "hover:text-black-800" },
+    { label: "Upload TEST", action: () => {setIsOpen(true);}, color: "hover:bg-green-100", textColor: "hover:text-black-800" },
     { label: "Upload LINK", action: () => {}, color: "hover:bg-blue-100", textColor: "hover:text-black-800" },
     { label: "Upload FILE", action: () => {}, color: "hover:bg-orange-100", textColor: "hover:text-black-800" },
     { label: "Upload VIDEO", action: () => {}, color: "hover:bg-yellow-100", textColor: "hover:text-black-800" },
@@ -75,7 +78,7 @@ export default function ActionDropdown({courseID, unitID, refetchUnits} : Action
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        setIsDropdownOpen(false);
       }
     };
 
@@ -88,20 +91,20 @@ export default function ActionDropdown({courseID, unitID, refetchUnits} : Action
     <>
       <div className="relative inline-block text-left w-full md:w-[10rem]" ref={dropdownRef}>
         <button
-          onClick={() => setIsOpen((prev) => !prev)}
+          onClick={() => setIsDropdownOpen((prev) => !prev)}
           className="p-2 text-black bg-transparent border-none hover:bg-gray-200 hover:font-semibold transition duration-150 rounded"
           >
         ⋮ 
         </button>
 
-        {isOpen && (
+        {isDropdownOpen && (
           <div className="absolute max-h-[8rem] overflow-y-auto w-full bg-white border border-gray-200 rounded shadow-lg z-10">
             {options.map(({ label, action, color, textColor }) => (
             <button
               key={label}
               onClick={() => {
               action(unitID);
-              setIsOpen(false);
+              setIsDropdownOpen(false);
               }}
               className={`w-full text-left p-2 text-sm text-black hover:font-semibold ${color} ${textColor}`}
             >
@@ -111,6 +114,13 @@ export default function ActionDropdown({courseID, unitID, refetchUnits} : Action
           </div>
         )}      
       </div>
-      </>
+      <CreateTestModal 
+        unitID={unitID}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        refetchTests={refetchUnits}
+        setNewTestID={() => {}}
+      />
+    </>
   );
 }

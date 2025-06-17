@@ -1,10 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Modal from "@/components/modals/courseModal";
+import Modal from "@/components/modals/formModal";
 import InputField from "../common/InputField";
-import { useUnitMutations } from "@/hooks/mutations/useUnitMutation";
 import { useHandleUnit } from "@/hooks/handleMutations/handleUnit";
 
 type CreateUnitModalProps = {

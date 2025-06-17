@@ -1,14 +1,12 @@
 import { useUnitMutations } from "@/hooks/mutations/useUnitMutation";
-import { UnitEntity } from "@/type/unit.entity";
 
 interface HandleUnitProps {
     courseID: string;
     refetchUnits?: () => void;
     setNewUnitID?: (id: string) => void;
-    setIsOpen: (open: boolean) => void;
 }
 
-export const useHandleUnit = ({ courseID, refetchUnits, setNewUnitID, setIsOpen }: HandleUnitProps) => {
+export const useHandleUnit = ({ courseID, refetchUnits, setNewUnitID }: HandleUnitProps) => {
     const { createMutation, deleteMutation } = useUnitMutations(courseID);
 
     const handleCreateUnit = (data: any) => {
@@ -32,7 +30,6 @@ export const useHandleUnit = ({ courseID, refetchUnits, setNewUnitID, setIsOpen 
             deleteMutation.mutate(unitID, {
                 onSuccess: () => {
                     refetchUnits?.();
-                    setIsOpen(false);
                 },
                 onError: (error) => {
                     console.error("Error deleting unit:", error);

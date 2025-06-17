@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import Modal from "@/components/modals/courseModal";
+import Modal from "@/components/modals/formModal";
 import { useMutation } from "@tanstack/react-query";
 import { courseSchema } from "@/lib/validation/courseSchema";
 import InputField from "../InputField";

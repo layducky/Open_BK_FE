@@ -23,14 +23,6 @@ export const useUnitMutations = (courseID: string) => {
             return { previousUnits, tempID };
         },
         onSuccess: (newUnitFromServer, _, context) => {
-            // queryClient.setQueryData(["units", courseID], (old: UnitEntity[] | undefined) =>
-            //     old
-            //     ? old.map((q) =>
-            //         q.unitID === `temp-${Date.now()}` ? newUnitFromServer : q
-            //         )
-            //     : [newUnitFromServer]
-            // );
-            // toast.success("Unit created successfully!");
             queryClient.setQueryData(["units", courseID], (old: UnitEntity[] | undefined) =>
                 old
                 ? old.map((unit) =>

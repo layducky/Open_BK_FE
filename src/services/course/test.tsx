@@ -1,11 +1,14 @@
-import { TestEntity } from "@/type/test.entity";
 import { apiClientWithAuth } from "../apiClient";
 
-export const CreateTest = async (unitID: string, data: TestEntity) => {
+export const createTest = async (testData: any) => {
     try {
+        const { unitID, testName, description, duration } = testData;
         const res = await apiClientWithAuth.post(`/course/collab/test/${unitID}`, {
-            data
+            testName, description, duration
         });
+        if (res.status !== 201) {
+            throw new Error(res.data?.message || "Failed to create test");
+        }
 
         return res.data;
     } catch (error) {
@@ -13,15 +16,19 @@ export const CreateTest = async (unitID: string, data: TestEntity) => {
     }
 };
 
-export const DeleteTest = async (testID: string) => {
+export const deleteTest = async (testID: string) => {
     try {
         const res = await apiClientWithAuth.delete(`/course/collab/test/${testID}`);
-        return res.data;
+        if (res.status === 200) {
+            return res.data;
+        } else {
+            throw new Error(res.data?.message || "Failed to delete test");
+        }
     } catch (error) {
         throw new Error("Failed to delete test");
     }
 };
-export const UpdateTest = async (testID: string, data: TestEntity) => {
+export const updateTest = async (testID: string, data: any) => {
     try {
         const res = await apiClientWithAuth.put(`/course/collab/test/${testID}`, {
             data
