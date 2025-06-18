@@ -3,14 +3,14 @@ import { BulletItem } from '@/components/ui/bulletItem';
 import { ButtonClick } from '@/components/common/buttons/button';
 
 const courseFeatures = [
-    { bulletType:"normal", iconType: "video", text: '95 hours on-demand video' },
-    { bulletType:"normal", iconType: "article", text: '35 articles' },
-    { bulletType:"normal", iconType: "test", text: '2 practice tests' },
-    { bulletType:"normal", iconType: "test", text: 'Assignments' },
-    { bulletType:"normal", iconType: "download", text: '100 downloadble resources' },
-    { bulletType:"normal", iconType: "infinity", text: 'Full lifetime access' },
-    { bulletType:"normal", iconType: "certificate", text: 'Certificate of completion' }
-    ]
+    { iconType: "video", text: '95 hours on-demand video' },
+    { iconType: "article", text: '35 articles' },
+    { iconType: "test", text: '2 practice tests' },
+    { iconType: "test", text: 'Assignments' },
+    { iconType: "download", text: '100 downloadble resources' },
+    { iconType: "infinity", text: 'Full lifetime access' },
+    { iconType: "certificate", text: 'Certificate of completion' }
+]
 
 export const ReviewCourseCard = ({courseID}: {courseID: string | null}) => {
     return(
@@ -21,7 +21,7 @@ export const ReviewCourseCard = ({courseID}: {courseID: string | null}) => {
                     <div className="flex flex-col items-start mt-2.5 w-full">
                         {courseFeatures.map((item, index) => (
                             <BulletItem key={index} {...item}/>
-                        ))} 
+                        ))}
                     </div>
                 </div>
                 <div className="flex flex-col pt-2.5 w-full text-sm font-semibold">
@@ -29,7 +29,8 @@ export const ReviewCourseCard = ({courseID}: {courseID: string | null}) => {
                         <div className="flex pb-6 items-start self-stretch my-auto w-[223px]">
                             <ButtonClick 
                                 courseID={courseID} 
-                                className="w-[200px]">Enroll now</ButtonClick>
+                                className="w-[200px]">Enroll now
+                            </ButtonClick>
                         </div>
                     </div>
                 </div>

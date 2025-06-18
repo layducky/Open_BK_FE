@@ -5,9 +5,8 @@ import Certificate from "@/public/svg/certificate.svg";
 import Infinity from "@/public/svg/infinity.svg";
 import Video from "@/public/svg/video.svg";
 import Test from "@/public/svg/test.svg";
-
 type BulletItemProps = {
-  bulletType: string;
+  bulletType?: string;
   iconType: string;
   text: string | number;
   ID?: string; // Optional ID for link items
@@ -37,20 +36,21 @@ export function BulletItem({ bulletType, iconType, text, ID }: BulletItemProps) 
     default:
       Icon = Check;
   }
-  const border = "border-t-2 border-dotted border-solid border-gray-300";
+  const border = "border-t-2 border-dotted border-solid border-gray-300 py-4";
+  const Type = bulletType || "normal";
 
   return (            
-    <div className={`w-full md:w-[98%] py-4 ${border}`}>
+    <div className={`w-full md:w-[98%] ${Type === "normal" ? "" : border}`}>
       <div className="flex gap-2.5 items-center mt-1.5">
         <div>
           <Icon />
         </div>
-        {bulletType === "link" && iconType === "test" ? (
+        {Type === "link" && iconType === "test" ? (
           <a
-            href={typeof text === "string" ? `/test/${ID}/overview` : "#"}
-            className="text-blue-600 underline"
+          href={typeof text === "string" ? `/test/${ID}/overview` : "#"}
+          className="text-blue-600 underline"
           >
-            {text}
+          {text}
           </a>
         ) : (
           <div>{text}</div>

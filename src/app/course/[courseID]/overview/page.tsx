@@ -3,10 +3,10 @@ import { BulletItem } from "@/components/ui/bulletItem";
 export default function Page() {
   const sampleData = {
     objectives: [
-      { text: "Objective 1", type: "objective" },
-      { text: "Objective 2", type: "objective" },
-      { text: "Objective 3", type: "objective" },
-      { text: "Objective 4", type: "objective" },
+      { iconType: "objective", text: "Objective 1" },
+      { iconType: "objective", text: "Objective 2" },
+      { iconType: "objective", text: "Objective 3" },
+      { iconType: "objective", text: "Objective 4" },
     ],
     description: "Loren ipsum",
   };

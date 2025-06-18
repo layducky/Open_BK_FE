@@ -28,19 +28,19 @@ export default function Page({
         avatar: "",
         stats: [
           {
-            type: "video",
+            iconType: "video",
             text: "500 Students"
           },
           {
-            type: "video",
+            iconType: "video",
             text: "3 Courses"
           },
           {
-            type: "video",
+            iconType: "video",
             text: "200 Reviews"
           },
           {
-            type: "video",
+            iconType: "video",
             text: "4.6 Overall Ratings"
           }
         ]
