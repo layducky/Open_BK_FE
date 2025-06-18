@@ -8,15 +8,14 @@ import { CreateQuesBtn } from "@/components/common/buttons/QuesBtn";
 import { QuestionEntity } from "@/type/question.entity";
 import QuestionItem from "@/components/common/QuestionItem";
 import { motion, AnimatePresence } from "framer-motion";
-import GradientButton from "@/components/common/buttons/GradientButton";
 
-interface UnitTestProps {
-  unitID: string;
+interface TestPageProps {
+  testID: string;
   mode: "attempt" | "review";
 }
 
-const UnitTest = ({ unitID, mode }: UnitTestProps) => {
-  const { data: questionContents, isLoading, error, refetch } = useQuestions(unitID);
+const TestPage = ({ testID, mode }: TestPageProps) => {
+  const { data: questionContents, isLoading, error, refetch } = useQuestions(testID);
   const { data: userInfo } = useUser();
   const [newQuestionIDs, setNewQuestionIDs] = useState<string[]>([]);
   const [anss, setAnss] = useState<Record<string, string>>({});
@@ -71,18 +70,19 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
           </div>
           {userInfo?.role === "COLLAB" && mode === "review" && (
             <div className="flex justify-end">
-              <CreateQuesBtn unitID={unitID} onQuestionCreated={handleQuestionCreated} refetchQuestions={refetch} />
+              <CreateQuesBtn testID={testID} onQuestionCreated={handleQuestionCreated} refetchQuestions={refetch} />
             </div>
           )}
           <div>
             {Array.isArray(questionContents) && questionContents.length === 0 ? (
-              <div className="w-full">
-                <img
-                  className="w-full"
-                  src="https://nihotour.gov.ng/wp-content/plugins/tutor/assets/images/emptystate.svg"
-                  alt="no course data"
-                />
-              </div>
+                <div className="w-full flex flex-col justify-center items-center">
+                  <p className="text-xl text-gray-400 font-bold">Oh no, it's empty here!</p>
+                  <img
+                  className="max-w-[12vh] max-h-[12vh] md:max-w-[24vh] md:max-h-[24vh]"
+                  src="https://res.cloudinary.com/dv2izp0a3/image/upload/v1750227722/empty-box_xv3l4d.png"
+                  alt="no test data"
+                  />
+                </div>
             ) : (
               <div className="question-content flex flex-col gap-5">
                 {questionContentElements}
@@ -90,7 +90,7 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
             )}
           </div>
           <div className="flex justify-center items-center mt-10">
-            {/* <SubmitTestBtn testID={unitID} anss={anss}/> */}
+            {/* <SubmitTestBtn testID={testID} anss={anss}/> */}
           </div>
         </div>
         <div className="w-3/12 hidden md:block">
@@ -101,4 +101,4 @@ const UnitTest = ({ unitID, mode }: UnitTestProps) => {
   );
 };
 
-export default UnitTest;
+export default TestPage;

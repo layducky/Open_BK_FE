@@ -39,7 +39,7 @@ export function BulletItem({ bulletType, iconType, text, ID }: BulletItemProps) 
   const border = "border-t-2 border-dotted border-solid border-gray-300 py-4";
   const Type = bulletType || "normal";
 
-  return (            
+  return (
     <div className={`w-full md:w-[98%] ${Type === "normal" ? "" : border}`}>
       <div className="flex gap-2.5 items-center mt-1.5">
         <div>

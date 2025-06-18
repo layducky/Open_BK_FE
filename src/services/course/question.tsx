@@ -6,7 +6,7 @@ const url = `/course/collab/question/`;
 const createQuestion = async (questionData: any) => {
   try {
     const {
-      unitID,
+      testID,
       numericalOrder,
       content,
       explanation,
@@ -17,7 +17,7 @@ const createQuestion = async (questionData: any) => {
       ansD,
     } = questionData;
 
-    const res = await apiClientWithAuth.post(`${url}${unitID}`, {
+    const res = await apiClientWithAuth.post(`${url}${testID}`, {
       numericalOrder,
       content,
       explanation,
@@ -35,13 +35,13 @@ const createQuestion = async (questionData: any) => {
   }
 };
 
-const getAllQuestions = async (unitID: string) => {
-  if (!unitID) {
+const getAllQuestions = async (testID: string) => {
+  if (!testID) {
     return [];
   }
 
   try {
-    const res = await apiClientWithAuth.get(`${url}all/${unitID}`);
+    const res = await apiClientWithAuth.get(`${url}all/${testID}`);
     return res.data;
   } catch (error: any) {
     console.error("Error fetching all questions:", error.message || error);

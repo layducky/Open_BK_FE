@@ -3,7 +3,7 @@
 import { useRouter, usePathname } from 'next/navigation';
 import * as React from 'react';
 
-export const ToggleBtn = ({ unitID }: { unitID: string }) => {
+export const ToggleBtn = ({ testID }: { testID: string }) => {
   const router = useRouter();
   const pathname = usePathname();
   
@@ -16,9 +16,9 @@ export const ToggleBtn = ({ unitID }: { unitID: string }) => {
   }, [pathname]);
 
   const handleClick = () => {
-    if (!unitID) return;
+    if (!testID) return;
 
-    const targetRoute = isChecked ? `/unit/${unitID}/attempt` : `/unit/${unitID}/review`;
+    const targetRoute = isChecked ? `/test/${testID}/attempt` : `/test/${testID}/review`;
     router.push(targetRoute);
   };
 

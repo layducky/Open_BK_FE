@@ -23,7 +23,7 @@ const QuestionItem = ({ question, mode, isCollab, refetchQuestions, onAnsChange 
     <div className="flex flex-col p-2 md:p-10 border border-solid border-black border-opacity-30 rounded-lg shadow-md">
       {isCollab && mode === "review" && (
         <div className="flex justify-end">
-          <DeleteQuesBtn questionID={question.questionID} unitID={question.unitID} refetchQuestions={refetchQuestions}/>
+          <DeleteQuesBtn questionID={question.questionID} testID={question.testID} refetchQuestions={refetchQuestions}/>
         </div>
       )}
       <div className="flex flex-col gap-2">

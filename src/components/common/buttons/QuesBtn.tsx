@@ -11,14 +11,14 @@ import GradientButton from "@/components/common/buttons/GradientButton";
 import { useTestMutations } from "@/hooks/mutations/useTestMutation";
 
 interface CreateQuesBtnProps {
-  unitID: string;
+  testID: string;
   onQuestionCreated?: () => void;
   refetchQuestions?: () => void;
 }
 
-export const CreateQuesBtn: React.FC<CreateQuesBtnProps> = ({ unitID, onQuestionCreated, refetchQuestions }) => {
+export const CreateQuesBtn: React.FC<CreateQuesBtnProps> = ({ testID, onQuestionCreated, refetchQuestions }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { createMutation } = useQuestionMutations(unitID);
+  const { createMutation } = useQuestionMutations(testID);
 
   const {
     register,
@@ -43,7 +43,7 @@ export const CreateQuesBtn: React.FC<CreateQuesBtnProps> = ({ unitID, onQuestion
 
   const onSubmit = (data: any) => {
     createMutation.mutate(
-      { ...data, unitID, questionID: "" },
+      { ...data, testID, questionID: "" },
       {
         onSuccess: () => {
           refetchQuestions?.(); 
@@ -55,7 +55,7 @@ export const CreateQuesBtn: React.FC<CreateQuesBtnProps> = ({ unitID, onQuestion
   };
 
   const formFields = [
-    { label: "Unit ID", type: "text", id: "unitID", placeholder: "", disabled: true },
+    { label: "Test ID", type: "text", id: "testID", placeholder: "", disabled: true },
     { label: "Numerical Order", type: "number", id: "numericalOrder", placeholder: "Numerical Order", disabled: false },
     { label: "Content", type: "text", id: "content", placeholder: "Content", disabled: false },
     { label: "Explanation", type: "text", id: "explanation", placeholder: "Explanation", disabled: false },
@@ -90,7 +90,7 @@ export const CreateQuesBtn: React.FC<CreateQuesBtnProps> = ({ unitID, onQuestion
                 id={id}
                 type={type}
                 register={register}
-                value={id === "unitID" ? unitID : undefined}
+                value={id === "testID" ? testID : undefined}
                 placeholder={placeholder}
                 error={errors[id as keyof typeof errors]}
                 disabled={disabled}
@@ -115,12 +115,12 @@ export const CreateQuesBtn: React.FC<CreateQuesBtnProps> = ({ unitID, onQuestion
 
 interface DeleteQuesBtnProps {
   questionID: string;
-  unitID: string;
+  testID: string;
   refetchQuestions?: () => void;
 }
 
-export const DeleteQuesBtn: React.FC<DeleteQuesBtnProps> = ({ questionID, unitID, refetchQuestions }) => {
-  const { deleteMutation } = useQuestionMutations(unitID);
+export const DeleteQuesBtn: React.FC<DeleteQuesBtnProps> = ({ questionID, testID, refetchQuestions }) => {
+  const { deleteMutation } = useQuestionMutations(testID);
 
   const handleClick = () => {
     if (confirm("Are you sure you want to delete this question?")) {

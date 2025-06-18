@@ -1,6 +1,6 @@
 export class QuestionEntity {
     questionID: string;
-    unitID: string;
+    testID: string;
     numericalOrder: number;
     content?: string;
     explanation?: string;
@@ -14,7 +14,7 @@ export class QuestionEntity {
 
     constructor(data: Partial<QuestionEntity>) {
         this.questionID = data.questionID || "";
-        this.unitID = data.unitID || "";
+        this.testID = data.testID || "";
         this.numericalOrder = data.numericalOrder || 0;
         this.content = data.content || "";
         this.explanation = data.explanation || "";

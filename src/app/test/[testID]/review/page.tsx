@@ -1,18 +1,18 @@
 "use client";
 import * as React from "react";
-import { useUnit } from '@/context/UnitContext';
-import UnitTest from "@/components/pages/unitTest";
+import { useTest } from '@/context/TestContext';
+import TestPage from "@/components/pages/testAttempt";
 
-export default function UnitReviewPage() {
-  const { unitID } = useUnit();
+export default function TestReviewPage() {
+  const { testID } = useTest();
 
-  if (!unitID) {
-    return <div>Loading unit ID...</div>;
+  if (!testID) {
+    return <div>Loading test ID...</div>;
   }
 
   return (
     <main>
-      <UnitTest unitID={unitID as string} mode="review"/>
+      <TestPage testID={testID as string} mode="review"/>
     </main>
   );
 }

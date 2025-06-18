@@ -1,26 +1,26 @@
 'use client'
 import { ToggleBtn } from '@/components/common/buttons/toggleBtn';
-import { UnitProvider } from '@/context/UnitContext';
+import { TestProvider } from '@/context/TestContext';
 import * as React from 'react'
 
-export default function UnitLayout({
+export default function TestLayout({
         children,
         params
     }: Readonly<{
         children: React.ReactNode;
-        params: Promise<{ unitID: string }>
+        params: Promise<{ testID: string }>
     }>) {
-        const [unitID, setUnitId] = React.useState<string | null>(null);
+        const [testID, setTestId] = React.useState<string | null>(null);
         const [isLoading, setIsLoading] = React.useState(true);
         React.useEffect(() => {
-            const fetchUnitId = async () => {
+            const fetchTestId = async () => {
                 setIsLoading(true);
-                const { unitID } = await params;
-                setUnitId(unitID);
+                const { testID } = await params;
+                setTestId(testID);
                 setIsLoading(false);
             };
         
-            fetchUnitId();
+            fetchTestId();
         }, [params]);
 
         if (isLoading) {
@@ -32,11 +32,11 @@ export default function UnitLayout({
         }
         
         return (
-            <UnitProvider unitID={unitID}>
+            <TestProvider testID={testID}>
                 <main className="flex flex-col">                
-                    <ToggleBtn unitID={unitID as string} />
+                    <ToggleBtn testID={testID as string} />
                     {children}
                 </main>
-            </UnitProvider>
+            </TestProvider>
         )
     }

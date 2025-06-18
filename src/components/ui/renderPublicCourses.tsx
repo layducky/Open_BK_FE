@@ -15,10 +15,11 @@ export const RenderPublicCourses: React.FC<{
           <CourseCard key={course.courseID} course={course} type={viewType} />
         ))
       ) : (
-        <div className="w-full">
+        <div className="w-full flex flex-col justify-center items-center">
+          <p className="text-xl text-gray-400 font-bold">Oh no, it's empty here!</p>
           <img
-            className="w-full"
-            src="https://nihotour.gov.ng/wp-content/plugins/tutor/assets/images/emptystate.svg"
+            className="max-w-[12vh] max-h-[12vh] md:max-w-[24vh] md:max-h-[24vh]"
+            src="https://res.cloudinary.com/dv2izp0a3/image/upload/v1750227722/empty-box_xv3l4d.png"
             alt="no course data"
           />
         </div>
