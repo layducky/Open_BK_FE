@@ -46,7 +46,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
     <div>
       <div className="flex">
         <div className="w-5/6">
-          <h2 className="mt-2.5 leading-none text-2xl font-bold">Course content</h2>
+          <h2 className="mt-2.5 leading-none text-2xl font-bold pt-2">Course content</h2>
         </div>
         {userInfo?.role === "COLLAB" &&
           <div className="w-1/6">
@@ -68,34 +68,34 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
               <AccordionTrigger className="text-xl">{unit.numericalOrder}. {unit.unitName}</AccordionTrigger>
               <AccordionContent>
                 <div className="flex flex-col min-h-[10rem]">
-                <div className="flex flex-col md:flex-row w-full border-b-2 border-dotted border-solid border-gray-300 pb-4">
-                  <div className="w-full md:hidden flex justify-center">
-                  { unit.unitID && userInfo?.role === "COLLAB"
-                  && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch} /> }
-                  </div>                    
-                  <div className="w-full md:w-1/2">
-                  {[
-                  { type: "download", text: `Created at: ${unit.createdAt}` },
-                  { type: "infinity", text: `Updated at: ${unit.updatedAt}` },
-                  ].map((item, itemIndex) => (
-                  <BulletItem key={itemIndex} {...item} />
-                  ))}
+                  <div className={`flex flex-col md:flex-row w-full pb-4`}>
+                    <div className="w-full md:hidden flex justify-center">
+                    { unit.unitID && userInfo?.role === "COLLAB"
+                    && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch} /> }
+                    </div>                    
+                    <div className="w-full md:w-1/2">
+                    {[
+                    { iconType: "download", bulletType:"borderText", text: `Created at: ${unit.createdAt}` },
+                    { iconType: "infinity", bulletType:"borderText", text: `Updated at: ${unit.updatedAt}` },
+                    ].map((item, itemIndex) => (
+                      <BulletItem key={itemIndex} {...item}/>
+                    ))}
+                    </div>
+                    <div className="hidden md:flex md:w-1/2 justify-end">
+                    { unit.unitID && userInfo?.role === "COLLAB"
+                    && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch}/> }
+                    </div>
                   </div>
-                  <div className="hidden md:flex md:w-1/2 justify-end">
-                  { unit.unitID && userInfo?.role === "COLLAB"
-                  && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch}/> }
-                  </div>
-                </div>
 
-                <div>
-                  <div className="w-full md:w-1/2 py-4">
-                  {[
-                  { type: "certificate", text: unit.description || "" },
-                  ].map((item, itemIndex) => (
-                  <BulletItem key={itemIndex} {...item} />
-                  ))}
+                  <div className="w-full flex flex-col items-end">            
+                    <BulletItem bulletType="borderText" iconType="certificate" text={unit.description || ""} />
+                    {Array.isArray(unit.unit_tests) && unit.unit_tests.map(({ testName, testID }, testIndex: number) => (
+                      <BulletItem key={testIndex} bulletType="link" iconType="test" text={testName || ""} ID={testID}/>
+                    ))}
+                  <div>
+
+                    </div>
                   </div>
-                </div>
                 </div>
               </AccordionContent>
             </AccordionItem>

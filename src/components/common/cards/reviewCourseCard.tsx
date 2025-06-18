@@ -1,17 +1,15 @@
 'use client'
 import { BulletItem } from '@/components/ui/bulletItem';
 import { ButtonClick } from '@/components/common/buttons/button';
-import { PublicCourseEntity } from "@/type/course.entity";
-import { CourseInfoBar } from '@/components/ui/infoBar';
 
 const courseFeatures = [
-    { type: "video", text: '95 hours on-demand video' },
-    { type: "article", text: '35 articles' },
-    { type: "test", text: '2 practice tests' },
-    { type: "test", text: 'Assignments' },
-    { type: "download", text: '100 downloadble resources' },
-    { type: "infinity", text: 'Full lifetime access' },
-    { type: "certificate", text: 'Certificate of completion' }
+    { bulletType:"normal", iconType: "video", text: '95 hours on-demand video' },
+    { bulletType:"normal", iconType: "article", text: '35 articles' },
+    { bulletType:"normal", iconType: "test", text: '2 practice tests' },
+    { bulletType:"normal", iconType: "test", text: 'Assignments' },
+    { bulletType:"normal", iconType: "download", text: '100 downloadble resources' },
+    { bulletType:"normal", iconType: "infinity", text: 'Full lifetime access' },
+    { bulletType:"normal", iconType: "certificate", text: 'Certificate of completion' }
     ]
 
 export const ReviewCourseCard = ({courseID}: {courseID: string | null}) => {

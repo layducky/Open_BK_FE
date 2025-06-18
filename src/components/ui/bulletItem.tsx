@@ -6,13 +6,16 @@ import Infinity from "@/public/svg/infinity.svg";
 import Video from "@/public/svg/video.svg";
 import Test from "@/public/svg/test.svg";
 
-export const BulletItem: React.FC<{
+type BulletItemProps = {
+  bulletType: string;
+  iconType: string;
   text: string | number;
-  type: string;
-}> = ({ text, type }) => {
-  //* Pass as a FC
-  let Icon: React.FC;
-  switch (type) {
+  ID?: string; // Optional ID for link items
+};
+
+export function BulletItem({ bulletType, iconType, text, ID }: BulletItemProps) {
+  let Icon: React.ComponentType;
+  switch (iconType) {
     case "objective":
       Icon = Check;
       break;
@@ -34,13 +37,25 @@ export const BulletItem: React.FC<{
     default:
       Icon = Check;
   }
+  const border = "border-t-2 border-dotted border-solid border-gray-300";
 
-  return (
-    <div className="flex gap-2.5 items-center mt-1.5">
-      <div>
-        <Icon />
+  return (            
+    <div className={`w-full md:w-[98%] py-4 ${border}`}>
+      <div className="flex gap-2.5 items-center mt-1.5">
+        <div>
+          <Icon />
+        </div>
+        {bulletType === "link" && iconType === "test" ? (
+          <a
+            href={typeof text === "string" ? `/test/${ID}/overview` : "#"}
+            className="text-blue-600 underline"
+          >
+            {text}
+          </a>
+        ) : (
+          <div>{text}</div>
+        )}
       </div>
-      <div>{text}</div>
     </div>
   );
-};
+}

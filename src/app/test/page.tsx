@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 type PageProps = Promise<{
-    unitID: string;
+    testID: string;
   }>;
 //*Handle automatic redirect to overview
 export default async function Page(props: {params: PageProps}) {
-    const { unitID } = await props.params;
-    redirect(`/unit/${unitID}/attempt`);
+    const { testID } = await props.params;
+    redirect(`/test/${testID}/overview`);
 }

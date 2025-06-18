@@ -34,7 +34,7 @@ const formFields = [
 const CreateUnitModal: React.FC<CreateUnitModalProps> = ({
   courseID, refetchUnits, setNewUnitID, isOpen, setIsOpen
 }) => {
-  const { handleCreateUnit } = useHandleUnit({courseID, refetchUnits, setNewUnitID, setIsOpen});
+  const { handleCreateUnit } = useHandleUnit({courseID, refetchUnits, setNewUnitID});
 
   const {
     register,
