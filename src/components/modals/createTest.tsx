@@ -28,7 +28,7 @@ const formFields = [
   { label: "Unit ID", id: "unitID", placeholder: "", disabled: false },
   { label: "Test Name", id: "testName", placeholder: "Test Name", disabled: false },
   { label: "Description", id: "description", placeholder: "Description", disabled: false },
-  { label: "Duration", id: "duration", placeholder: "Duration", disabled: false },
+  { label: "Duration (m)", id: "duration", placeholder: "Duration", disabled: false },
 ];
 
 const CreateTestModal: React.FC<CreateTestModalProps> = ({

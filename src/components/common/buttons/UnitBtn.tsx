@@ -8,6 +8,8 @@ import { useUnitMutations } from "@/hooks/mutations/useUnitMutation";
 import CreateUnitModal from "../../modals/createUnit";
 import { useHandleTest } from "@/hooks/handleMutations/handleTest";
 import CreateTestModal from "@/components/modals/createTest";
+import test from "node:test";
+import { SelectionOption } from "@/type/selection.entity";
 
 
 interface CreateUnitBtnProps {
@@ -54,26 +56,14 @@ export const ViewTestButton: React.FC<{ unitID: string }> = ({ unitID }) => {
     );
 };
 
-interface ActionDropdownProps {
-  courseID: string;
-  unitID: string;
-  refetchUnits?: () => void;
-}
 
-export default function ActionDropdown({courseID, unitID, refetchUnits} : ActionDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
+
+interface ActionDropdownProps {
+  options: SelectionOption[];
+}
+function ActionDropdown({options} : ActionDropdownProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const { handleDeleteUnit } = useHandleUnit({courseID, refetchUnits});
-
-  const options = [
-    { label: "Edit description", action: () => {}, color: "hover:bg-gray-100", textColor: "hover:text-black-800" },
-    { label: "Upload TEST", action: () => {setIsOpen(true);}, color: "hover:bg-green-100", textColor: "hover:text-black-800" },
-    { label: "Upload LINK", action: () => {}, color: "hover:bg-blue-100", textColor: "hover:text-black-800" },
-    { label: "Upload FILE", action: () => {}, color: "hover:bg-orange-100", textColor: "hover:text-black-800" },
-    { label: "Upload VIDEO", action: () => {}, color: "hover:bg-yellow-100", textColor: "hover:text-black-800" },
-    { label: "DELETE UNIT", action: handleDeleteUnit, color: "hover:bg-red-500", textColor: "hover:text-white" },
-  ];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -88,32 +78,55 @@ export default function ActionDropdown({courseID, unitID, refetchUnits} : Action
 
 
   return (
-    <>
-      <div className="relative inline-block text-left w-full md:w-[10rem]" ref={dropdownRef}>
-        <button
-          onClick={() => setIsDropdownOpen((prev) => !prev)}
-          className="p-2 text-black bg-transparent border-none hover:bg-gray-200 hover:font-semibold transition duration-150 rounded"
-          >
-        ⋮ 
-        </button>
+    <div className="relative inline-block text-right w-full md:w-[10rem]" ref={dropdownRef}>
+      <button
+        onClick={() => setIsDropdownOpen((prev) => !prev)}
+        className="p-2 text-black bg-transparent border-none hover:bg-gray-200 hover:font-semibold transition duration-150 rounded"
+        >
+      ⋮ 
+      </button>
 
-        {isDropdownOpen && (
-          <div className="absolute max-h-[8rem] overflow-y-auto w-full bg-white border border-gray-200 rounded shadow-lg z-10">
-            {options.map(({ label, action, color, textColor }) => (
-            <button
-              key={label}
-              onClick={() => {
-              action(unitID);
-              setIsDropdownOpen(false);
-              }}
-              className={`w-full text-left p-2 text-sm text-black hover:font-semibold ${color} ${textColor}`}
-            >
-              {label}
-            </button>
-            ))}
-          </div>
-        )}      
-      </div>
+      {isDropdownOpen && (
+        <div className="absolute max-h-[8rem] overflow-y-auto w-full bg-white border border-gray-200 rounded shadow-lg z-10">
+          {options.map(({ label, action, color, textColor }) => (
+          <button
+            key={label}
+            onClick={() => {
+            action();
+            setIsDropdownOpen(false);
+            }}
+            className={`w-full text-left p-2 text-sm text-black hover:font-semibold ${color} ${textColor}`}
+          >
+            {label}
+          </button>
+          ))}
+        </div>
+      )}      
+    </div>
+  );
+}
+
+interface unitActionDropdownProps {
+  courseID: string;
+  unitID: string;
+  refetchUnits?: () => void;
+}
+
+export function UnitActionDropdown({courseID, unitID, refetchUnits} : unitActionDropdownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const { handleDeleteUnit } = useHandleUnit({courseID, refetchUnits});
+
+  const options = [
+    { label: "Edit description", action: () => {}, color: "hover:bg-gray-100", textColor: "hover:text-black-800" },
+    { label: "Upload TEST", action: () => {setIsOpen(true);}, color: "hover:bg-green-100", textColor: "hover:text-black-800" },
+    { label: "Upload LINK", action: () => {}, color: "hover:bg-blue-100", textColor: "hover:text-black-800" },
+    { label: "Upload FILE", action: () => {}, color: "hover:bg-orange-100", textColor: "hover:text-black-800" },
+    { label: "Upload VIDEO", action: () => {}, color: "hover:bg-yellow-100", textColor: "hover:text-black-800" },
+    { label: "DELETE UNIT", action: () => handleDeleteUnit(unitID), color: "hover:bg-red-500", textColor: "hover:text-white" },
+  ];
+  return (
+    <>
+      <ActionDropdown options={options} />
       <CreateTestModal 
         unitID={unitID}
         isOpen={isOpen}
@@ -122,5 +135,27 @@ export default function ActionDropdown({courseID, unitID, refetchUnits} : Action
         setNewTestID={() => {}}
       />
     </>
+  );
+}
+
+export function TestActionDropdown({testID} : {testID: string}) {
+  const router = useRouter();
+  const options = [
+    { label: "Edit description", action: () => {}, color: "hover:bg-gray-100", textColor: "hover:text-black-800" },
+    { 
+      label: "EDIT TEST", 
+      action: () => {
+        if (testID) {
+          router.push(`/test/${testID}/review`);
+        }
+      }, 
+      color: "hover:bg-blue-100", 
+      textColor: "hover:text-black" 
+    },
+  ];
+  return (
+    <div>
+      <ActionDropdown options={options} />
+    </div>
   );
 }

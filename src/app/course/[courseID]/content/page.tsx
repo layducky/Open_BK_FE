@@ -5,7 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { BulletItem } from "@/components/ui/bulletItem";
 import { useUser } from "@/hooks/querys/useUser";
 import { useUnits } from "@/hooks/querys/useCourses";
-import ActionDropdown from "@/components/common/buttons/UnitBtn";
+import { UnitActionDropdown } from "@/components/common/buttons/UnitBtn";
 import { CreateUnitBtn } from "@/components/common/buttons/UnitBtn";
 
 
@@ -71,7 +71,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                   <div className={`flex flex-col md:flex-row w-full pb-4`}>
                     <div className="w-full md:hidden flex justify-center">
                     { unit.unitID && userInfo?.role === "COLLAB"
-                    && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch} /> }
+                    && <UnitActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch} /> }
                     </div>                    
                     <div className="w-full md:w-1/2">
                     {[
@@ -83,7 +83,9 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                     </div>
                     <div className="hidden md:flex md:w-1/2 justify-end">
                     { unit.unitID && userInfo?.role === "COLLAB"
-                    && <ActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch}/> }
+                    && (
+                        <UnitActionDropdown courseID={courseID || ""} unitID={unit.unitID} refetchUnits={refetch}/> 
+                    )}
                     </div>
                   </div>
 

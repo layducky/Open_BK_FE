@@ -4,10 +4,7 @@ const url = `/course/enroll`;
 
 const enrollCourse = async (learnerID: string, courseID: string) => {
   try {
-    const { data  } = await apiClientWithAuth.post(`${url}`, {
-      learnerID,
-      courseID,
-    });
+    const { data  } = await apiClientWithAuth.post(`${url}/${courseID}`, {});
 
     return data;
   } catch (error: any) {
@@ -17,7 +14,7 @@ const enrollCourse = async (learnerID: string, courseID: string) => {
 
 const getAllEnrolledCourses = async (learnerID: string) => {
   try {
-    const res = await apiClientWithAuth.get(`${url}/${learnerID}`);
+    const res = await apiClientWithAuth.get(`${url}`);
 
     if (res.status === 200) {
       return res.data;
@@ -29,10 +26,10 @@ const getAllEnrolledCourses = async (learnerID: string) => {
   }
 };
 
-const getEnrolledCourseById = async (id: number) => {
+const getEnrolledCourseById = async (courseID: number) => {
   try {
     const res = await apiClientWithAuth.get(
-      `${url}/${id}`
+      `${url}/${courseID}`
     );
 
     if (res.status === 200) {
@@ -76,7 +73,7 @@ const getEnrolledCourseById = async (id: number) => {
 const deleteEnrolledCourse = async (learnerID: string, courseID: string) => {
   try {
     const res = await apiClientWithAuth.delete(
-      `${url}/${learnerID}/${courseID}`
+      `${url}/${courseID}`
     );
 
     if (res.status === 200) {

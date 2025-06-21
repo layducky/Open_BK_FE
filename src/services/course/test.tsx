@@ -39,3 +39,50 @@ export const updateTest = async (testID: string, data: any) => {
         throw new Error("Failed to update test");
     }
 }
+
+export const getUserTest = async (testID: string) => {
+    try {
+        const res = await apiClientWithAuth.get(`/user/test/${testID}`);
+        if (res.status === 200) {
+            return res.data;
+        } else {
+            throw new Error(res.data?.message || "Failed to get user's test");
+        }
+    } catch (error) {
+        throw new Error("Failed to get user's test");
+    }
+};
+
+export const createSubmission = async (userTestID: string) => {
+    try {
+        const res = await apiClientWithAuth.post(`/user/test/submit/${userTestID}`);
+        if (res.status === 201) {
+            return res.data;
+        } else {
+            throw new Error(res.data?.message || "Failed to create submission");
+        }
+    } catch (error) {
+        throw new Error("Failed to create submission");
+    }
+}
+
+interface quesAns {
+    questionID: string;
+    selectedAns: string;
+}
+
+export const updateSubmission = async (userTestID: string, status: string, submission: quesAns[]) => {
+    try {
+        const res = await apiClientWithAuth.put(`/user/test/submit/${userTestID}`, {
+            status,
+            submission
+        });
+        if (res.status === 200) {
+            return res.data;
+        } else {
+            throw new Error(res.data?.message || "Failed to update submission");
+        }
+    } catch (error) {
+        throw new Error("Failed to update submission");
+    }
+};

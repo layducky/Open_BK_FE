@@ -1,11 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { getQueryClient } from "@/app/providers";
+
 import { PublicCourseEntity } from "@/type/course.entity";
 import { UnitEntity } from "@/type/unit.entity";
 import { QuestionEntity } from "@/type/question.entity";
+
 import { getAllCourses } from "@/services/course";
 import { getAllUnits } from "@/services/course/unit";
 import { getAllQuestions } from "@/services/course/question";
+import { getUserTest } from "@/services/course/test";
+import { UserTestEntity } from "@/type/test.entity";
 
 export const useCourses = () => {
   return useQuery<PublicCourseEntity[] | undefined>({
@@ -27,7 +31,15 @@ export const useQuestions = (unitID: string) => {
   return useQuery<QuestionEntity[]>({
     queryKey: ["getAllQuestions", unitID],
     queryFn: () => getAllQuestions(unitID as string),
-    staleTime: 0,
+    staleTime: Infinity,
+  });
+}
+
+export const useUserTest = (testID: string) => {
+  return useQuery<UserTestEntity>({
+    queryKey: ["getUserTest", testID],
+    queryFn: () => getUserTest(testID as string),
+    staleTime: Infinity,
   });
 }
 

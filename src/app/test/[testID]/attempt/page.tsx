@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useTest } from '@/context/TestContext';
-import TestTest from "@/components/pages/testAttempt";
+import TestPage from "@/components/pages/testAttempt";
 
 export default function TestAttemptPage() {
   const { testID } = useTest();
@@ -12,7 +12,7 @@ export default function TestAttemptPage() {
 
   return (
     <main>
-      <TestTest testID={testID as string} mode="attempt"/>
+      <TestPage testID={testID as string} mode="attempt"/>
     </main>
   );
 }

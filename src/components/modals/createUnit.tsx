@@ -18,17 +18,12 @@ const unitSchema = yup.object().shape({
   courseID: yup.string().required("Course ID is required"),
   unitName: yup.string().required("Unit Name is required"),
   description: yup.string().required("Description is required"),
-  numericalOrder: yup
-      .number()
-      .typeError("Numerical Order must be a number")
-      .required("Numerical Order is required"),
 });
 
 const formFields = [
   { label: "Course ID", id: "courseID", placeholder: "", disabled: false },
   { label: "Unit Name", id: "unitName", placeholder: "Unit Name", disabled: false },
   { label: "Description", id: "description", placeholder: "Description", disabled: false },
-  { label: "Numerical Order", id: "numericalOrder", placeholder: "Numerical Order", disabled: false },
 ];
 
 const CreateUnitModal: React.FC<CreateUnitModalProps> = ({
@@ -49,7 +44,6 @@ const CreateUnitModal: React.FC<CreateUnitModalProps> = ({
       courseID: courseID || "",
       unitName: "",
       description: "",
-      numericalOrder: 0,
     },
   });
 

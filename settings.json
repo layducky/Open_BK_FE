@@ -6,7 +6,7 @@
             "enableSsl": "Disabled"
          },
          "previewLimit": 50,
-         "server": "localhost",
+         "server": "{{base_url}}",
          "port": 3306,
          "driver": "MySQL",
          "name": "test",
@@ -16,7 +16,7 @@
       },
       {
          "previewLimit": 50,
-         "server": "localhost",
+         "server": "{{base_url}}",
          "port": 5432,
          "driver": "PostgreSQL",
          "name": "opbk",
