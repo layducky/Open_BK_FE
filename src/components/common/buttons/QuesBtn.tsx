@@ -50,20 +50,22 @@ export const CreateQuesBtn: React.FC<CreateQuesBtnProps> = ({ testID, onQuestion
           onQuestionCreated?.();
           onClose();
         },
+        onError: (error: any) => {
+          console.error("Error creating question:", error);
+        },
       }
     );
   };
 
   const formFields = [
-    { label: "Test ID", type: "text", id: "testID", placeholder: "", disabled: true },
-    { label: "Numerical Order", type: "number", id: "numericalOrder", placeholder: "Numerical Order", disabled: false },
-    { label: "Content", type: "text", id: "content", placeholder: "Content", disabled: false },
-    { label: "Explanation", type: "text", id: "explanation", placeholder: "Explanation", disabled: false },
+    { label: "Test ID*", type: "text", id: "testID", placeholder: "", disabled: true },
+    { label: "Content*", type: "text", id: "content", placeholder: "Content", disabled: false },
+    { label: "Explanation*", type: "text", id: "explanation", placeholder: "Explanation", disabled: false },
     {
-      label: "Correct Ans",
+      label: "Correct Answer*",
       type: "select",
       id: "correctAns",
-      placeholder: "Select Correct Ans",
+      placeholder: "Select Correct Answer",
       disabled: false,
       options: [
         { value: "A", label: "A" },
@@ -72,10 +74,10 @@ export const CreateQuesBtn: React.FC<CreateQuesBtnProps> = ({ testID, onQuestion
         { value: "D", label: "D" },
       ],
     },
-    { label: "Ans A", type: "text", id: "ansA", placeholder: "Enter Ans A", disabled: false },
-    { label: "Ans B", type: "text", id: "ansB", placeholder: "Enter Ans B", disabled: false },
-    { label: "Ans C", type: "text", id: "ansC", placeholder: "Enter Ans C", disabled: false },
-    { label: "Ans D", type: "text", id: "ansD", placeholder: "Enter Ans D", disabled: false },
+    { label: "Answer A*", type: "text", id: "ansA", placeholder: "Enter Answer A", disabled: false },
+    { label: "Answer B*", type: "text", id: "ansB", placeholder: "Enter Answer B", disabled: false },
+    { label: "Answer C*", type: "text", id: "ansC", placeholder: "Enter Answer C", disabled: false },
+    { label: "Answer D*", type: "text", id: "ansD", placeholder: "Enter Answer D", disabled: false },
   ];
 
   return (

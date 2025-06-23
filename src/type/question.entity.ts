@@ -1,7 +1,7 @@
 export class QuestionEntity {
     questionID: string;
     testID: string;
-    numericalOrder: number;
+    // numericalOrder: number;
     content?: string;
     explanation?: string;
     correctAns: string;
@@ -15,7 +15,7 @@ export class QuestionEntity {
     constructor(data: Partial<QuestionEntity>) {
         this.questionID = data.questionID || "";
         this.testID = data.testID || "";
-        this.numericalOrder = data.numericalOrder || 0;
+        // this.numericalOrder = data.numericalOrder || 0;
         this.content = data.content || "";
         this.explanation = data.explanation || "";
         this.correctAns = data.correctAns || "";

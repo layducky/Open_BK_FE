@@ -1,11 +1,6 @@
 import * as yup from "yup";
 
 export const questionSchema = yup.object().shape({
-  numericalOrder: yup
-    .number()
-    .required("Numerical Order is required")
-    .min(0, "Numerical Order must be greater than or equal to 0"),
-
   content: yup
     .string()
     .required("Content is required")
