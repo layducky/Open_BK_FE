@@ -1,10 +1,10 @@
 import * as React from "react";
-import Check from "@/public/svg/check.svg";
-import Download from "@/public/svg/download.svg";
-import Certificate from "@/public/svg/certificate.svg";
-import Infinity from "@/public/svg/infinity.svg";
-import Video from "@/public/svg/video.svg";
-import Test from "@/public/svg/test.svg";
+import Check from "/public/svg/check.svg";
+import Download from "/public/svg/download.svg";
+import Certificate from "/public/svg/certificate.svg";
+import Infinity from "/public/svg/infinity.svg";
+import Video from "/public/svg/video.svg";
+import Test from "/public/svg/test.svg";
 type BulletItemProps = {
   bulletType?: string;
   iconType: string;

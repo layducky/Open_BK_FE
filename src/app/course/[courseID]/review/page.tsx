@@ -1,7 +1,7 @@
 import * as React from "react"
-import Star from "@/public/svg/star.svg";
-import StarHalf from "@/public/svg/star_half.svg";
-import StarEmpty from "@/public/svg/star_empty.svg";
+import Star from "/public/svg/star.svg";
+import StarHalf from "/public/svg/star_half.svg";
+import StarEmpty from "/public/svg/star_empty.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ButtonClick } from "@/components/common/buttons/button";
 

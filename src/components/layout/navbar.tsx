@@ -1,8 +1,8 @@
 "use client";
 import * as React from "react";
-import Search from "@/public/svg/search.svg";
-import Cart from "@/public/svg/cart.svg";
-import BkIcon from "@/public/images/BkIcon.png";
+import Search from "/public/svg/search.svg";
+import Cart from "/public/svg/cart.svg";
+import BkIcon from "/public/images/BkIcon.png";
 import Link from "next/link";
 import SigninButton from "../common/buttons/SigninButton";
 import SignupButton from "../common/buttons/SignupButton";

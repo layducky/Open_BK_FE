@@ -1,4 +1,4 @@
-import Star from "@/public/svg/star.svg";
+import Star from "/public/svg/star.svg";
 import Link from "next/link";
 import { Course } from "@/type/course.entity";
 import { PublicFootBar } from "./publicFootBar";

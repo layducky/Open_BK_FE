@@ -1,6 +1,6 @@
 import { ButtonClick } from "../buttons/button";
 import * as React from "react";
-import ArrowRight from "@/public/svg/arrow_right.svg";
+import ArrowRight from "/public/svg/arrow_right.svg";
 import { useParams } from "react-router-dom";
 export const PublicFootBar: React.FC<{ price: string }> = ({ price }) => {
   const [courseID, setCourseID] = React.useState<string | null>(null);
