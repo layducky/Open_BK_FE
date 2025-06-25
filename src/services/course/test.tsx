@@ -1,3 +1,4 @@
+import { SubmissionEntity } from "@/type/submission.entity";
 import { apiClientWithAuth } from "../apiClient";
 
 export const createTest = async (testData: any) => {
@@ -66,16 +67,10 @@ export const createSubmission = async (userTestID: string) => {
     }
 }
 
-interface quesAns {
-    questionID: string;
-    selectedAns: string;
-}
-
-export const updateSubmission = async (userTestID: string, status: string, submission: quesAns[]) => {
+export const updateSubmission = async (submissionID: string, data: SubmissionEntity) => {
     try {
-        const res = await apiClientWithAuth.put(`/user/test/submit/${userTestID}`, {
-            status,
-            submission
+        const res = await apiClientWithAuth.put(`/user/test/submit/${submissionID}`, {
+            ...data
         });
         if (res.status === 200) {
             return res.data;

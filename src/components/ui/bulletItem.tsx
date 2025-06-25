@@ -47,7 +47,7 @@ export function BulletItem({ bulletType, iconType, text, ID }: BulletItemProps) 
         </div>
         {Type === "link" && iconType === "test" ? (
           <a
-          href={typeof text === "string" ? `/test/${ID}/overview` : "#"}
+          href={typeof text === "string" ? `/test/${ID}` : "#"}
           className="text-blue-600 underline"
           >
           {text}

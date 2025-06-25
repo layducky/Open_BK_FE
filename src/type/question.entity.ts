@@ -1,7 +1,7 @@
 export class QuestionEntity {
     questionID: string;
     testID: string;
-    // numericalOrder: number;
+    numericalOrder: number;
     content?: string;
     explanation?: string;
     correctAns: string;
@@ -9,13 +9,13 @@ export class QuestionEntity {
     ansB?: string;
     ansC?: string;
     ansD?: string;
-    // createdAt: string;
-    // updatedAt: string;
+    createdAt: string;
+    updatedAt: string;
 
     constructor(data: Partial<QuestionEntity>) {
         this.questionID = data.questionID || "";
         this.testID = data.testID || "";
-        // this.numericalOrder = data.numericalOrder || 0;
+        this.numericalOrder = data.numericalOrder || 0;
         this.content = data.content || "";
         this.explanation = data.explanation || "";
         this.correctAns = data.correctAns || "";
@@ -23,11 +23,11 @@ export class QuestionEntity {
         this.ansB = data.ansB || "";
         this.ansC = data.ansC || "";
         this.ansD = data.ansD || "";
-        // this.createdAt = data.createdAt
-        //     ? new Date(data.createdAt).toLocaleString("de-DE")
-        //     : "-";
-        // this.updatedAt = data.updatedAt
-        //     ? new Date(data.updatedAt).toLocaleString("de-DE")
-        //     : "-";
+        this.createdAt = data.createdAt
+            ? new Date(data.createdAt).toLocaleString("de-DE")
+            : "-";
+        this.updatedAt = data.updatedAt
+            ? new Date(data.updatedAt).toLocaleString("de-DE")
+            : "-";
     }
 }

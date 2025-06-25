@@ -6,9 +6,11 @@ import { useForm } from "react-hook-form";
 import Modal from "@/components/modals/formModal";
 import { questionSchema } from "@/lib/validation/questionSchema";
 import InputField from "../InputField";
+import { useRouter } from "next/navigation";
 import { useQuestionMutations } from "@/hooks/mutations/useQuestionMutations";
 import GradientButton from "@/components/common/buttons/GradientButton";
-import { useTestMutations } from "@/hooks/mutations/useTestMutation";
+import { SubmissionAnsEntity, SubmissionEntity } from "@/type/submission.entity";
+import { useSubmissionMutation } from "@/hooks/mutations/useSubmissionMutation";
 
 interface CreateQuesBtnProps {
   testID: string;
@@ -143,24 +145,30 @@ export const DeleteQuesBtn: React.FC<DeleteQuesBtnProps> = ({ questionID, testID
   );
 };
 
-interface SubmitTestBtnProps {
-  testID: string;
-  anss: Record<string, string>;
+
+export const SubmitTestBtn = ({ testID, submissionID, submission }: { testID: string; submissionID: string; submission: Record<string, string> }) => {
+  const router = useRouter();
+  const { updateMutation } = useSubmissionMutation(submissionID);
+
+  const handleSubmitAnss = () => {
+    const submissionArray: SubmissionAnsEntity[] = Object.entries(submission).map(([questionID, selectedAns]) => ({
+      questionID,
+      selectedAns,
+    }));
+
+    const data = {
+      status: "submitted",
+      submission: submissionArray,
+    };
+
+    updateMutation.mutate(data, {
+      onSuccess: () => {
+        router.push(`/test/${testID}`);
+      },
+    });
+  };
+
+  return (
+    <GradientButton onClick={handleSubmitAnss} text="Submit" disabled={updateMutation.isPending} />
+  );
 }
-
-// export const SubmitTestBtn: React.FC<SubmitTestBtnProps> = ({ testID, anss }) => {
-//   const { submitAnssMutation } = useTestMutations(testID);
-  
-//   const handleSubmitAnss = () => {
-//     console.log("Submitted Anss:", anss);
-    
-//     submitAnssMutation.mutate({
-//       testID: testID,
-//       anss: anss,
-//     });
-//   };
-
-//   return (
-//     <GradientButton onClick={handleSubmitAnss} text="Submit" disabled={submitAnssMutation.isPending} />
-//   );
-// }

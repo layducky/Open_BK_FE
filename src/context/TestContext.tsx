@@ -1,12 +1,13 @@
 'use client';
-
 import * as React from 'react';
 
 type TestContextType = {
   testID: string | null;
+  submissionID: string | null;
+  setSubmissionID: (id: string) => void;
 };
 
-const TestContext = React.createContext<TestContextType>({ testID: null });
+const TestContext = React.createContext<TestContextType>({ testID: null, submissionID: null, setSubmissionID: () => {} });
 
 export function TestProvider({
   children,
@@ -15,7 +16,8 @@ export function TestProvider({
   children: React.ReactNode;
   testID: string | null;
 }) {
-  return <TestContext.Provider value={{ testID }}>{children}</TestContext.Provider>;
+  const [submissionID, setSubmissionID] = React.useState<string | null>(null);
+  return <TestContext.Provider value={{ testID, submissionID, setSubmissionID }}>{children}</TestContext.Provider>;
 }
 
 export function useTest() {

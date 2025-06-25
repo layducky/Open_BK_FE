@@ -4,21 +4,23 @@ import { useState } from "react";
 import { useQuestions } from "@/hooks/querys/useCourses";
 import { useUser } from "@/hooks/querys/useUser";
 import { RightUnitBar } from "@/components/common/RightUnitBar";
-import { CreateQuesBtn } from "@/components/common/buttons/QuesBtn";
+import { CreateQuesBtn, SubmitTestBtn } from "@/components/common/buttons/QuesBtn";
 import { QuestionEntity } from "@/type/question.entity";
 import QuestionItem from "@/components/common/QuestionItem";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface TestPageProps {
   testID: string;
+  submissionID: string;
   mode: "attempt" | "review";
 }
 
-const TestPage = ({ testID, mode }: TestPageProps) => {
+const TestPage = ({ testID, submissionID, mode }: TestPageProps) => {
+  console.log(submissionID);
   const { data: questionContents, isLoading, error, refetch } = useQuestions(testID);
   const { data: userInfo } = useUser();
   const [newQuestionIDs, setNewQuestionIDs] = useState<string[]>([]);
-  const [anss, setAnss] = useState<Record<string, string>>({});
+  const [submission, setSubmission] = useState<Record<string, string>>({});
 
   if (isLoading) return <div>Loading questions...</div>;
   if (error) return <div>Error loading questions: {error.message}</div>;
@@ -34,7 +36,7 @@ const TestPage = ({ testID, mode }: TestPageProps) => {
   };
 
   const handleAnsChange = (questionID: string, selected: string) => {
-    setAnss(prev => ({ ...prev, [questionID]: selected }));
+    setSubmission(prev => ({ ...prev, [questionID]: selected }));
   };
   const questionContentElements = Array.isArray(questionContents) ? (
     <AnimatePresence>
@@ -52,7 +54,6 @@ const TestPage = ({ testID, mode }: TestPageProps) => {
             isCollab={userInfo?.role === "COLLAB"}
             refetchQuestions={refetch}
             onAnsChange={handleAnsChange}
-            // selectedAns={anss[questionContent.questionID]}
           />
         </motion.div>
       ))}
@@ -90,7 +91,7 @@ const TestPage = ({ testID, mode }: TestPageProps) => {
             )}
           </div>
           <div className="flex justify-center items-center mt-10">
-            {/* <SubmitTestBtn testID={testID} anss={anss}/> */}
+            <SubmitTestBtn testID={testID} submissionID={submissionID} submission={submission}/>
           </div>
         </div>
         <div className="w-3/12 hidden md:block">

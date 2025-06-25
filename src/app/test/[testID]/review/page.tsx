@@ -4,7 +4,7 @@ import { useTest } from '@/context/TestContext';
 import TestPage from "@/components/pages/testAttempt";
 
 export default function TestReviewPage() {
-  const { testID } = useTest();
+  const { testID, submissionID } = useTest();
 
   if (!testID) {
     return <div>Loading test ID...</div>;
@@ -12,7 +12,7 @@ export default function TestReviewPage() {
 
   return (
     <main>
-      <TestPage testID={testID as string} mode="review"/>
+      <TestPage testID={testID as string} submissionID={submissionID as string} mode="review"/>
     </main>
   );
 }
