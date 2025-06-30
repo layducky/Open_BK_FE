@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 const SigninButton = () => {
     const router = useRouter();
     const handleLogin = () => {
-        router.push('/login');
+        router.push('/auth/login');
     };
 
     return (

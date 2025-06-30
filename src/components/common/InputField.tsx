@@ -1,6 +1,6 @@
 const getInputClass = (error: any) => {
-  return `text-black text-base w-full min-w-[30vw] px-5 py-3 rounded-lg border dark:border-stone-400 caret-dodger-blue-500 focus:outline-dodger-blue-500 ${
-    error ? " border-2 border-red-500 focus:outline-red-500" : ""
+  return `text-black text-base w-full px-5 py-3 rounded-lg border dark:border-stone-400 caret-dodger-blue-500 focus:outline-dodger-blue-500 ${
+    error ? "border-2 border-red-500 focus:outline-red-500" : ""
   }`;
 };
 
@@ -26,7 +26,7 @@ const InputField = ({
   options?: { value: string; label: string }[]; // Add options for select
 }) => {
   return (
-    <div className="flex flex-col gap-2 relative">
+    <div className="flex flex-col md:gap-2 w-full relative">
       <label htmlFor={id} className="font-semibold text-lg">
         {label}
       </label>
@@ -58,10 +58,13 @@ const InputField = ({
           {...(value ? { value } : {})}
         />
       )}
-      <span className="text-red-500 text-sm absolute -bottom-5">
-        {error?.message}
-      </span>
+      {error?.message && (
+        <span className="text-red-500 text-sm">
+          {error.message}
+        </span>
+      )}
     </div>
+
   );
 };
 

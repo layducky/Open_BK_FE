@@ -9,8 +9,8 @@ export function middleware(request: NextRequest) {
   
   // if (
   //   pathname === '/' ||
-  //   pathname === '/login' ||
-  //   pathname === '/register' ||
+  //   pathname === '/auth/login' ||
+  //   pathname === '/auth/register' ||
   //   pathname === '/course'
   // ) {
   //   return NextResponse.next();
