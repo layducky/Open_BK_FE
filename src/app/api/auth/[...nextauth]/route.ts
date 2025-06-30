@@ -6,7 +6,8 @@ import GoogleProvider from "next-auth/providers/google";
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
 const GOOGLE_CLIENT_SECRET = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET || "";
 
-const authOption: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt' 
   },
@@ -64,7 +65,6 @@ const authOption: NextAuthOptions = {
       session.user.role = token.role as string;
       session.user.image = token.image as string;
       session.user.name = token.name as string;
-      console.log("Session user:", session.user);
 
       return session;
     },
@@ -77,6 +77,6 @@ const authOption: NextAuthOptions = {
   },
 }
 
-const handler = NextAuth(authOption);
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
