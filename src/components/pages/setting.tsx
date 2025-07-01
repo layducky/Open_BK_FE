@@ -55,7 +55,7 @@ const SettingsPage: React.FC<{
           <div className="flex flex-row gap-5 relative w-fit h-fit rounded-full">
             <img
               className="rounded-full bg-white w-28 aspect-square object-cover border-[6px] border-white"
-              src={user?.imageUrl}
+              src={user?.image}
             />
             <button
               className="rounded-full border-1 aspect-square border-white w-7 absolute right-[2px] bottom-2 bg-white flex items-center justify-center text-stone-600 duration-200 hover:bg-dodger-blue-500 hover:text-white"

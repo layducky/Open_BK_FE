@@ -2,12 +2,12 @@ export class Course {
   courseID: string;
   courseName: string;
   description: string | null;
-  imageUrl: string;
+  image: string;
   category: string;
   price: string;
   authorInfo: {
     name: string;
-    imageUrl: string;
+    image: string;
   };
   createdAt: string;
   updatedAt: string;
@@ -16,17 +16,17 @@ export class Course {
     courseID: string,
     courseName: string,
     description: string | null,
-    imageUrl: string,
+    image: string,
     category: string,
     price: string,
-    authorInfo: { name: string; imageUrl: string },
+    authorInfo: { name: string; image: string },
     createdAt: string,
     updatedAt: string,
   ) {
     this.courseID = courseID;
     this.courseName = courseName;
     this.description = description;
-    this.imageUrl = imageUrl;
+    this.image = image;
     this.category = category;
     this.price = price;
     this.authorInfo = authorInfo;

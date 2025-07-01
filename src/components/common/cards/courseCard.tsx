@@ -14,7 +14,7 @@ export const CourseCard: React.FC<{ course: Course | null, type?: string }> = ({
       >
         <img
           loading="lazy"
-          src={course?.imageUrl}
+          src={course?.image}
           alt={`Image of ${course?.courseName}`}
           className="object-contain w-full aspect-[1.42]"
         />
@@ -41,7 +41,7 @@ export const CourseCard: React.FC<{ course: Course | null, type?: string }> = ({
               <div className="author flex flex-row items-center gap-2">
                 <img
                   className="aspect-square w-7 rounded-full"
-                  src={course?.authorInfo?.imageUrl}
+                  src={course?.authorInfo?.image}
                 />
                 <span className="text-sm">{course?.authorInfo?.name}</span>
               </div>

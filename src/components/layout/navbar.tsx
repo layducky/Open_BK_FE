@@ -26,7 +26,8 @@ export const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
   if (status === 'loading') return <div>Loading...</div>;
 
-  const user = session?.user;  
+  const user = session?.user;
+  sessionStorage.setItem("userID", user?.id || "");
 
   return (
     <div className="flex overflow-hidden flex-wrap items-center py-4 pl-8 w-full text-base leading-none bg-white text-black shadow-sm max-md:pl-5 max-md:max-w-full">

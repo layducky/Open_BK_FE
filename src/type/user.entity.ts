@@ -4,7 +4,7 @@ export class UserEntity {
   email: string;
   role?: string;
   createdAt: string;
-  imageUrl: string;
+  image: string;
   phoneNumber: string;
   biography: string;
 
@@ -16,7 +16,7 @@ export class UserEntity {
     this.createdAt = data.createdAt
       ? new Date(data.createdAt).toLocaleString("de-DE")
       : "-";
-    this.imageUrl = data.imageUrl || "";
+    this.image = data.image || "";
     this.phoneNumber = data.phoneNumber || "";
     this.biography = data.biography || "";
   }

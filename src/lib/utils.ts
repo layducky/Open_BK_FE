@@ -8,8 +8,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const transformToCourse = ({ courseID, courseName, description, imageUrl, category, price, authorInfo , createdAt, updatedAt }: PublicCourseEntity | EnrolledCourseEntity) => {
+export const transformToCourse = ({ courseID, courseName, description, image, category, price, authorInfo , createdAt, updatedAt }: PublicCourseEntity | EnrolledCourseEntity) => {
   console.log(typeof authorInfo);
-  return new Course( courseID, courseName, description, imageUrl, category, price, authorInfo, createdAt, updatedAt);
+  return new Course( courseID, courseName, description, image, category, price, authorInfo, createdAt, updatedAt);
 } 
   

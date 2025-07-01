@@ -6,6 +6,7 @@ import { PublicCourseEntity } from "@/type/course.entity";
 
 export const UserInforBar = () => {
   const { data: user } = useUser();
+  console.log("User Info Bar", user);
 
   const backgroundColor =
     user?.role === "LEARNER" ? "bg-pink-300" : user?.role === "ADMIN" ? "bg-gray-300" :  "bg-yellow-200";
@@ -17,7 +18,7 @@ export const UserInforBar = () => {
       <div className="flex flex-row gap-5">
         <img
           className="rounded-full bg-black w-28 aspect-square object-cover border-[6px] border-white"
-          src={user?.imageUrl}
+          src={user?.image} alt="Avatar"
         />
         <Suspense fallback={<p>Loading...</p>}>
           <div className="flex flex-col gap-1 self-center">
@@ -48,7 +49,7 @@ const CourseStats = ({courseData}: {courseData: PublicCourseEntity}) => {
           <div className="flex gap-2">
             <img
               className="aspect-square w-7 rounded-full"
-              src={courseData?.authorInfo?.imageUrl}
+              src={courseData?.authorInfo?.image}
             />
             <p className="font-bold">{courseData?.authorInfo?.name}</p>
           </div>
@@ -106,7 +107,7 @@ export const CourseInfoBar: React.FC<{ courseData: PublicCourseEntity}> = ({ cou
             <div className='shadow-lg bg-white rounded-lg border py-4'>
               <img
                   loading="lazy"
-                  src={courseData?.imageUrl}
+                  src={courseData?.image}
                   alt="Course preview"
                   className="object-contain w-full rounded-md aspect-[1.38]"
               />
@@ -133,7 +134,7 @@ export const CourseInfoBar: React.FC<{ courseData: PublicCourseEntity}> = ({ cou
           <div className='shadow-lg bg-white rounded-lg border py-4'>
             <img
                 loading="lazy"
-                src={courseData?.imageUrl}
+                src={courseData?.image}
                 alt="Course preview"
                 className="object-contain w-full rounded-md aspect-[1.38]"
             />

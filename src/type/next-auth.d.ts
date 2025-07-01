@@ -8,6 +8,14 @@ declare module 'next-auth' {
   }
   interface User {
     id: string;
+    accessToken: string;
+    role?: string;
+    image?: string;
+    name?: string;
+  }
+  interface AdapterUser {
+    id: string;
+    accessToken: string;
     role?: string;
     image?: string;
     name?: string;
