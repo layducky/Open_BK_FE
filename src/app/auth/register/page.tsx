@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
@@ -9,6 +8,7 @@ import { signUp } from "@/services/auth/auth";
 import AuthFormLayout from "@/components/auth/AuthFormLayout";
 import InputField from "@/components/common/InputField";
 import { ButtonForm } from "@/components/common/buttons/button";
+import { signIn } from "next-auth/react";
 
 const fields = [
   { label: "First Name", id: "firstName", type: "text", placeholder: "i.e: Kevin" },
@@ -19,20 +19,23 @@ const fields = [
 ];
 
 export default function RegisterPage() {
-  const router = useRouter();
 
   const { mutate, error } = useMutation({
-    mutationFn: (data: any) =>
-      signUp({
+    mutationFn: async (data: any) => {
+      await signUp({
         name: `${data.firstName} ${data.lastName}`,
         email: data.email,
         password: data.password,
-      }),
-    onSuccess: ({ userID, accessToken }) => {
-      if (userID) sessionStorage.setItem("userID", userID);
-      if (accessToken) sessionStorage.setItem("accessToken", accessToken);
-      window.location.reload();
-      router.push("/");
+      });
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        callbackUrl: "/",
+        redirect: true,
+      });
+      if (!result?.ok) {
+        throw new Error("Invalid email or password");
+      }
     },
   });
 

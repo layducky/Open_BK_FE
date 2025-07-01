@@ -6,7 +6,6 @@ import { PublicCourseEntity } from "@/type/course.entity";
 
 export const UserInforBar = () => {
   const { data: user } = useUser();
-  console.log("User Info Bar", user);
 
   const backgroundColor =
     user?.role === "LEARNER" ? "bg-pink-300" : user?.role === "ADMIN" ? "bg-gray-300" :  "bg-yellow-200";

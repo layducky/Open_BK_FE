@@ -28,6 +28,7 @@ export const Navbar: React.FC = () => {
 
   const user = session?.user;
   sessionStorage.setItem("userID", user?.id || "");
+  sessionStorage.setItem("accessToken", session?.accessToken || "");
 
   return (
     <div className="flex overflow-hidden flex-wrap items-center py-4 pl-8 w-full text-base leading-none bg-white text-black shadow-sm max-md:pl-5 max-md:max-w-full">
