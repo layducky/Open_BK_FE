@@ -8,6 +8,7 @@ const server_url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
 const GOOGLE_CLIENT_SECRET = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET || "";
 
+console.log("Loaded environment variables:", { server_url, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET });
 
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,

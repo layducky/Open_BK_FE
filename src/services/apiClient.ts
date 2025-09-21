@@ -1,4 +1,4 @@
-'use server';
+'use client';
 import axios from "axios";
 
 const server_url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
