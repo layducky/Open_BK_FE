@@ -7,6 +7,9 @@ const apiClient = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+
+console.log("Loaded environment variables:", { server_url });
+
 const getApiClientWithAuth = () => {
   if (typeof window === "undefined") {
     // Return a client without Authorization header during SSR
