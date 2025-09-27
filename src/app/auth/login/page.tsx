@@ -33,11 +33,13 @@ export default function LoginPage() {
         email: data.email,
         password: data.password,
         callbackUrl: callbackUrl,
-        redirect: true,
+        redirect: false,
       });
 
       if (!result?.ok) {
         setError("Invalid email or password");
+      } else if (result?.ok) {
+        window.location.href = result.url || callbackUrl; 
       }
         
     } catch (error) {
