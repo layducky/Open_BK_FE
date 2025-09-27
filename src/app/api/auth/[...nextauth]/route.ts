@@ -1,14 +1,13 @@
 import NextAuth from "next-auth/next";
-import { NextAuthOptions, DefaultSession } from "next-auth";
-import { oAuth2Verify } from "@/services/auth/oAuth2";
+import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import axios from 'axios';
+import { oAuth2Verify } from "@/services/auth/oAuth2";
 
-const server_url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const server_url = "http://backend:5000/api/v1";
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
 const GOOGLE_CLIENT_SECRET = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET || "";
-
-console.log("Loaded environment variables:", { server_url, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET });
 
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -25,17 +24,14 @@ const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
         try {
-          const response = await fetch(`${server_url}/auth/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: credentials.email,
+          const response = await axios.post(`${server_url}/auth/login`, {
+            email: credentials.email,
               password: credentials.password,
-            }),
-          });
+            }, {
+                headers: { "Content-Type": "application/json" }
+            });
 
-          if (!response.ok) return null;
-          const data = await response.json();
+          const data = response.data;
           return {
             id: data.userID,
             name: data.name,
@@ -44,7 +40,11 @@ const authOptions: NextAuthOptions = {
             accessToken: data.accessToken,
           };
         } catch (error) {
-          console.error("Login failed:", error);
+          if (axios.isAxiosError(error) && error.response) {
+            console.error("Login failed (Backend response error):", error.response.data);
+            return null;
+          }
+          console.error("Login failed (Network or Unknown Error):", error);
           return null;
         }
       },
@@ -115,10 +115,9 @@ const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // if (url.startsWith("/")) return `${baseUrl}${url}`
-      // else if (new URL(url).origin === baseUrl) return url
-    // return baseUrl
-      return '/';
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      else if (url.startsWith(baseUrl)) return url
+      return baseUrl
     }
   },
 }

@@ -1,14 +1,11 @@
 'use client';
 import axios from "axios";
 
-const server_url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const server_url = "/api/v1";
 const apiClient = axios.create({
   baseURL: server_url,
   headers: { "Content-Type": "application/json" },
 });
-
-
-console.log("Loaded environment variables:", { server_url });
 
 const getApiClientWithAuth = () => {
   if (typeof window === "undefined") {

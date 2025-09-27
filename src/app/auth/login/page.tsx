@@ -26,15 +26,23 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormInputs) => {
-    const result = await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      callbackUrl: "/",
-      redirect: true,
-    });
+    const callbackUrl = window.location.origin + "/";
 
-    if (!result?.ok) {
-      setError("Invalid email or password");
+    try {
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        callbackUrl: callbackUrl,
+        redirect: true,
+      });
+
+      if (!result?.ok) {
+        setError("Invalid email or password");
+      }
+        
+    } catch (error) {
+        console.error("NextAuth signIn failed with exception:", error);
+        setError("A system error occurred during login. Please try again.");
     }
   };
 

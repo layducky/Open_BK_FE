@@ -9,7 +9,6 @@ export const getUserInfo = async (): Promise<UserEntity | null> => {
       return null;
     }
     const { data } = await apiClientWithAuth.get<UserEntity>(`/user/${userID}`);
-    console.log("User Info:", data);
     return data ? new UserEntity(data) : null;
   } catch (error) {
     return null;

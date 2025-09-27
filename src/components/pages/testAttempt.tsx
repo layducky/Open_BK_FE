@@ -16,7 +16,6 @@ interface TestPageProps {
 }
 
 const TestPage = ({ testID, submissionID, mode }: TestPageProps) => {
-  console.log(submissionID);
   const { data: questionContents, isLoading, error, refetch } = useQuestions(testID);
   const { data: userInfo } = useUser();
   const [newQuestionIDs, setNewQuestionIDs] = useState<string[]>([]);

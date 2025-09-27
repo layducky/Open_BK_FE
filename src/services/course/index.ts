@@ -5,7 +5,6 @@ const url = `/course/public`;
 const getAllCourses = async () => {
   try {
     const res = await apiClient.get(`${url}`);
-
     if (res.status === 200) {
       return res.data;
     } else {
