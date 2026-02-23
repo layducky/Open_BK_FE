@@ -61,7 +61,7 @@ const CollabCoursesPage: React.FC<{
   return (
     <div className="w-full p-8 drop-shadow h-fit min-h-full bg-white rounded-2xl flex flex-col gap-6 min-w-full">
       <div className="flex">
-        <div className="w-5/6">
+        <div className="w-5/6 flex justify-center items-center">
           <h3 className="font-semibold text-lg">My Courses</h3>
         </div>
         <div className="w-1/6">

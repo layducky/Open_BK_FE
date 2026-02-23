@@ -2,9 +2,17 @@ import { apiClient } from "@/services/apiClient";
 
 const url = `/course/public`;
 
-const getAllCourses = async () => {
+export interface CourseFilters {
+  search?: string;
+  category?: string;
+  priceType?: string;
+}
+
+const getAllCourses = async (filters?: CourseFilters) => {
   try {
-    const res = await apiClient.get(`${url}`);
+    const res = await apiClient.get(`${url}`, {
+      params: filters,
+    });
     if (res.status === 200) {
       return res.data;
     } else {

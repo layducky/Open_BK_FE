@@ -5,16 +5,16 @@ import { PublicCourseEntity } from "@/type/course.entity";
 import { UnitEntity } from "@/type/unit.entity";
 import { QuestionEntity } from "@/type/question.entity";
 
-import { getAllCourses } from "@/services/course";
+import { CourseFilters, getAllCourses } from "@/services/course";
 import { getAllUnits } from "@/services/course/unit";
 import { getAllQuestions } from "@/services/course/question";
 import { getUserTest } from "@/services/course/test";
 import { UserTestEntity } from "@/type/test.entity";
 
-export const useCourses = () => {
+export const useCourses = (filters?: CourseFilters) => {
   return useQuery<PublicCourseEntity[] | undefined>({
-    queryKey: ["getAllCourses"],
-    queryFn: getAllCourses,
+    queryKey: ["getAllCourses", filters ?? {}],
+    queryFn: () => getAllCourses(filters),
     staleTime: Infinity,
   });
 };
@@ -46,8 +46,8 @@ export const useUserTest = (testID: string) => {
 export const prefetchCourses = async () => {
   const queryClient = getQueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ['getAllCourses'],
-    queryFn: getAllCourses,
+    queryKey: ["getAllCourses"],
+    queryFn: () => getAllCourses(),
     staleTime: Infinity,
   });
 };

@@ -9,6 +9,7 @@ import SignupButton from "../common/buttons/SignupButton";
 import { roleString } from "@/lib/roleUtils";
 import { useSession } from "next-auth/react";
 import { LogoutButton } from "../common/buttons/logoutButton";
+import { useRouter } from "next/navigation";
 
 const CartCount: React.FC = () => {
   return (
@@ -24,6 +25,21 @@ const CartCount: React.FC = () => {
 
 export const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
+
+  const [search, setSearch] = React.useState("");
+
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const query = search.trim();
+    const params = new URLSearchParams();
+    if (query) {
+      params.set("search", query);
+    }
+    const url = params.toString() ? `/course?${params.toString()}` : "/course";
+    router.push(url);
+  };
+
   if (status === 'loading') return <div>Loading...</div>;
 
   const user = session?.user;
@@ -47,7 +63,10 @@ export const Navbar: React.FC = () => {
       </div>
 
       <div className="w-6/12 flex justify-center" >
-        <form className="flex flex-wrap gap-10 justify-between items-center self-stretch px-4 py-2 my-auto tracking-wide whitespace-nowrap rounded-2xl bg-stone-100 min-w-[240px] text-black text-opacity-70 w-[607px] max-md:px-5 max-md:max-w-full">
+        <form
+          className="flex flex-wrap gap-10 justify-between items-center self-stretch px-4 py-2 my-auto tracking-wide whitespace-nowrap rounded-2xl bg-stone-100 min-w-[240px] text-black text-opacity-70 w-[607px] max-md:px-5 max-md:max-w-full"
+          onSubmit={handleSearchSubmit}
+        >
           <label htmlFor="search" className="sr-only">
             Search courses
           </label>
@@ -57,6 +76,8 @@ export const Navbar: React.FC = () => {
               id="search"
               placeholder="Search"
               className="bg-transparent border-none outline-none flex-grow"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
             <Search />
           </div>
