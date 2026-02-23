@@ -67,13 +67,6 @@ export default function CourseLayout({
                         <ReviewCourseCard courseID={courseID || ''} courseData={courseData ?? undefined} />
                     </div>
 
-                    {courseData?.category && (
-                        <div className="px-6 max-md:px-5">
-                            <span className="inline-block px-3 py-1.5 text-sm font-medium rounded-[50px] bg-zinc-200 text-black">
-                                {courseData.category}
-                            </span>
-                        </div>
-                    )}
                     <div
                         className="flex flex-wrap gap-4 items-center px-24 py-4 max-w-full text-base text-center text-black max-md:px-5 ">
                         {tabs.map((tab, index) => (
@@ -86,8 +79,8 @@ export default function CourseLayout({
 
                         ))}
                     </div>
-                    <div className="flex flex-col items-center">
-                        <div className="p-4 md:px-12 rounded-xl border border-solid border-black border-opacity-30 w-full">
+                    <div className="flex flex-col items-start">
+                        <div className="p-4 md:px-12 rounded-xl border border-solid border-black border-opacity-30 w-full text-left">
                             {children }
                         </div>
                     </div>

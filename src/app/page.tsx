@@ -27,12 +27,12 @@ export default function Page() {
         direction="up"
         className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-16 w-full bg-white min-h-[400px]"
       >
-        <h2 className="text-3xl font-bold text-slate-900 mb-2">What&apos;s new</h2>
-        <p className="text-slate-600 mb-8 max-w-xl">Discover the latest courses and start learning.</p>
-        <div className="flex flex-wrap gap-6 justify-center md:justify-start items-stretch w-full">
+        <h2 className="text-3xl font-bold text-slate-900 mb-2 text-center">What&apos;s new</h2>
+        <p className="text-slate-600 mb-8 max-w-xl mx-auto text-center">Discover the latest courses and start learning.</p>
+        <div className="flex flex-wrap gap-6 justify-center items-stretch w-full">
           <RenderPublicCourses courses={courses} start={0} end={3} viewType="PREVIEW-COURSE" />
         </div>
-        <div className="mt-8">
+        <div className="mt-8 flex justify-center">
           <Link
             href="/course"
             className="inline-flex items-center px-5 py-2.5 rounded-xl bg-dodger-blue-500 text-white font-medium hover:bg-dodger-blue-600 transition"

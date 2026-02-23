@@ -1,7 +1,6 @@
 'use client';
 import { useUser } from "@/hooks/querys/useUser";
 import { useState, useEffect } from "react";
-
 import { UserEntity } from "@/type/user.entity";
 const Profile: React.FC = () => {
   const [profile, setProfile] = useState<UserEntity>();

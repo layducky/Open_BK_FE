@@ -7,8 +7,7 @@ import { useUser } from "@/hooks/querys/useUser";
 import { useUnits } from "@/hooks/querys/useCourses";
 import { UnitActionDropdown } from "@/components/common/buttons/UnitBtn";
 import { CreateUnitBtn } from "@/components/common/buttons/UnitBtn";
-
-
+import { formatDateTime } from "@/lib/dateUtils";
 
 export default function CourseContentPage({ params }: { params: Promise<{ courseID: string }> }) {
   const [courseID, setCourseID] = React.useState<string | null>(null);
@@ -75,8 +74,8 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                     </div>                    
                     <div className="w-full md:w-1/2">
                     {[
-                    { iconType: "download", bulletType:"borderText", text: `Created at: ${unit.createdAt}` },
-                    { iconType: "infinity", bulletType:"borderText", text: `Updated at: ${unit.updatedAt}` },
+                    { iconType: "download", bulletType:"borderText", text: `Created at: ${formatDateTime(unit.createdAt)}` },
+                    { iconType: "infinity", bulletType:"borderText", text: `Updated at: ${formatDateTime(unit.updatedAt)}` },
                     ].map((item, itemIndex) => (
                       <BulletItem key={itemIndex} {...item}/>
                     ))}

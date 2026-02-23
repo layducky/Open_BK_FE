@@ -6,6 +6,7 @@ import { SubmissionStatusEntity } from "@/type/test.entity";
 import { useRouter } from "next/navigation";
 import { createSubmission, updateSubmission } from "@/services/course/test";
 import { TestActionDropdown } from "@/components/common/buttons/UnitBtn";
+import { formatDateTime } from "@/lib/dateUtils";
 
 
 const attemptLabels: Record<string, string> = {
@@ -32,7 +33,7 @@ const AttemptCard = ({ sub }: { sub: SubmissionStatusEntity }) => {
         return "text-black";
     }
   };
-  const endDate = sub.submittedAt ?? "Waiting...";
+  const endDate = sub.submittedAt != null ? formatDateTime(sub.submittedAt) : "Waiting...";
 
   const rows = [
     {
@@ -54,7 +55,7 @@ const AttemptCard = ({ sub }: { sub: SubmissionStatusEntity }) => {
     },
     { key: "numRightAns", value: <span className="text-black">{sub.numRightAns}</span> },
     { key: "timeTaken", value: <span className="text-black">{sub.numRightAns}</span> },
-    { key: "start", value: <span className="text-black">{sub.createdAt}</span> },
+    { key: "start", value: <span className="text-black">{formatDateTime(sub.createdAt)}</span> },
     { key: "end", value: <span className="text-gray-500">{endDate}</span> },
   ];
 
