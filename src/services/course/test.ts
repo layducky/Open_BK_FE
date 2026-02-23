@@ -81,3 +81,13 @@ export const updateSubmission = async (submissionID: string, data: SubmissionEnt
         throw new Error("Failed to update submission");
     }
 };
+
+export const getSubmissionReview = async (submissionID: string) => {
+    try {
+        const res = await apiClientWithAuth.get(`/user/test/submit/review/${submissionID}`);
+        if (res.status === 200) return res.data;
+        throw new Error(res.data?.message || "Failed to get submission review");
+    } catch (error) {
+        throw new Error(error instanceof Error ? error.message : "Failed to get submission review");
+    }
+};

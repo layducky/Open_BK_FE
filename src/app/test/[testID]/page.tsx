@@ -1,10 +1,12 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import { useTest } from '@/context/TestContext';
 import { useUserTest } from "@/hooks/querys/useCourses";
+import { useUser } from "@/hooks/querys/useUser";
 import { SubmissionStatusEntity } from "@/type/test.entity";
 import { useRouter } from "next/navigation";
-import { createSubmission, updateSubmission } from "@/services/course/test";
+import { createSubmission } from "@/services/course/test";
 import { TestActionDropdown } from "@/components/common/buttons/UnitBtn";
 import { formatDateTime } from "@/lib/dateUtils";
 
@@ -18,7 +20,7 @@ const attemptLabels: Record<string, string> = {
   end: "End",
 };
 
-const AttemptCard = ({ sub }: { sub: SubmissionStatusEntity }) => {
+const AttemptCard = ({ sub, testID }: { sub: SubmissionStatusEntity; testID: string }) => {
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
       case "ongoing":
@@ -72,7 +74,7 @@ const AttemptCard = ({ sub }: { sub: SubmissionStatusEntity }) => {
           ))}
         </tbody>
       </table>
-      <a href="#" className="text-blue-600 hover:underline text-sm">Review</a>
+      <Link href={`/test/${testID}/submission/${sub.submissionID}`} className="text-blue-600 hover:underline text-sm">Review</Link>
     </div>
   );
 };
@@ -80,9 +82,10 @@ const AttemptCard = ({ sub }: { sub: SubmissionStatusEntity }) => {
 export default function TestPage() {
   const { testID, setSubmissionID } = useTest();
   const router = useRouter();
+  const { data: userInfo } = useUser();
   if (!testID) return <div>Loading test ID...</div>;
 
-  const { data: userTest, isLoading, error, refetch } = useUserTest(testID as string);
+  const { data: userTest, isLoading, error } = useUserTest(testID as string);
   if (isLoading) return <div>Loading questions...</div>;
   if (error) return <div>Error loading questions: {error.message}</div>;
 
@@ -135,9 +138,11 @@ export default function TestPage() {
               Test {userTest?.numericalOrder}: <span className="text-blue-600">{userTest?.testName}</span>
             </h1>
           </div>
-          <div className="w-1/6">
-            <TestActionDropdown testID={testID as string} />
-          </div>
+          {userInfo?.role === "COLLAB" && (
+            <div className="w-1/6">
+              <TestActionDropdown testID={testID as string} />
+            </div>
+          )}
         </div>
         {["allow", "continue", "closed", "forbidden"].includes(userTest?.status ?? "") && (
           <button
@@ -172,7 +177,7 @@ export default function TestPage() {
           <div className="text-xl font-semibold text-blue-500 mb-4">Overview of your previous attempts</div>
         </div>
         <div className="flex flex-wrap md:flex-row gap-6">
-          {userTest?.submissions?.map(sub => <AttemptCard key={sub.submissionID} sub={sub} />)}
+          {userTest?.submissions?.map(sub => <AttemptCard key={sub.submissionID} sub={sub} testID={testID as string} />)}
         </div>
 
       </div>

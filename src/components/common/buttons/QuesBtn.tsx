@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useQuestionMutations } from "@/hooks/mutations/useQuestionMutations";
 import GradientButton from "@/components/common/buttons/GradientButton";
 import { SubmissionAnsEntity, SubmissionEntity } from "@/type/submission.entity";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSubmissionMutation } from "@/hooks/mutations/useSubmissionMutation";
 
 interface CreateQuesBtnProps {
@@ -148,6 +149,7 @@ export const DeleteQuesBtn: React.FC<DeleteQuesBtnProps> = ({ questionID, testID
 
 export const SubmitTestBtn = ({ testID, submissionID, submission }: { testID: string; submissionID: string; submission: Record<string, string> }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { updateMutation } = useSubmissionMutation(submissionID);
 
   const handleSubmitAnss = () => {
@@ -163,6 +165,7 @@ export const SubmitTestBtn = ({ testID, submissionID, submission }: { testID: st
 
     updateMutation.mutate(data, {
       onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["getUserTest", testID] });
         router.push(`/test/${testID}`);
       },
     });
