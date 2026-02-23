@@ -94,7 +94,7 @@ export const ButtonClick: React.FC<
   return (
     <button className={`group relative ${align} w-fit flex`} onClick={handleClick}>
       <div
-        className={`flex justify-center items-center gap-2 p-2 bg-saffron-400 font-semibold text-lg rounded-3xl border-2 z-20 border-black ${className}`}
+        className={`flex justify-center items-center gap-2 p-1.5 bg-saffron-400 font-semibold text-md rounded-3xl border-2 z-20 border-black ${className}`}
       >
         {children}
       </div>

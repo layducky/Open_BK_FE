@@ -26,6 +26,19 @@ const getAllEnrolledCourses = async (learnerID: string) => {
   }
 };
 
+const getEnrollStats = async () => {
+  try {
+    const res = await apiClientWithAuth.get(`${url}/stats`);
+
+    if (res.status === 200) {
+      return res.data;
+    }
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getEnrolledCourseById = async (courseID: number) => {
   try {
     const res = await apiClientWithAuth.get(
@@ -91,5 +104,6 @@ export {
   getAllEnrolledCourses,
   getEnrolledCourseById,
   // updateEnrolledCourse,
-  deleteEnrolledCourse
+  deleteEnrolledCourse,
+  getEnrollStats,
 };

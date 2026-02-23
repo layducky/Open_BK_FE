@@ -11,7 +11,7 @@ const tabs = [
 //   { id: "completedCourses", label: "Completed Courses" },
 ];
 
-const ITEMS_PER_PAGE = 21;
+const ITEMS_PER_PAGE = 3;
 
 const CollabCoursesPage: React.FC<{
   data: any;
@@ -46,7 +46,6 @@ const CollabCoursesPage: React.FC<{
   const coursesForSelectedTab = allCourses[selectedTabId] || [];
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  // const coursesToShow = coursesForSelectedTab.slice(startIndex, endIndex);
   const totalPages = Math.ceil(coursesForSelectedTab.length / ITEMS_PER_PAGE);
 
   const handleTabClick = (tabId: string) => {
@@ -59,12 +58,12 @@ const CollabCoursesPage: React.FC<{
   };
 
   return (
-    <div className="w-full p-8 drop-shadow h-fit min-h-full bg-white rounded-2xl flex flex-col gap-6 min-w-full">
+    <div className="w-full p-3 drop-shadow h-fit min-h-full bg-white rounded-2xl flex flex-col gap-3 min-w-full">
       <div className="flex">
         <div className="w-5/6 flex justify-center items-center">
           <h3 className="font-semibold text-lg">My Courses</h3>
         </div>
-        <div className="w-1/6">
+        <div className="w-1/6 flex justify-end items-center">
           <CreateCourseBtn />
         </div>
       </div>
@@ -93,7 +92,12 @@ const CollabCoursesPage: React.FC<{
       </div>
       <div className="flex justify-center items-center tab_content w-full h-fit flex flex-col">
         <div className="flex justify-center items-center grid grid-cols-3 gap-8 max-md:grid-cols-1 max-xl:grid-cols-2">
-          <RenderPublicCourses courses={courses} start={0} end={3} viewType="COLLAB-COURSE" />
+          <RenderPublicCourses
+            courses={coursesForSelectedTab}
+            start={startIndex}
+            end={endIndex}
+            viewType="COLLAB-COURSE"
+          />
         </div>
         <Pagination
           currentPage={currentPage}

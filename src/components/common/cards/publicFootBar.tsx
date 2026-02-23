@@ -17,12 +17,12 @@ export const PublicFootBar: React.FC<{ price: string }> = ({ price }) => {
   }, [params.courseID]);
 
   return (
-    <div className="flex gap-5 justify-between items-center pt-4 mt-4 w-full">
+    <div className="flex gap-5 justify-between items-center pt-4 mt-1 w-full">
       <ButtonClick courseID={courseID}>
         Enroll now
         <ArrowRight />
       </ButtonClick>
-      <div className="self-stretch my-auto text-2xl font-bold text-sky-600">
+      <div className="self-stretch my-auto text-xl font-bold text-green-600">
         {price}$
       </div>
     </div>

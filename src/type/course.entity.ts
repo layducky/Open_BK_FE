@@ -9,6 +9,7 @@ export class Course {
     name: string;
     image: string;
   };
+  learnersCount?: number;
   createdAt: string;
   updatedAt: string;
 
