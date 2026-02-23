@@ -14,6 +14,8 @@ const InputField = ({
   type = "text",
   disabled,
   options,
+  min,
+  max,
 }: {
   label: string;
   id: string;
@@ -23,7 +25,9 @@ const InputField = ({
   placeholder: string;
   type?: string;
   disabled: boolean;
-  options?: { value: string; label: string }[]; // Add options for select
+  options?: { value: string; label: string }[];
+  min?: number;
+  max?: number;
 }) => {
   return (
     <div className="flex flex-col md:gap-2 w-full relative">
@@ -56,6 +60,8 @@ const InputField = ({
           placeholder={placeholder}
           disabled={disabled}
           {...(value ? { value } : {})}
+          {...(type === "number" && min !== undefined ? { min } : {})}
+          {...(type === "number" && max !== undefined ? { max } : {})}
         />
       )}
       {error?.message && (

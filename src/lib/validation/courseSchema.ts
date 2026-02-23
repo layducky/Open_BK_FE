@@ -12,12 +12,14 @@ export const courseSchema = yup.object().shape({
 
   category: yup
     .string()
-    .required("Category is required"),
+    .required("Category is required")
+    .oneOf(["MATH", "ENGLISH", "CODE", "ART", "NONE"], "Category must be selected from the list"),
 
   price: yup
     .number()
     .required("Price is required")
-    .min(0, "Price must be greater than or equal to 0"),
+    .min(0, "Price must be 0 or greater (no negative values)")
+    .typeError("Price must be a number"),
 
   image: yup
     .mixed(),

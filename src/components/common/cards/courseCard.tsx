@@ -1,6 +1,6 @@
 import Star from "/public/svg/star.svg";
 import Link from "next/link";
-import { Course } from "@/type/course.entity";
+import { Course, EnrolledCourseEntity } from "@/type/course.entity";
 import { PublicFootBar } from "./publicFootBar";
 import { EnrolledFootBar } from "./enrolledFootBar";
 import { CollabFootBar } from "./collabFootBar";
@@ -58,7 +58,11 @@ export const CourseCard: React.FC<{ course: Course | null; type?: string }> = ({
           {type === "PREVIEW-COURSE" && (
             <PublicFootBar price={course?.price ?? "0"} />
           )}
-          {type === "ENROLLED-COURSE" && <EnrolledFootBar />}
+          {type === "ENROLLED-COURSE" && (
+            <EnrolledFootBar
+              progress={(course as EnrolledCourseEntity)?.status === "COMPLETED" ? 100 : 0}
+            />
+          )}
           {type === "COLLAB-COURSE" && (
             <CollabFootBar
               courseID={course?.courseID || null}

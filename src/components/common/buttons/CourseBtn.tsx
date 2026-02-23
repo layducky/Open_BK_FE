@@ -1,7 +1,7 @@
 "use client";
 
 import { createCourse, deleteCourse } from "@/services/course/courseCollab";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -10,18 +10,18 @@ import { useMutation } from "@tanstack/react-query";
 import { courseSchema } from "@/lib/validation/courseSchema";
 import InputField from "../InputField";
 import GradientButton from "./GradientButton";
+import { useCourseCategories } from "@/hooks/querys/useCourseData";
 
 
 export const CreateCourseBtn: React.FC = () => {
-    const [authorID, setAuthorID] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [image, setImage] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string | null>(null); 
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const { data: categoryOptions = [] } = useCourseCategories();
 
-    const { mutate, error } = useMutation({
+    const { mutate } = useMutation({
         mutationFn: (data: any) => createCourse({
-            authorID: data.authorID,
-            // image: image as Blob, 
+            authorID: typeof window !== "undefined" ? sessionStorage.getItem("userID") : null,
             courseName: data.courseName,
             description: data.description,
             category: data.category,
@@ -65,37 +65,29 @@ export const CreateCourseBtn: React.FC = () => {
     };
 
     const formFields = [
-        { label: "Author ID", type: "hidden", id: "authorID", placeholder: "", disabled: false },
         { label: "Course Name", type: "text", id: "courseName", placeholder: "Course Name", disabled: false },
         { label: "Description", type: "text", id: "description", placeholder: "Description", disabled: false },
-        { label: "Category", type: "text", id: "category", placeholder: "Category", disabled: false },
-        { label: "Price", type: "number", id: "price", placeholder: "Price", disabled: false }
+        { label: "Category", type: "select", id: "category", placeholder: "Select category", disabled: false, options: categoryOptions },
+        { label: "Price", type: "number", id: "price", placeholder: "0", disabled: false, min: 0 }
     ];
-
-    useEffect(() => {
-        const storedAuthorID = sessionStorage.getItem("userID");
-        if (storedAuthorID) {
-            setAuthorID(storedAuthorID);
-        }
-        
-    }, []);
 
     return (
         <>
             <GradientButton onClick={handleClick} text="Create New Course" />
             <Modal modelTitle="Create New Course" isOpen={isOpen} onClose={onClose}>
                 <form onSubmit={handleSubmit((data) => mutate(data))} className="space-y-6">
-                    {formFields.map(({ label, id, placeholder, disabled }) => (
+                    {formFields.map(({ label, id, type = "text", placeholder, disabled, options, min }) => (
                         <label key={id} className="block">
                             <InputField
                                 label={label}
                                 id={id}
-                                type="text"
+                                type={type}
                                 register={register}
-                                value={id === "authorID" ? authorID || "" : ""}
                                 placeholder={placeholder}
-                                error={errors.courseName}
+                                error={errors[id as keyof typeof errors]}
                                 disabled={disabled}
+                                options={options}
+                                min={min}
                             />
                         </label>
                     ))}

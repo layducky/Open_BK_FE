@@ -1,6 +1,9 @@
 'use client'
 import { BulletItem } from '@/components/ui/bulletItem';
 import { ButtonClick } from '@/components/common/buttons/button';
+import { EnrolledFootBar } from './enrolledFootBar';
+import { useEnrolledCourses } from '@/hooks/querys/useEnrollCourse';
+import { PublicCourseEntity } from '@/type/course.entity';
 
 const courseFeatures = [
     { iconType: "video", text: '95 hours on-demand video' },
@@ -12,8 +15,19 @@ const courseFeatures = [
     { iconType: "certificate", text: 'Certificate of completion' }
 ]
 
-export const ReviewCourseCard = ({courseID}: {courseID: string | null}) => {
-    return(
+export const ReviewCourseCard = ({
+    courseID,
+    courseData,
+}: {
+    courseID: string | null;
+    courseData?: PublicCourseEntity | null;
+}) => {
+    const { data: enrolledList } = useEnrolledCourses();
+    const enrollment = enrolledList?.find((c: { courseID: string }) => c.courseID === courseID);
+    const isEnrolled = !!enrollment;
+    const progress = enrollment?.status === 'COMPLETED' ? 100 : 0;
+
+    return (
         <div className="top-10 flex-col mx-auto sticky">
             <div className='shadow-lg bg-white rounded-lg border py-4'>
                 <div className="flex flex-col px-2.5 py-4 w-full text-base">
@@ -24,18 +38,30 @@ export const ReviewCourseCard = ({courseID}: {courseID: string | null}) => {
                         ))}
                     </div>
                 </div>
-                <div className="flex flex-col pt-2.5 w-full text-sm font-semibold">
-                    <div className="flex justify-center items-center px-2.5 w-full">
-                        <div className="flex pb-6 items-start self-stretch my-auto w-[223px]">
-                            <ButtonClick 
-                                courseID={courseID} 
-                                className="w-[200px]">Enroll now
-                            </ButtonClick>
+                <div className="flex flex-col pt-2.5 w-full text-sm font-semibold px-2.5">
+                    {!isEnrolled ? (
+                        <>
+                            <div className="flex justify-center items-center w-full pb-2">
+                                <span className="text-xl font-bold text-green-600">
+                                    {courseData?.price != null && courseData?.price !== '' ? `${courseData.price}$` : 'Free'}
+                                </span>
+                            </div>
+                            <div className="flex justify-center items-center w-full pb-6">
+                                <ButtonClick
+                                    courseID={courseID}
+                                    className="w-[200px]"
+                                >
+                                    Enroll now
+                                </ButtonClick>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="pb-6">
+                            <EnrolledFootBar progress={progress} />
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
-            
         </div>
     )
 }

@@ -23,6 +23,23 @@ const getAllCourses = async (filters?: CourseFilters) => {
   }
 };
 
+export interface CourseCategoryOption {
+  value: string;
+  label: string;
+}
+
+const getCourseCategories = async (): Promise<CourseCategoryOption[]> => {
+  try {
+    const res = await apiClient.get(`${url}/categories`);
+    if (res.status === 200 && Array.isArray(res.data)) {
+      return res.data;
+    }
+    return [];
+  } catch (error) {
+    return [];
+  }
+};
+
 const getCourseById = async (courseID?: string) => {
   if (!courseID) return {};
 
@@ -83,6 +100,7 @@ const deleteCourse = async (id: number) => {
 
 export {
   getAllCourses,
+  getCourseCategories,
   getCourseById,
   updateCourse,
   deleteCourse,

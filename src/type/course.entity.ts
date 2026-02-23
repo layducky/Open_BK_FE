@@ -38,6 +38,10 @@ export class Course {
 
 export interface PublicCourseEntity extends Course {
   authorID: string;
+  authorStats?: {
+    totalLearners: number;
+    ownedCourses: number;
+  };
 }
 
 export interface EnrolledCourseEntity extends Course {

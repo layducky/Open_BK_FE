@@ -64,9 +64,16 @@ export default function CourseLayout({
                 <div className='col-span-1 md:col-span-8 p-2'>
                     {courseData && <CourseInfoBar courseData={courseData}/>}
                     <div className="md:hidden">
-                        <ReviewCourseCard courseID={courseID || ''} />
+                        <ReviewCourseCard courseID={courseID || ''} courseData={courseData ?? undefined} />
                     </div>
 
+                    {courseData?.category && (
+                        <div className="px-6 max-md:px-5">
+                            <span className="inline-block px-3 py-1.5 text-sm font-medium rounded-[50px] bg-zinc-200 text-black">
+                                {courseData.category}
+                            </span>
+                        </div>
+                    )}
                     <div
                         className="flex flex-wrap gap-4 items-center px-24 py-4 max-w-full text-base text-center text-black max-md:px-5 ">
                         {tabs.map((tab, index) => (
@@ -86,7 +93,7 @@ export default function CourseLayout({
                     </div>
                 </div>
                 <aside className='hidden md:block col-span-1 md:col-span-2 p-2'>
-                    <ReviewCourseCard courseID={courseID || ''} />
+                    <ReviewCourseCard courseID={courseID || ''} courseData={courseData ?? undefined} />
                 </aside>
             </main>
         )

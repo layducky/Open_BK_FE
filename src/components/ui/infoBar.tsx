@@ -33,9 +33,8 @@ export const UserInforBar = () => {
 };
 
 const CourseStats = ({courseData}: {courseData: PublicCourseEntity}) => {
-  
+  const students = courseData?.learnersCount ?? 0;
   const sampleData = {
-      students: 123456,
       rating: 4.5,
       reviews: 123456,
       lastUpdated: courseData?.updatedAt,
@@ -53,7 +52,7 @@ const CourseStats = ({courseData}: {courseData: PublicCourseEntity}) => {
             <p className="font-bold">{courseData?.authorInfo?.name}</p>
           </div>
           <div className="text-gray-500">
-            {sampleData.students.toLocaleString()} students
+            {students.toLocaleString()} students
           </div>
           <div className="flex overflow-hidden z-0 gap-1.5 md:items-center self-stretch px-2.5 my-auto">
               <img
