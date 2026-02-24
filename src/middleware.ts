@@ -67,9 +67,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isCourseContent = /^\/course\/[^/]+\/content/.test(pathname);
   const isTestRoute = pathname.startsWith("/test");
-  const needsAuth = isCourseContent || isTestRoute;
+  const needsAuth = isTestRoute;
 
   if (needsAuth && !isAuthenticated) {
     const loginUrl = new URL("/auth/login", request.url);

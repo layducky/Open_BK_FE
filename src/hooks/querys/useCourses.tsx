@@ -6,7 +6,7 @@ import { UnitEntity } from "@/type/unit.entity";
 import { QuestionEntity } from "@/type/question.entity";
 
 import { CourseFilters, getAllCourses } from "@/services/course";
-import { getAllUnits } from "@/services/course/unit";
+import { getAllUnits, getPublicUnits } from "@/services/course/unit";
 import { getAllQuestions } from "@/services/course/question";
 import { getUserTest } from "@/services/course/test";
 import { UserTestEntity } from "@/type/test.entity";
@@ -19,13 +19,23 @@ export const useCourses = (filters?: CourseFilters) => {
   });
 };
 
-export const useUnits = (courseID: string) => {
+export const useUnits = (courseID: string, opts?: { enabled?: boolean }) => {
   return useQuery<UnitEntity[]>({
     queryKey: ["getAllUnits", courseID],
     queryFn: () => getAllUnits(courseID as string),
     staleTime: Infinity,
+    enabled: opts?.enabled !== false,
   });
-}
+};
+
+export const usePublicUnits = (courseID: string, opts?: { enabled?: boolean }) => {
+  return useQuery<UnitEntity[]>({
+    queryKey: ["getPublicUnits", courseID],
+    queryFn: () => getPublicUnits(courseID as string),
+    staleTime: Infinity,
+    enabled: opts?.enabled !== false,
+  });
+};
 
 export const useQuestions = (unitID: string) => {
   return useQuery<QuestionEntity[]>({

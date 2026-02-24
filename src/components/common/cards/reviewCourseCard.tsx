@@ -1,7 +1,6 @@
 'use client'
 import { BulletItem } from '@/components/ui/bulletItem';
 import { ButtonClick } from '@/components/common/buttons/button';
-import { EnrolledFootBar } from './enrolledFootBar';
 import { useEnrolledCourses } from '@/hooks/querys/useEnrollCourse';
 import { PublicCourseEntity } from '@/type/course.entity';
 
@@ -23,9 +22,7 @@ export const ReviewCourseCard = ({
     courseData?: PublicCourseEntity | null;
 }) => {
     const { data: enrolledList } = useEnrolledCourses();
-    const enrollment = enrolledList?.find((c: { courseID: string }) => c.courseID === courseID);
-    const isEnrolled = !!enrollment;
-    const progress = enrollment?.status === 'COMPLETED' ? 100 : 0;
+    const isEnrolled = !!enrolledList?.find((c: { courseID: string }) => c.courseID === courseID);
 
     return (
         <div className="top-10 flex-col mx-auto sticky">
@@ -56,8 +53,10 @@ export const ReviewCourseCard = ({
                             </div>
                         </>
                     ) : (
-                        <div className="pb-6">
-                            <EnrolledFootBar progress={progress} />
+                        <div className="flex justify-center items-center w-full pb-6">
+                            <div className="flex justify-center items-center w-[200px] p-1.5 bg-gray-300 text-gray-600 font-semibold text-md rounded-3xl border-2 border-gray-400 cursor-not-allowed pointer-events-none">
+                                Enrolled
+                            </div>
                         </div>
                     )}
                 </div>

@@ -1,6 +1,7 @@
 import { apiClient, apiClientWithAuth } from "@/services/apiClient";
 
 const url = `/course/collab/unit/`;
+const publicUrl = `/course/public/`;
 
 // Tạo mới một unit
 const createUnit = async (unitData: any) => {
@@ -22,6 +23,15 @@ const createUnit = async (unitData: any) => {
 const getAllUnits = async (courseID?: string) => {
   if (!courseID) return [];
   const res = await apiClientWithAuth.get(`${url}all/${courseID}`);
+  if (res.status === 200) return res.data || [];
+  const err = new Error((res as any)?.data?.message || "Failed to load units") as Error & { response?: any };
+  err.response = res;
+  throw err;
+};
+
+const getPublicUnits = async (courseID?: string) => {
+  if (!courseID) return [];
+  const res = await apiClient.get(`${publicUrl}${courseID}/units`);
   if (res.status === 200) return res.data || [];
   const err = new Error((res as any)?.data?.message || "Failed to load units") as Error & { response?: any };
   err.response = res;
@@ -86,6 +96,7 @@ const deleteUnit = async (unitID: string) => {
 export {
   createUnit,
   getAllUnits,
+  getPublicUnits,
   // getUnitById,
   // updateUnit,
   deleteUnit,

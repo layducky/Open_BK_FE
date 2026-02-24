@@ -55,7 +55,7 @@ export const CourseCard: React.FC<{ course: Course | null; type?: string }> = ({
           </div>
 
           {type === "PREVIEW-COURSE" && (
-            <PublicFootBar price={course?.price ?? "0"} />
+            <PublicFootBar price={course?.price ?? "0"} courseID={course?.courseID} />
           )}
           {type === "ENROLLED-COURSE" && (
             <EnrolledFootBar

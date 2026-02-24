@@ -5,7 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { BulletItem } from "@/components/ui/bulletItem";
 import { TestLink } from "@/components/common/TestLink";
 import { useUser } from "@/hooks/querys/useUser";
-import { useUnits } from "@/hooks/querys/useCourses";
+import { useUnits, usePublicUnits } from "@/hooks/querys/useCourses";
 import { useEnrolledCourses } from "@/hooks/querys/useEnrollCourse";
 import { useCourseData } from "@/hooks/querys/useCourseData";
 import { UnitActionDropdown } from "@/components/common/buttons/UnitBtn";
@@ -25,7 +25,6 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
     fetchCourseID();
   }, [params]);
 
-  const { data: unitContents, isLoading, error, refetch } = useUnits(courseID as string);
   const { data: userInfo } = useUser();
   const { data: enrolledCourses } = useEnrolledCourses();
   const { data: courseData } = useCourseData(courseID as string);
@@ -34,6 +33,10 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
     enrolledCourses?.some((c) => c.courseID === courseID) ||
     (userInfo?.role === "COLLAB" && courseData?.authorID === userInfo?.id) ||
     userInfo?.role === "ADMIN";
+
+  const unitsWithAuth = useUnits(courseID as string, { enabled: !!isEnrolled && !!courseID });
+  const unitsPublic = usePublicUnits(courseID as string, { enabled: !isEnrolled && !!courseID });
+  const { data: unitContents, isLoading, error, refetch } = isEnrolled ? unitsWithAuth : unitsPublic;
 
   React.useEffect(() => {
     const fetchNewUnitID = async () => {
@@ -50,15 +53,12 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
 
   if (isLoading) return <div>Loading units...</div>;
   if (error) {
-    const isForbidden = (error as any)?.response?.status === 403;
     return (
       <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
         <p className="text-amber-800 font-medium">
-          {isForbidden
-            ? "You must enroll in this course to view the content."
-            : `Error loading content: ${error.message}`}
+          Error loading content: {(error as Error).message}
         </p>
-        {isForbidden && courseID && (
+        {courseID && (
           <a
             href={`/course/${courseID}/overview`}
             className="mt-2 inline-block text-blue-600 hover:underline"
