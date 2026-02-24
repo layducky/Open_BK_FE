@@ -7,6 +7,7 @@ import Modal from "@/components/modals/formModal";
 import { questionSchema } from "@/lib/validation/questionSchema";
 import InputField from "../InputField";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/context/ModalContext";
 import { useQuestionMutations } from "@/hooks/mutations/useQuestionMutations";
 import GradientButton from "@/components/common/buttons/GradientButton";
 import { SubmissionAnsEntity, SubmissionEntity } from "@/type/submission.entity";
@@ -151,19 +152,35 @@ interface SubmitTestBtnProps {
   testID: string;
   submissionID: string;
   submission: Record<string, string>;
+  questionContents?: { questionID: string }[];
+  courseID?: string | null;
   onRef?: (ref: { submit: () => void } | null) => void;
 }
 
-export const SubmitTestBtn = ({ testID, submissionID, submission, onRef }: SubmitTestBtnProps) => {
+export const SubmitTestBtn = ({
+  testID,
+  submissionID,
+  submission,
+  questionContents = [],
+  courseID,
+  onRef,
+}: SubmitTestBtnProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { openModal, closeModal } = useModal();
   const { updateMutation } = useSubmissionMutation(submissionID);
 
-  const handleSubmitAnss = useCallback(() => {
-    const submissionArray: SubmissionAnsEntity[] = Object.entries(submission).map(([questionID, selectedAns]) => ({
-      questionID,
-      selectedAns,
-    }));
+  const doSubmit = useCallback(() => {
+    const submissionArray: SubmissionAnsEntity[] = (questionContents.length > 0
+      ? questionContents.map((q) => ({
+          questionID: q.questionID,
+          selectedAns: submission[q.questionID] || "NULL",
+        }))
+      : Object.entries(submission).map(([questionID, selectedAns]) => ({
+          questionID,
+          selectedAns: selectedAns || "NULL",
+        }))
+    ) as SubmissionAnsEntity[];
 
     const data = {
       status: "submitted",
@@ -171,12 +188,57 @@ export const SubmitTestBtn = ({ testID, submissionID, submission, onRef }: Submi
     };
 
     updateMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (res: any) => {
         queryClient.invalidateQueries({ queryKey: ["getUserTest", testID] });
-        router.push(`/test/${testID}`);
+        if (res?.totalScore != null) {
+          openModal("SubmitSuccessModal", {
+            onClose: closeModal,
+            testID,
+            courseID,
+            totalScore: res.totalScore,
+            numRightAns: res.numRightAns ?? 0,
+            numQuests: res.numQuests ?? 0,
+            timeTaken: res.timeTaken,
+          });
+        } else {
+          router.push(`/test/${testID}`);
+        }
       },
     });
-  }, [submission, testID, submissionID, updateMutation, queryClient, router]);
+  }, [
+    submission,
+    questionContents,
+    testID,
+    submissionID,
+    courseID,
+    updateMutation,
+    queryClient,
+    router,
+    openModal,
+    closeModal,
+  ]);
+
+  const handleSubmitAnss = useCallback(() => {
+    const total = questionContents.length || 1;
+    const answered = questionContents.filter(
+      (q) => submission[q.questionID] && submission[q.questionID] !== "" && submission[q.questionID] !== "NULL"
+    ).length;
+    const unanswered = total - answered;
+
+    if (total > 0 && unanswered > 0) {
+      openModal("UnansweredQuestionModal", {
+        onClose: closeModal,
+        onConfirm: () => {
+          closeModal();
+          doSubmit();
+        },
+        unansweredCount: unanswered,
+        totalCount: total,
+      });
+    } else {
+      doSubmit();
+    }
+  }, [submission, questionContents, openModal, closeModal, doSubmit]);
 
   useEffect(() => {
     onRef?.({ submit: handleSubmitAnss });
@@ -186,4 +248,4 @@ export const SubmitTestBtn = ({ testID, submissionID, submission, onRef }: Submi
   return (
     <GradientButton onClick={handleSubmitAnss} text="Submit" disabled={updateMutation.isPending} />
   );
-}
+};

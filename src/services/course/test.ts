@@ -62,18 +62,74 @@ export const getUserTest = async (testID: string) => {
   throw new Error((res as any).data?.message || "Failed to get user's test");
 };
 
-export const createSubmission = async (userTestID: string) => {
+export interface CreateSubmissionResult {
+  submissionID: string;
+  startedAt?: string;
+  duration?: number;
+  serverTime?: number;
+}
+
+export interface OngoingSubmissionError {
+  code: "ONGOING_SUBMISSION";
+  message: string;
+  submissionID: string;
+}
+
+export const createSubmission = async (userTestID: string): Promise<CreateSubmissionResult> => {
     try {
         const res = await apiClientWithAuth.post(`/user/test/submit/${userTestID}`);
-        if (res.status === 201) {
-            return res.data;
-        } else {
-            throw new Error(res.data?.message || "Failed to create submission");
+        if (res.status === 201) return res.data;
+        if (res.status === 409 && res.data?.code === "ONGOING_SUBMISSION") {
+            const err: OngoingSubmissionError = {
+                code: "ONGOING_SUBMISSION",
+                message: res.data?.message || "You have an ongoing attempt",
+                submissionID: res.data?.submissionID,
+            };
+            throw err;
         }
-    } catch (error) {
-        throw new Error("Failed to create submission");
+        throw new Error(res.data?.message || "Failed to create submission");
+    } catch (e: any) {
+        if (e?.code === "ONGOING_SUBMISSION") throw e;
+        if (e?.response?.status === 409 && e?.response?.data?.code === "ONGOING_SUBMISSION") {
+            throw {
+                code: "ONGOING_SUBMISSION",
+                message: e.response.data?.message || "You have an ongoing attempt",
+                submissionID: e.response.data?.submissionID,
+            } as OngoingSubmissionError;
+        }
+        throw e instanceof Error ? e : new Error("Failed to create submission");
     }
-}
+};
+
+export const forceEndAndCreate = async (userTestID: string): Promise<CreateSubmissionResult> => {
+    const res = await apiClientWithAuth.post(`/user/test/submit/${userTestID}/force-end-and-create`);
+    if (res.status === 201) return res.data;
+    throw new Error(res.data?.message || "Failed to force end and create");
+};
+
+export const getOngoingAnswers = async (submissionID: string): Promise<{ answers: { questionID: string; selectedAns: string }[] }> => {
+    const res = await apiClientWithAuth.get(`/user/test/submit/ongoing/${submissionID}`);
+    if (res.status === 200) return res.data;
+    throw new Error((res as any).data?.message || "Failed to get ongoing answers");
+};
+
+const getBaseUrl = () => process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+
+export const saveDraftKeepalive = (submissionID: string, data: SubmissionEntity) => {
+    if (typeof window === "undefined") return;
+    const token = sessionStorage.getItem("accessToken");
+    const url = `${getBaseUrl()}/user/test/submit/${submissionID}`;
+    const body = JSON.stringify(data);
+    fetch(url, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body,
+        keepalive: true,
+    }).catch(() => {});
+};
 
 export const updateSubmission = async (submissionID: string, data: SubmissionEntity) => {
     try {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useModal } from "@/context/ModalContext";
 import Link from "next/link";
 import { useTest } from "@/context/TestContext";
@@ -7,9 +7,10 @@ import { useUserTest } from "@/hooks/querys/useCourses";
 import { useUser } from "@/hooks/querys/useUser";
 import { SubmissionStatusEntity } from "@/type/test.entity";
 import { useRouter } from "next/navigation";
-import { createSubmission, NotEnrolledError } from "@/services/course/test";
+import { createSubmission, forceEndAndCreate, NotEnrolledError, OngoingSubmissionError } from "@/services/course/test";
 import { TestActionDropdown } from "@/components/common/buttons/UnitBtn";
 import { formatDateTime } from "@/lib/dateUtils";
+import Pagination from "@/components/common/pagination";
 
 
 const attemptLabels: Record<string, string> = {
@@ -63,7 +64,7 @@ const AttemptCard = ({ sub, testID }: { sub: SubmissionStatusEntity; testID: str
   ];
 
   return (
-    <div className="w-[30vh] flex-1 bg-gray-100 rounded-lg shadow-lg shadow p-4">
+    <div className="min-w-0 flex-1 bg-gray-100 rounded-lg shadow-lg shadow p-4">
       <div className="text-lg font-semibold text-blue-700 mb-2">Attempt {sub.numericalOrder}</div>
       <table className="w-full text-sm mb-2">
         <tbody>
@@ -80,12 +81,28 @@ const AttemptCard = ({ sub, testID }: { sub: SubmissionStatusEntity; testID: str
   );
 };
 
+const CARDS_PER_ROW = 4;
+const ROWS_PER_PAGE = 2;
+const CARDS_PER_PAGE = CARDS_PER_ROW * ROWS_PER_PAGE;
+
 export default function TestPage() {
   const { testID, setSubmissionID, setTimingFromCreate } = useTest();
   const router = useRouter();
   const { data: userInfo } = useUser();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const { data: userTest, isLoading, error } = useUserTest(testID as string);
+  const [attemptPage, setAttemptPage] = useState(1);
+
+  const submissions = userTest?.submissions ?? [];
+  const totalPages = Math.max(1, Math.ceil(submissions.length / CARDS_PER_PAGE));
+  const paginatedSubmissions = useMemo(() => {
+    const start = (attemptPage - 1) * CARDS_PER_PAGE;
+    return submissions.slice(start, start + CARDS_PER_PAGE);
+  }, [submissions, attemptPage]);
+
+  useEffect(() => {
+    setAttemptPage(1);
+  }, [testID]);
 
   useEffect(() => {
     if (error instanceof NotEnrolledError && error.courseID) {
@@ -132,26 +149,58 @@ export default function TestPage() {
   };
   const testDuration = formatTimeUnit(userTest?.duration);
 
-  const handleClick = async () => {
-    if (userTest?.status === "continue") {
-      setSubmissionID(userTest?.lastSubmissionID as string);
+  const goToAttempt = (response: { submissionID: string; startedAt?: string; duration?: number; serverTime?: number }) => {
+    setSubmissionID(response.submissionID);
+    if (response.startedAt && response.duration != null && response.serverTime != null) {
+      setTimingFromCreate({
+        startedAt: response.startedAt,
+        duration: response.duration,
+        serverTime: response.serverTime,
+      });
+    } else {
       setTimingFromCreate(null);
-      router.push(`/test/${testID}/attempt`);
-    } else if (userTest?.status === "allow") {
-      if (confirm("Are you sure you want to take this test?")) {
-        const response = await createSubmission(userTest?.userTestID as string);
-        setSubmissionID(response.submissionID);
-        if (response.startedAt && response.duration != null && response.serverTime != null) {
-          setTimingFromCreate({
-            startedAt: response.startedAt,
-            duration: response.duration,
-            serverTime: response.serverTime,
-          });
-        }
-        router.push(`/test/${testID}/attempt`);
+    }
+    router.push(`/test/${testID}/attempt`);
+  };
+
+  const handleContinue = () => {
+    setSubmissionID(userTest?.lastSubmissionID as string);
+    setTimingFromCreate(null);
+    router.push(`/test/${testID}/attempt`);
+  };
+
+  const handleStartNew = async () => {
+    if (userTest?.status !== "allow" && userTest?.status !== "continue") return;
+    if (userTest?.status === "allow" && !confirm("Are you sure you want to take this test?")) return;
+    try {
+      const response = await createSubmission(userTest?.userTestID as string);
+      closeModal();
+      goToAttempt(response);
+    } catch (e) {
+      if ((e as OngoingSubmissionError)?.code === "ONGOING_SUBMISSION") {
+        openModal("OngoingSubmissionModal", {
+          onConfirm: async () => {
+            try {
+              const response = await forceEndAndCreate(userTest?.userTestID as string);
+              closeModal();
+              goToAttempt(response);
+            } catch (err) {
+              openModal("OngoingSubmissionModal", {
+                errorMessage: err instanceof Error ? err.message : "Đã xảy ra lỗi. Vui lòng thử lại.",
+                onClose: closeModal,
+              });
+            }
+          },
+          onClose: closeModal,
+        });
+      } else {
+        openModal("OngoingSubmissionModal", {
+          errorMessage: e instanceof Error ? e.message : "Đã xảy ra lỗi. Vui lòng thử lại.",
+          onClose: closeModal,
+        });
       }
     }
-  }
+  };
 
   return (
     <div className="bg-white flex justify-center min-h-screen p-2 pt-6 md:p-6">
@@ -174,27 +223,42 @@ export default function TestPage() {
           )}
         </div>
         {["allow", "continue", "closed", "forbidden"].includes(userTest?.status ?? "") && (
-          <button
-            onClick={["allow", "continue"].includes(userTest?.status ?? "") ? handleClick : undefined}
-            disabled={["closed", "forbidden"].includes(userTest?.status ?? "")}
-            className={`font-semibold px-6 py-2 rounded mb-4 text-white ${
-              userTest?.status === "allow"
-                ? "bg-blue-600 hover:bg-blue-700"
-                : userTest?.status === "continue"
-                ? "bg-yellow-500 hover:bg-yellow-600"
-                : userTest?.status === "closed"
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-red-500 cursor-not-allowed"
-            }`}
-          >
-            {userTest?.status === "allow"
-              ? "Attempt"
-              : userTest?.status === "continue"
-              ? "Continue"
-              : userTest?.status === "closed"
-              ? "Closed"
-              : "Forbidden"}
-          </button>
+          <div className="flex gap-3 mb-4">
+            {userTest?.status === "continue" && (
+              <>
+                <button
+                  onClick={handleContinue}
+                  className="font-semibold px-6 py-2 rounded text-white bg-yellow-500 hover:bg-yellow-600"
+                >
+                  Continue
+                </button>
+                <button
+                  onClick={handleStartNew}
+                  className="font-semibold px-6 py-2 rounded text-white bg-blue-600 hover:bg-blue-700"
+                >
+                  Start new attempt
+                </button>
+              </>
+            )}
+            {userTest?.status === "allow" && (
+              <button
+                onClick={handleStartNew}
+                className="font-semibold px-6 py-2 rounded text-white bg-blue-600 hover:bg-blue-700"
+              >
+                Attempt
+              </button>
+            )}
+            {["closed", "forbidden"].includes(userTest?.status ?? "") && (
+              <button
+                disabled
+                className={`font-semibold px-6 py-2 rounded text-white ${
+                  userTest?.status === "closed" ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 cursor-not-allowed"
+                }`}
+              >
+                {userTest?.status === "closed" ? "Closed" : "Forbidden"}
+              </button>
+            )}
+          </div>
         )}
         <div className="text-gray-600 mb-2">Test duration: {testDuration}</div>
         <div className="text-gray-600 mb-2">Number of questions: {userTest?.numQuests}</div>
@@ -205,8 +269,19 @@ export default function TestPage() {
           </div>
           <div className="text-xl font-semibold text-blue-500 mb-4">Overview of your previous attempts</div>
         </div>
-        <div className="flex flex-wrap md:flex-row gap-6">
-          {userTest?.submissions?.map(sub => <AttemptCard key={sub.submissionID} sub={sub} testID={testID as string} />)}
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {paginatedSubmissions.map(sub => (
+              <AttemptCard key={sub.submissionID} sub={sub} testID={testID as string} />
+            ))}
+          </div>
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={attemptPage}
+              totalPages={totalPages}
+              onPageChange={setAttemptPage}
+            />
+          )}
         </div>
 
       </div>

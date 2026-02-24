@@ -9,10 +9,13 @@ const server_url = process.env.NEXT_PUBLIC_API_URL || "http://backend:5000/api/v
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
 const GOOGLE_CLIENT_SECRET = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET || "";
 
+const SESSION_MAX_AGE = 24 * 60 * 60;
+
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: 'jwt' 
+    strategy: "jwt",
+    maxAge: SESSION_MAX_AGE,
   },
   providers: [
     CredentialsProvider({

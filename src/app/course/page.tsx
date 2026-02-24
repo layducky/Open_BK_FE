@@ -4,6 +4,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCourses } from "@/hooks/querys/useCourses";
 import { RenderPublicCourses } from "@/components/ui/renderPublicCourses";
 import { useSearchParams } from "next/navigation";
+import Pagination from "@/components/common/pagination";
 
 interface FilterItem {
   id: number;
@@ -56,35 +57,6 @@ const FilterSection: React.FC<{
   );
 };
 
-const Pagination: React.FC<{
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}> = ({ currentPage, totalPages, onPageChange }) => {
-  return (
-    <nav
-      className="flex gap-2.5 justify-between items-center text-base tracking-wide text-center text-neutral-950"
-      role="navigation"
-      aria-label="Pagination"
-    >
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-        <button
-          key={page}
-          onClick={() => onPageChange(page)}
-          className={`self-stretch px-0.5 my-auto h-[33px] min-h-[33px] rounded-[30px] w-[33px] border border-black border-solid focus:outline-none focus:ring-2 focus:ring-sky-600 ${
-            currentPage === page ? "text-white bg-sky-600" : "bg-gray-100"
-          }`}
-          aria-current={currentPage === page ? "page" : undefined}
-          aria-label={`Page ${page}`}
-        >
-          <span className="font-bold">{page}</span>
-        </button>
-      ))}
-    </nav>
-  );
-};
-
-
 export default function Page(){
 
   const searchParams = useSearchParams();
@@ -121,7 +93,7 @@ export default function Page(){
   };
 
   const totalCourses = courses?.length ?? 0;
-  const totalPages = totalCourses > 0 ? Math.ceil(totalCourses / pageSize) : 1;
+  const totalPages = Math.max(1, totalCourses > 0 ? Math.ceil(totalCourses / pageSize) : 1);
   const current = Math.min(currentPage, totalPages);
   const startIndex = totalCourses === 0 ? 0 : (current - 1) * pageSize + 1;
   const endIndex = totalCourses === 0 ? 0 : Math.min(totalCourses, current * pageSize);
@@ -171,8 +143,8 @@ export default function Page(){
 
           <div className="flex justify-center mt-8">
             <Pagination
-              currentPage={current}
-              totalPages={totalPages}
+              currentPage={Math.min(currentPage, totalPages)}
+              totalPages={Math.max(1, totalPages)}
               onPageChange={setCurrentPage}
             />
           </div>

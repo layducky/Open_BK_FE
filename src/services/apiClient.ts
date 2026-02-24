@@ -8,23 +8,19 @@ const apiClient = axios.create({
 });
 
 const getApiClientWithAuth = () => {
-  if (typeof window === "undefined") {
-    // Return a client without Authorization header during SSR
-    return axios.create({
-      baseURL: server_url,
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
-  }
-  const accessToken = sessionStorage.getItem("accessToken");
-  return axios.create({
+  const client = axios.create({
     baseURL: server_url,
-    headers: {
-      "Content-Type": "application/json",
-      ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-    },
+    headers: { "Content-Type": "application/json" },
     withCredentials: true,
   });
+  if (typeof window !== "undefined") {
+    client.interceptors.request.use((config) => {
+      const token = sessionStorage.getItem("accessToken");
+      if (token) config.headers.Authorization = `Bearer ${token}`;
+      return config;
+    });
+  }
+  return client;
 };
 
 const apiClientWithAuth = getApiClientWithAuth();
@@ -40,23 +36,31 @@ apiClientWithAuth.interceptors.request.use(
   }
 );
 
+function forceLogoutSessionExpired() {
+  if (typeof window === "undefined") return;
+  sessionStorage.removeItem("accessToken");
+  sessionStorage.removeItem("userID");
+  window.location.href = "/api/auth/signout?callbackUrl=/auth/login?sessionExpired=1";
+}
+
 apiClientWithAuth.interceptors.response.use(
-  (response) => {
-      return response;
-    },
+  (response) => response,
   (error) => {
     if (error.response) {
       const statusCode = error.response.status;
+      if (statusCode === 401) {
+        forceLogoutSessionExpired();
+        return Promise.reject(error);
+      }
       if (statusCode === 500) {
-        alert('Đã xảy ra lỗi trên máy chủ. Vui lòng thử lại sau.');
+        alert("Đã xảy ra lỗi trên máy chủ. Vui lòng thử lại sau.");
       }
     } else if (error.request) {
-      alert('Không thể kết nối với máy chủ. Vui lòng thử lại sau.');
+      alert("Không thể kết nối với máy chủ. Vui lòng thử lại sau.");
     } else {
-      alert('Có lỗi xảy ra: ' + error.message);
+      alert("Có lỗi xảy ra: " + error.message);
     }
-    return error.response;
-    // Promise.reject({status: error.status, massage: error.message})
+    return Promise.reject(error);
   }
 );
 

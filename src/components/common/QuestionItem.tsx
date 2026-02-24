@@ -8,15 +8,17 @@ interface QuestionItemProps {
   mode: "attempt" | "review";
   isCollab: boolean;
   refetchQuestions?: () => void;
+  selectedAns?: string | null;
   onAnsChange?: (questionID: string, ans: string) => void;
 }
 
-const QuestionItem = ({ question, mode, isCollab, refetchQuestions, onAnsChange }: QuestionItemProps) => {
-  const [selectedAns, setSelectedAns] = useState<string | null>(null); // For attempt mode
+const QuestionItem = ({ question, mode, isCollab, refetchQuestions, selectedAns: controlledAns, onAnsChange }: QuestionItemProps) => {
+  const [internalAns, setInternalAns] = useState<string | null>(null);
+  const selectedAns = controlledAns ?? internalAns;
 
-  const handleAnsSelect = (key:string) => {
-    onAnsChange?.(question.questionID, key)
-    setSelectedAns(key);
+  const handleAnsSelect = (key: string) => {
+    onAnsChange?.(question.questionID, key);
+    if (controlledAns === undefined) setInternalAns(key);
   };
 
   return (

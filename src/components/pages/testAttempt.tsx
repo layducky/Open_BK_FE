@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
-import { useQuestions } from "@/hooks/querys/useCourses";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useQuestions, useUserTest } from "@/hooks/querys/useCourses";
 import { useUser } from "@/hooks/querys/useUser";
 import { useSubmissionTiming } from "@/hooks/useSubmissionTiming";
 import { RightUnitBar } from "@/components/common/RightUnitBar";
@@ -11,6 +11,8 @@ import { QuestionEntity } from "@/type/question.entity";
 import QuestionItem from "@/components/common/QuestionItem";
 import { motion, AnimatePresence } from "framer-motion";
 import type { SubmissionTimingData } from "@/context/TestContext";
+import { getOngoingAnswers, updateSubmission, saveDraftKeepalive } from "@/services/course/test";
+import { SubmissionEntity } from "@/type/submission.entity";
 
 interface TestPageProps {
   testID: string;
@@ -19,12 +21,20 @@ interface TestPageProps {
   timingFromCreate?: SubmissionTimingData | null;
 }
 
+const DEBOUNCE_SAVE_MS = 30000;
+
 const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProps) => {
   const { data: questionContents, isLoading, error, refetch } = useQuestions(testID);
   const { data: userInfo } = useUser();
+  const { data: userTest } = useUserTest(testID);
   const [newQuestionIDs, setNewQuestionIDs] = useState<string[]>([]);
   const [submission, setSubmission] = useState<Record<string, string>>({});
+  const [answersLoaded, setAnswersLoaded] = useState(false);
   const submitRef = useRef<{ submit: () => void } | null>(null);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSavedRef = useRef<string>("");
+  const submissionRef = useRef(submission);
+  submissionRef.current = submission;
 
   const timing = useSubmissionTiming(
     mode === "attempt" ? submissionID : null,
@@ -38,6 +48,66 @@ const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProp
   const setSubmitRef = useCallback((ref: { submit: () => void } | null) => {
     submitRef.current = ref;
   }, []);
+
+  const saveDraft = useCallback(() => {
+    if (mode !== "attempt" || !questionContents?.length) return;
+    const submissionArray = (questionContents as QuestionEntity[]).map((q) => ({
+      questionID: q.questionID,
+      selectedAns: submission[q.questionID] || "NULL",
+    }));
+    const payload: SubmissionEntity = { status: "ongoing", submission: submissionArray };
+    const key = JSON.stringify(payload);
+    if (key === lastSavedRef.current) return;
+    lastSavedRef.current = key;
+    updateSubmission(submissionID, payload).catch(() => {});
+  }, [mode, submissionID, submission, questionContents]);
+
+  useEffect(() => {
+    if (mode !== "attempt" || !submissionID || !questionContents?.length) {
+      setAnswersLoaded(true);
+      return;
+    }
+    getOngoingAnswers(submissionID)
+      .then(({ answers }) => {
+        const init: Record<string, string> = {};
+        answers.forEach((a) => {
+          init[a.questionID] = a.selectedAns === "NULL" ? "" : a.selectedAns;
+        });
+        setSubmission(init);
+      })
+      .catch(() => {})
+      .finally(() => setAnswersLoaded(true));
+  }, [mode, submissionID, questionContents?.length]);
+
+  useEffect(() => {
+    if (mode !== "attempt" || !answersLoaded) return;
+    const id = setTimeout(saveDraft, DEBOUNCE_SAVE_MS);
+    saveTimeoutRef.current = id;
+    return () => {
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    };
+  }, [submission, answersLoaded, mode, saveDraft]);
+
+  useEffect(() => {
+    if (mode !== "attempt" || !questionContents?.length) return;
+    const onBeforeUnload = () => {
+      const sub = submissionRef.current;
+      const arr = (questionContents as QuestionEntity[]).map((q) => ({
+        questionID: q.questionID,
+        selectedAns: sub[q.questionID] || "NULL",
+      }));
+      saveDraftKeepalive(submissionID, { status: "ongoing", submission: arr });
+    };
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") saveDraft();
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [mode, submissionID, questionContents, saveDraft]);
 
   if (isLoading) return <div>Loading questions...</div>;
   if (error) return <div>Error loading questions: {error.message}</div>;
@@ -70,6 +140,7 @@ const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProp
             mode={mode}
             isCollab={userInfo?.role === "COLLAB"}
             refetchQuestions={refetch}
+            selectedAns={mode === "attempt" ? (submission[questionContent.questionID] ?? null) : undefined}
             onAnsChange={handleAnsChange}
           />
         </motion.div>
@@ -115,17 +186,24 @@ const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProp
               </div>
             )}
           </div>
-          <div className="flex justify-center items-center mt-10">
-            <SubmitTestBtn
-              testID={testID}
-              submissionID={submissionID}
-              submission={submission}
-              onRef={setSubmitRef}
-            />
-          </div>
+          {mode === "attempt" && (
+            <div className="flex justify-center items-center mt-10">
+              <SubmitTestBtn
+                testID={testID}
+                submissionID={submissionID}
+                submission={submission}
+                questionContents={questionContents as QuestionEntity[]}
+                courseID={userTest?.courseID}
+                onRef={setSubmitRef}
+              />
+            </div>
+          )}
         </div>
         <div className="w-3/12 hidden md:block">
-          <RightUnitBar questionContents={questionContents} />
+          <RightUnitBar
+            questionContents={questionContents}
+            submission={mode === "attempt" ? submission : undefined}
+          />
         </div>
       </div>
     </main>

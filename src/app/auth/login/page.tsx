@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,6 +16,17 @@ type LoginFormInputs = yup.InferType<typeof loginSchema>;
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
+  const [sessionExpired, setSessionExpired] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("sessionExpired") === "1") {
+        setSessionExpired(true);
+        window.history.replaceState({}, "", "/auth/login");
+      }
+    }
+  }, []);
 
   const {
     register,
@@ -26,13 +37,14 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormInputs) => {
-    const callbackUrl = window.location.origin + "/";
+    const params = new URLSearchParams(window.location.search);
+    const callbackUrl = params.get("callbackUrl") || window.location.origin + "/";
 
     try {
       const result = await signIn("credentials", {
         email: data.email,
         password: data.password,
-        callbackUrl: callbackUrl,
+        callbackUrl,
         redirect: false,
       });
 
@@ -75,6 +87,11 @@ export default function LoginPage() {
         />
       </div>
 
+      {sessionExpired && (
+        <div className="px-5 py-3 text-amber-800 bg-amber-100 border-2 border-amber-500 font-medium rounded-lg">
+          <p>Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.</p>
+        </div>
+      )}
       {error && (
         <div className="px-5 py-3 text-red-500 bg-red-200 border-2 border-red-500 font-medium rounded-lg">
           <p>{error}</p>

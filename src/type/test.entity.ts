@@ -40,6 +40,7 @@ export class UserTestEntity {
     duration: number;
     numQuests: number;
     lastSubmissionID: string | null;
+    courseID?: string | null;
     submissions: SubmissionStatusEntity[];
 
     constructor(data: Partial<UserTestEntity>) {
@@ -52,6 +53,7 @@ export class UserTestEntity {
         this.duration = data.duration ?? 0;
         this.numQuests = data.numQuests ?? 0;
         this.lastSubmissionID = data.lastSubmissionID ?? null;
+        this.courseID = data.courseID ?? null;
         this.submissions = (data.submissions || []).map(
             (s) => new SubmissionStatusEntity(s)
         );
