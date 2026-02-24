@@ -1,9 +1,11 @@
 "use client";
 import { useModal } from "@/context/ModalContext";
 import UploadProfileModal from "./UploadProfileModal";
+import NotEnrolledModal from "./NotEnrolledModal";
 
 const ModalLookup: Record<string, React.FC<any>> = {
   UploadProfileModal: UploadProfileModal,
+  NotEnrolledModal: NotEnrolledModal,
 };
 
 const ModalManager = () => {

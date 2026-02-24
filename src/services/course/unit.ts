@@ -20,18 +20,12 @@ const createUnit = async (unitData: any) => {
   }
 };
 const getAllUnits = async (courseID?: string) => {
-  if (!courseID) {
-    return [];
-  }
-  try {
-    const res = await apiClient.get(`${url}all/${courseID}`);
-    if (res.status !== 200) {
-      throw [];
-    }
-    return res.data || [];
-  } catch (error) {
-    return []
-  }
+  if (!courseID) return [];
+  const res = await apiClientWithAuth.get(`${url}all/${courseID}`);
+  if (res.status === 200) return res.data || [];
+  const err = new Error((res as any)?.data?.message || "Failed to load units") as Error & { response?: any };
+  err.response = res;
+  throw err;
 };
 
 // const getUnitById = async (unitID?: string) => {

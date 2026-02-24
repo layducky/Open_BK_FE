@@ -1,12 +1,13 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
+import { useModal } from "@/context/ModalContext";
 import Link from "next/link";
-import { useTest } from '@/context/TestContext';
+import { useTest } from "@/context/TestContext";
 import { useUserTest } from "@/hooks/querys/useCourses";
 import { useUser } from "@/hooks/querys/useUser";
 import { SubmissionStatusEntity } from "@/type/test.entity";
 import { useRouter } from "next/navigation";
-import { createSubmission } from "@/services/course/test";
+import { createSubmission, NotEnrolledError } from "@/services/course/test";
 import { TestActionDropdown } from "@/components/common/buttons/UnitBtn";
 import { formatDateTime } from "@/lib/dateUtils";
 
@@ -56,7 +57,7 @@ const AttemptCard = ({ sub, testID }: { sub: SubmissionStatusEntity; testID: str
       ),
     },
     { key: "numRightAns", value: <span className="text-black">{sub.numRightAns}</span> },
-    { key: "timeTaken", value: <span className="text-black">{sub.numRightAns}</span> },
+    { key: "timeTaken", value: <span className="text-black">{sub.timeTaken != null ? `${sub.timeTaken.toFixed(1)} min` : '-'}</span> },
     { key: "start", value: <span className="text-black">{formatDateTime(sub.createdAt)}</span> },
     { key: "end", value: <span className="text-gray-500">{endDate}</span> },
   ];
@@ -80,14 +81,34 @@ const AttemptCard = ({ sub, testID }: { sub: SubmissionStatusEntity; testID: str
 };
 
 export default function TestPage() {
-  const { testID, setSubmissionID } = useTest();
+  const { testID, setSubmissionID, setTimingFromCreate } = useTest();
   const router = useRouter();
   const { data: userInfo } = useUser();
-  if (!testID) return <div>Loading test ID...</div>;
-
+  const { openModal } = useModal();
   const { data: userTest, isLoading, error } = useUserTest(testID as string);
-  if (isLoading) return <div>Loading questions...</div>;
-  if (error) return <div>Error loading questions: {error.message}</div>;
+
+  useEffect(() => {
+    if (error instanceof NotEnrolledError && error.courseID) {
+      openModal("NotEnrolledModal", {
+        redirectTo: `/course/${error.courseID}/overview`,
+      });
+    }
+  }, [error, openModal]);
+
+  useEffect(() => {
+    setTimingFromCreate(null);
+  }, [setTimingFromCreate]);
+
+  if (!testID) return <div>Loading test ID...</div>;
+  if (error instanceof NotEnrolledError) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <p className="text-gray-500">Please confirm the message above.</p>
+      </div>
+    );
+  }
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   const formatTimeUnit = (minutes?: number) => {
     if (!minutes || minutes <= 0) return "0 seconds";
@@ -114,12 +135,20 @@ export default function TestPage() {
   const handleClick = async () => {
     if (userTest?.status === "continue") {
       setSubmissionID(userTest?.lastSubmissionID as string);
+      setTimingFromCreate(null);
       router.push(`/test/${testID}/attempt`);
     } else if (userTest?.status === "allow") {
       if (confirm("Are you sure you want to take this test?")) {
-      const response = await createSubmission(userTest?.userTestID as string);
-      setSubmissionID(response.submissionID);
-      router.push(`/test/${testID}/attempt`);
+        const response = await createSubmission(userTest?.userTestID as string);
+        setSubmissionID(response.submissionID);
+        if (response.startedAt && response.duration != null && response.serverTime != null) {
+          setTimingFromCreate({
+            startedAt: response.startedAt,
+            duration: response.duration,
+            serverTime: response.serverTime,
+          });
+        }
+        router.push(`/test/${testID}/attempt`);
       }
     }
   }

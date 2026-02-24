@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import Modal from "@/components/modals/formModal";
@@ -147,12 +147,19 @@ export const DeleteQuesBtn: React.FC<DeleteQuesBtnProps> = ({ questionID, testID
 };
 
 
-export const SubmitTestBtn = ({ testID, submissionID, submission }: { testID: string; submissionID: string; submission: Record<string, string> }) => {
+interface SubmitTestBtnProps {
+  testID: string;
+  submissionID: string;
+  submission: Record<string, string>;
+  onRef?: (ref: { submit: () => void } | null) => void;
+}
+
+export const SubmitTestBtn = ({ testID, submissionID, submission, onRef }: SubmitTestBtnProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { updateMutation } = useSubmissionMutation(submissionID);
 
-  const handleSubmitAnss = () => {
+  const handleSubmitAnss = useCallback(() => {
     const submissionArray: SubmissionAnsEntity[] = Object.entries(submission).map(([questionID, selectedAns]) => ({
       questionID,
       selectedAns,
@@ -169,7 +176,12 @@ export const SubmitTestBtn = ({ testID, submissionID, submission }: { testID: st
         router.push(`/test/${testID}`);
       },
     });
-  };
+  }, [submission, testID, submissionID, updateMutation, queryClient, router]);
+
+  useEffect(() => {
+    onRef?.({ submit: handleSubmitAnss });
+    return () => onRef?.(null);
+  }, [onRef, handleSubmitAnss]);
 
   return (
     <GradientButton onClick={handleSubmitAnss} text="Submit" disabled={updateMutation.isPending} />

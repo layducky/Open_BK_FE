@@ -40,6 +40,7 @@ export const useUserTest = (testID: string) => {
     queryKey: ["getUserTest", testID],
     queryFn: () => getUserTest(testID as string),
     staleTime: Infinity,
+    retry: false,
   });
 }
 

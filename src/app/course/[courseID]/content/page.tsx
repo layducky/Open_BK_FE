@@ -1,10 +1,13 @@
-'use client';
+"use client";
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { BulletItem } from "@/components/ui/bulletItem";
+import { TestLink } from "@/components/common/TestLink";
 import { useUser } from "@/hooks/querys/useUser";
 import { useUnits } from "@/hooks/querys/useCourses";
+import { useEnrolledCourses } from "@/hooks/querys/useEnrollCourse";
+import { useCourseData } from "@/hooks/querys/useCourseData";
 import { UnitActionDropdown } from "@/components/common/buttons/UnitBtn";
 import { CreateUnitBtn } from "@/components/common/buttons/UnitBtn";
 import { formatDateTime } from "@/lib/dateUtils";
@@ -24,6 +27,13 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
 
   const { data: unitContents, isLoading, error, refetch } = useUnits(courseID as string);
   const { data: userInfo } = useUser();
+  const { data: enrolledCourses } = useEnrolledCourses();
+  const { data: courseData } = useCourseData(courseID as string);
+
+  const isEnrolled =
+    enrolledCourses?.some((c) => c.courseID === courseID) ||
+    (userInfo?.role === "COLLAB" && courseData?.authorID === userInfo?.id) ||
+    userInfo?.role === "ADMIN";
 
   React.useEffect(() => {
     const fetchNewUnitID = async () => {
@@ -39,7 +49,26 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
   }, [newUnitID, unitContents]);
 
   if (isLoading) return <div>Loading units...</div>;
-  if (error) return <div>Error loading units: {error.message}</div>;
+  if (error) {
+    const isForbidden = (error as any)?.response?.status === 403;
+    return (
+      <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+        <p className="text-amber-800 font-medium">
+          {isForbidden
+            ? "You must enroll in this course to view the content."
+            : `Error loading content: ${error.message}`}
+        </p>
+        {isForbidden && courseID && (
+          <a
+            href={`/course/${courseID}/overview`}
+            className="mt-2 inline-block text-blue-600 hover:underline"
+          >
+            Go to course overview
+          </a>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -90,9 +119,16 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
 
                   <div className="w-full flex flex-col items-end">            
                     <BulletItem bulletType="borderText" iconType="certificate" text={unit.description || ""} />
-                    {Array.isArray(unit.unit_tests) && unit.unit_tests.map(({ testName, testID }, testIndex: number) => (
-                      <BulletItem key={testIndex} bulletType="link" iconType="test" text={testName || ""} ID={testID}/>
-                    ))}
+                    {Array.isArray(unit.unit_tests) &&
+                      unit.unit_tests.map(({ testName, testID }, testIndex: number) => (
+                        <TestLink
+                          key={testIndex}
+                          testID={testID}
+                          testName={testName || ""}
+                          courseID={courseID || ""}
+                          isEnrolled={!!isEnrolled}
+                        />
+                      ))}
                   <div>
 
                     </div>

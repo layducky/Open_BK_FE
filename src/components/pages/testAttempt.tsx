@@ -1,25 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useQuestions } from "@/hooks/querys/useCourses";
 import { useUser } from "@/hooks/querys/useUser";
+import { useSubmissionTiming } from "@/hooks/useSubmissionTiming";
 import { RightUnitBar } from "@/components/common/RightUnitBar";
 import { CreateQuesBtn, SubmitTestBtn } from "@/components/common/buttons/QuesBtn";
+import { TestTimer } from "@/components/common/TestTimer";
 import { QuestionEntity } from "@/type/question.entity";
 import QuestionItem from "@/components/common/QuestionItem";
 import { motion, AnimatePresence } from "framer-motion";
+import type { SubmissionTimingData } from "@/context/TestContext";
 
 interface TestPageProps {
   testID: string;
   submissionID: string;
   mode: "attempt" | "review";
+  timingFromCreate?: SubmissionTimingData | null;
 }
 
-const TestPage = ({ testID, submissionID, mode }: TestPageProps) => {
+const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProps) => {
   const { data: questionContents, isLoading, error, refetch } = useQuestions(testID);
   const { data: userInfo } = useUser();
   const [newQuestionIDs, setNewQuestionIDs] = useState<string[]>([]);
   const [submission, setSubmission] = useState<Record<string, string>>({});
+  const submitRef = useRef<{ submit: () => void } | null>(null);
+
+  const timing = useSubmissionTiming(
+    mode === "attempt" ? submissionID : null,
+    timingFromCreate ?? undefined
+  );
+
+  const handleTimeUp = useCallback(() => {
+    submitRef.current?.submit();
+  }, []);
+
+  const setSubmitRef = useCallback((ref: { submit: () => void } | null) => {
+    submitRef.current = ref;
+  }, []);
 
   if (isLoading) return <div>Loading questions...</div>;
   if (error) return <div>Error loading questions: {error.message}</div>;
@@ -63,10 +81,18 @@ const TestPage = ({ testID, submissionID, mode }: TestPageProps) => {
     <main>
       <div className="flex gap-10 p-1 md:pt-0 md:p-10">
         <div className="flex flex-col pt-6 md:p-10 gap-6 max-h-[100vh] overflow-y-auto rounded-lg border border-solid border-black border-opacity-20 bg-white w-9/12 max-md:w-full transition-all ease-in-out duration-300">
-          <div className="flex justify-center items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <h1 className="text-2xl md:text-5xl font-semibold">
               {mode === "attempt" ? "Unit Test Attempt" : "Unit Test Overview"}
             </h1>
+            {mode === "attempt" && timing.startedAt && (
+              <TestTimer
+                startedAt={timing.startedAt}
+                durationMinutes={timing.duration}
+                serverTimeOffset={timing.serverTimeOffset}
+                onTimeUp={handleTimeUp}
+              />
+            )}
           </div>
           {userInfo?.role === "COLLAB" && mode === "review" && (
             <div className="flex justify-end">
@@ -90,7 +116,12 @@ const TestPage = ({ testID, submissionID, mode }: TestPageProps) => {
             )}
           </div>
           <div className="flex justify-center items-center mt-10">
-            <SubmitTestBtn testID={testID} submissionID={submissionID} submission={submission}/>
+            <SubmitTestBtn
+              testID={testID}
+              submissionID={submissionID}
+              submission={submission}
+              onRef={setSubmitRef}
+            />
           </div>
         </div>
         <div className="w-3/12 hidden md:block">

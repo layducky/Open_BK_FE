@@ -1,10 +1,10 @@
 "use client";
 import * as React from "react";
-import { useTest } from '@/context/TestContext';
+import { useTest } from "@/context/TestContext";
 import TestPage from "@/components/pages/testAttempt";
 
 export default function TestAttemptPage() {
-  const { testID, submissionID } = useTest();
+  const { testID, submissionID, timingFromCreate } = useTest();
 
   if (!testID) {
     return <div>Loading test ID...</div>;
@@ -12,7 +12,12 @@ export default function TestAttemptPage() {
 
   return (
     <main>
-      <TestPage testID={testID as string} submissionID={submissionID as string} mode="attempt"/>
+      <TestPage
+        testID={testID as string}
+        submissionID={submissionID as string}
+        mode="attempt"
+        timingFromCreate={timingFromCreate}
+      />
     </main>
   );
 }

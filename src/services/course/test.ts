@@ -41,17 +41,25 @@ export const updateTest = async (testID: string, data: any) => {
     }
 }
 
+export class NotEnrolledError extends Error {
+  courseID: string | null;
+  constructor(message: string, courseID: string | null) {
+    super(message);
+    this.name = "NotEnrolledError";
+    this.courseID = courseID;
+  }
+}
+
 export const getUserTest = async (testID: string) => {
-    try {
-        const res = await apiClientWithAuth.get(`/user/test/${testID}`);
-        if (res.status === 200) {
-            return res.data;
-        } else {
-            throw new Error(res.data?.message || "Failed to get user's test");
-        }
-    } catch (error) {
-        throw new Error("Failed to get user's test");
-    }
+  const res = await apiClientWithAuth.get(`/user/test/${testID}`);
+  if (res.status === 200) return res.data;
+  if (res.status === 403 && (res as any).data?.courseID != null) {
+    throw new NotEnrolledError(
+      (res as any).data?.message || "You must enroll to access this test",
+      (res as any).data?.courseID
+    );
+  }
+  throw new Error((res as any).data?.message || "Failed to get user's test");
 };
 
 export const createSubmission = async (userTestID: string) => {
@@ -83,11 +91,23 @@ export const updateSubmission = async (submissionID: string, data: SubmissionEnt
 };
 
 export const getSubmissionReview = async (submissionID: string) => {
-    try {
-        const res = await apiClientWithAuth.get(`/user/test/submit/review/${submissionID}`);
-        if (res.status === 200) return res.data;
-        throw new Error(res.data?.message || "Failed to get submission review");
-    } catch (error) {
-        throw new Error(error instanceof Error ? error.message : "Failed to get submission review");
-    }
+  try {
+    const res = await apiClientWithAuth.get(`/user/test/submit/review/${submissionID}`);
+    if (res.status === 200) return res.data;
+    throw new Error(res.data?.message || "Failed to get submission review");
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : "Failed to get submission review");
+  }
+};
+
+export interface SubmissionTiming {
+  startedAt: string;
+  duration: number;
+  serverTime: number;
+}
+
+export const getSubmissionTiming = async (submissionID: string): Promise<SubmissionTiming> => {
+  const res = await apiClientWithAuth.get(`/user/test/submit/timing/${submissionID}`);
+  if (res.status === 200) return res.data;
+  throw new Error((res as any).data?.message || "Failed to get submission timing");
 };

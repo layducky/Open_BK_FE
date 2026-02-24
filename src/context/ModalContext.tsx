@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, ReactNode } from "react";
 
 type ModalData = {
   name: string;
@@ -17,11 +17,11 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined);
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [modal, setModal] = useState<ModalData>(null);
 
-  const openModal = (name: string, props: Record<string, any> = {}) => {
+  const openModal = useCallback((name: string, props: Record<string, any> = {}) => {
     setModal({ name, props });
-  };
+  }, []);
 
-  const closeModal = () => setModal(null);
+  const closeModal = useCallback(() => setModal(null), []);
 
   return (
     <ModalContext.Provider value={{ modal, openModal, closeModal }}>
