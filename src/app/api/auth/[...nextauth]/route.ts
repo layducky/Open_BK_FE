@@ -5,7 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 import axios from 'axios';
 import { oAuth2Verify } from "@/services/auth/oAuth2";
 
-const server_url = process.env.NEXT_PUBLIC_API_URL || "http://backend:5000/api/v1";
+const server_url = process.env.NEXT_PUBLIC_API_URL || "http://backendd:5000/api/v1";
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
 const GOOGLE_CLIENT_SECRET = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET || "";
 
