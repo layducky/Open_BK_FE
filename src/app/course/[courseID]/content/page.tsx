@@ -30,7 +30,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
   const { data: courseData } = useCourseData(courseID as string);
 
   const isEnrolled =
-    enrolledCourses?.some((c) => c.courseID === courseID) ||
+    enrolledCourses?.some((c: { courseID: string }) => c.courseID === courseID) ||
     (userInfo?.role === "COLLAB" && courseData?.authorID === userInfo?.id) ||
     userInfo?.role === "ADMIN";
 

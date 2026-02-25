@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { Suspense } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCourses } from "@/hooks/querys/useCourses";
 import { RenderPublicCourses } from "@/components/ui/renderPublicCourses";
@@ -57,8 +58,7 @@ const FilterSection: React.FC<{
   );
 };
 
-export default function Page(){
-
+function CoursePageContent() {
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = React.useState<string>(""); 
   const [selectedCategory, setSelectedCategory] = React.useState<string>(
@@ -151,5 +151,13 @@ export default function Page(){
         </section>
       </div>
     </main>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="flex min-h-[400px] items-center justify-center">Loading...</div>}>
+      <CoursePageContent />
+    </Suspense>
   );
 }
