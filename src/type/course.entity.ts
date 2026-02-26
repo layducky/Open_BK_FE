@@ -12,6 +12,7 @@ export class Course {
   learnersCount?: number;
   createdAt: string;
   updatedAt: string;
+  contentUpdatedAt?: string;
 
   constructor(
     courseID: string,

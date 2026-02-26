@@ -6,6 +6,7 @@ export class UnitEntity {
     description?: string;
     createdAt: string;
     updatedAt: string;
+    contentUpdatedAt?: string;
     unit_tests: { testID: string; testName: string }[];
 
     constructor(data: Partial<UnitEntity> & { unit_tests?: { testID: string; testName: string }[] }) {

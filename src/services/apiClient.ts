@@ -40,6 +40,7 @@ function forceLogoutSessionExpired() {
   if (typeof window === "undefined") return;
   sessionStorage.removeItem("accessToken");
   sessionStorage.removeItem("userID");
+  alert("Your session has expired. You have been logged out.");
   window.location.href = "/api/auth/signout?callbackUrl=/auth/login?sessionExpired=1";
 }
 

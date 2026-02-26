@@ -127,6 +127,8 @@ export default function TestPage() {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
+  const isEmptyTest = (userTest?.numQuests ?? 0) === 0;
+
   const formatTimeUnit = (minutes?: number) => {
     if (!minutes || minutes <= 0) return "0 seconds";
     const units = [
@@ -150,6 +152,7 @@ export default function TestPage() {
   const testDuration = formatTimeUnit(userTest?.duration);
 
   const goToAttempt = (response: { submissionID: string; startedAt?: string; duration?: number; serverTime?: number }) => {
+    if (isEmptyTest) return;
     setSubmissionID(response.submissionID);
     if (response.startedAt && response.duration != null && response.serverTime != null) {
       setTimingFromCreate({
@@ -164,12 +167,14 @@ export default function TestPage() {
   };
 
   const handleContinue = () => {
+    if (isEmptyTest) return;
     setSubmissionID(userTest?.lastSubmissionID as string);
     setTimingFromCreate(null);
     router.push(`/test/${testID}/attempt`);
   };
 
   const handleStartNew = async () => {
+    if (isEmptyTest) return;
     if (userTest?.status !== "allow" && userTest?.status !== "continue") return;
     if (userTest?.status === "allow" && !confirm("Are you sure you want to take this test?")) return;
     try {
@@ -222,7 +227,17 @@ export default function TestPage() {
             </div>
           )}
         </div>
-        {["allow", "continue", "closed", "forbidden"].includes(userTest?.status ?? "") && (
+        {isEmptyTest && (
+          <div className="rounded-lg border-2 border-amber-200 bg-amber-50 p-4 mb-6">
+            <p className="text-amber-800 font-semibold">This test is empty and not ready yet.</p>
+            <p className="text-amber-700 mt-1">
+              {userInfo?.role === "COLLAB"
+                ? "Please add questions to this test before learners can attempt it."
+                : "Please try again later."}
+            </p>
+          </div>
+        )}
+        {["allow", "continue", "closed", "forbidden"].includes(userTest?.status ?? "") && !isEmptyTest && (
           <div className="flex gap-3 mb-4">
             {userTest?.status === "continue" && (
               <>

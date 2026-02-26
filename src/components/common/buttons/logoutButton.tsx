@@ -1,12 +1,16 @@
 "use client";
 
 import { signOut } from "next-auth/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { IoLogOutOutline } from "react-icons/io5";
 
 export const LogoutButton = () => {
+  const queryClient = useQueryClient();
+
   const handleLogout = () => {
     sessionStorage.removeItem("accessToken");
     sessionStorage.removeItem("userID");
+    queryClient.removeQueries({ queryKey: ["EnrollCourses"] });
     signOut({ callbackUrl: "/" });
   };
 

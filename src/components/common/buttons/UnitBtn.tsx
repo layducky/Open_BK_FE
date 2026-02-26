@@ -8,7 +8,6 @@ import { useUnitMutations } from "@/hooks/mutations/useUnitMutation";
 import CreateUnitModal from "../../modals/createUnit";
 import { useHandleTest } from "@/hooks/handleMutations/handleTest";
 import CreateTestModal from "@/components/modals/createTest";
-import test from "node:test";
 import { SelectionOption } from "@/type/selection.entity";
 
 
@@ -61,7 +60,7 @@ export const ViewTestButton: React.FC<{ unitID: string }> = ({ unitID }) => {
 interface ActionDropdownProps {
   options: SelectionOption[];
 }
-function ActionDropdown({options} : ActionDropdownProps) {
+function ActionDropdown({ options }: ActionDropdownProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -87,7 +86,7 @@ function ActionDropdown({options} : ActionDropdownProps) {
       </button>
 
       {isDropdownOpen && (
-        <div className="absolute max-h-[8rem] overflow-y-auto w-full bg-white border border-gray-200 rounded shadow-lg z-10">
+        <div className="absolute right-0 mt-1 max-h-[12rem] overflow-y-auto min-w-[8rem] w-max bg-white border border-gray-200 rounded shadow-lg z-50">
           {options.map(({ label, action, color, textColor }) => (
           <button
             key={label}
@@ -138,21 +137,38 @@ export function UnitActionDropdown({courseID, unitID, refetchUnits} : unitAction
   );
 }
 
-export function TestActionDropdown({testID} : {testID: string}) {
+interface TestActionDropdownProps {
+  testID: string;
+  unitID?: string;
+  refetchUnits?: () => void;
+  deleteOnly?: boolean;
+}
+
+export function TestActionDropdown({ testID, unitID, refetchUnits, deleteOnly }: TestActionDropdownProps) {
   const router = useRouter();
-  const options = [
-    { label: "Edit description", action: () => {}, color: "hover:bg-gray-100", textColor: "hover:text-black-800" },
-    { 
-      label: "EDIT TEST", 
-      action: () => {
-        if (testID) {
-          router.push(`/test/${testID}/review`);
-        }
-      }, 
-      color: "hover:bg-blue-100", 
-      textColor: "hover:text-black" 
-    },
-  ];
+  const { handleDeleteTest } = useHandleTest({
+    unitID: unitID ?? "",
+    refetchTests: refetchUnits,
+    setNewTestID: undefined,
+    setIsOpen: () => {},
+  });
+
+  const options = deleteOnly && unitID
+    ? [{ label: "DELETE TEST", action: () => handleDeleteTest(testID), color: "hover:bg-red-500", textColor: "hover:text-white" }]
+    : [
+        { label: "Edit description", action: () => {}, color: "hover:bg-gray-100", textColor: "hover:text-black-800" },
+        { 
+          label: "EDIT TEST", 
+          action: () => {
+            if (testID) {
+              router.push(`/test/${testID}/review`);
+            }
+          }, 
+          color: "hover:bg-blue-100", 
+          textColor: "hover:text-black" 
+        },
+        ...(unitID ? [{ label: "DELETE TEST", action: () => handleDeleteTest(testID), color: "hover:bg-red-500", textColor: "hover:text-white" }] : []),
+      ];
   return (
     <div>
       <ActionDropdown options={options} />

@@ -15,7 +15,6 @@ type CreateTestModalProps = {
 };
 
 const testSchema = yup.object().shape({
-  unitID: yup.string().required("Unit ID is required"),
   testName: yup.string().required("Test Name is required"),
   description: yup.string().required("Description is required"),
   duration: yup
@@ -25,7 +24,6 @@ const testSchema = yup.object().shape({
 });
 
 const formFields = [
-  { label: "Unit ID", id: "unitID", placeholder: "", disabled: false },
   { label: "Test Name", id: "testName", placeholder: "Test Name", disabled: false },
   { label: "Description", id: "description", placeholder: "Description", disabled: false },
   { label: "Duration (m)", id: "duration", placeholder: "Duration", disabled: false },
@@ -46,7 +44,6 @@ const CreateTestModal: React.FC<CreateTestModalProps> = ({
     mode: "onSubmit",
     reValidateMode: "onChange",
     defaultValues: {
-      unitID: unitID || "",
       testName: "",
       description: "",
       duration: 15,
@@ -60,15 +57,14 @@ const CreateTestModal: React.FC<CreateTestModalProps> = ({
 
   return (
     <Modal modelTitle="Create New Test" isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit((data) => { handleCreateTest(data); onClose(); })} className="space-y-6">
+      <form onSubmit={handleSubmit((data) => { handleCreateTest({ ...data, unitID: unitID || "" }); onClose(); })} className="space-y-6">
         {formFields.map(({ label, id, placeholder, disabled }) => (
           <label key={id} className="block">
             <InputField
               label={label}
               id={id}
-              type="text"
+              type={id === "duration" ? "number" : "text"}
               register={register}
-              value={id === "unitID" ? unitID || "" : ""}
               placeholder={placeholder}
               error={errors[id as keyof typeof errors]}
               disabled={disabled}

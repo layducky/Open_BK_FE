@@ -36,7 +36,7 @@ export const UserInforBar = () => {
 const CourseStats = ({ courseData }: { courseData: PublicCourseEntity }) => {
   const students = courseData?.learnersCount ?? 0;
   const sampleData = {
-    lastUpdated: courseData?.updatedAt != null ? formatDateTime(courseData.updatedAt) : "-",
+    lastUpdated: (courseData?.contentUpdatedAt ?? courseData?.updatedAt) != null ? formatDateTime(courseData.contentUpdatedAt ?? courseData.updatedAt) : "-",
     language: "English",
   };
 

@@ -2,17 +2,9 @@
 import { BulletItem } from '@/components/ui/bulletItem';
 import { ButtonClick } from '@/components/common/buttons/button';
 import { useEnrolledCourses } from '@/hooks/querys/useEnrollCourse';
+import { usePublicUnits } from '@/hooks/querys/useCourses';
+import { useUser } from '@/hooks/querys/useUser';
 import { PublicCourseEntity } from '@/type/course.entity';
-
-const courseFeatures = [
-    { iconType: "video", text: '95 hours on-demand video' },
-    { iconType: "article", text: '35 articles' },
-    { iconType: "test", text: '2 practice tests' },
-    { iconType: "test", text: 'Assignments' },
-    { iconType: "download", text: '100 downloadble resources' },
-    { iconType: "infinity", text: 'Full lifetime access' },
-    { iconType: "certificate", text: 'Certificate of completion' }
-]
 
 export const ReviewCourseCard = ({
     courseID,
@@ -21,8 +13,22 @@ export const ReviewCourseCard = ({
     courseID: string | null;
     courseData?: PublicCourseEntity | null;
 }) => {
-    const { data: enrolledList } = useEnrolledCourses();
-    const isEnrolled = !!enrolledList?.find((c: { courseID: string }) => c.courseID === courseID);
+    const { data: userInfo } = useUser();
+    const { data: enrolledList, isError, isLoading } = useEnrolledCourses();
+    const { data: units } = usePublicUnits(courseID || '', { enabled: !!courseID });
+
+    const enrolled = Array.isArray(enrolledList) && enrolledList.some((c: { courseID: string }) => String(c.courseID) === String(courseID));
+    const isCollabOrAdmin = (userInfo?.role === "COLLAB" && courseData?.authorID === userInfo?.id) || userInfo?.role === "ADMIN";
+    const isEnrolled = !isError && !isLoading && (enrolled || isCollabOrAdmin);
+
+    const testCount = units?.reduce((acc, u) => acc + (u.unit_tests?.length || 0), 0) ?? 0;
+    const courseFeatures = [
+        { iconType: "test", text: `${testCount} practice test${testCount !== 1 ? 's' : ''}` },
+        { iconType: "infinity", text: 'Full lifetime access' },
+        { iconType: "certificate", text: 'Certificate of completion' },
+        { iconType: "video", text: '0 hours on-demand video' },
+        { iconType: "article", text: '0 articles' },
+    ];
 
     return (
         <div className="top-10 flex-col mx-auto sticky">

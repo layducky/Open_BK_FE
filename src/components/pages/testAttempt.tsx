@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import Link from "next/link";
 import { useQuestions, useUserTest } from "@/hooks/querys/useCourses";
 import { useUser } from "@/hooks/querys/useUser";
 import { useSubmissionTiming } from "@/hooks/useSubmissionTiming";
@@ -156,7 +157,7 @@ const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProp
             <h1 className="text-2xl md:text-5xl font-semibold">
               {mode === "attempt" ? "Unit Test Attempt" : "Unit Test Overview"}
             </h1>
-            {mode === "attempt" && timing.startedAt && (
+            {mode === "attempt" && timing.startedAt && Array.isArray(questionContents) && questionContents.length > 0 && (
               <TestTimer
                 startedAt={timing.startedAt}
                 durationMinutes={timing.duration}
@@ -172,13 +173,22 @@ const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProp
           )}
           <div>
             {Array.isArray(questionContents) && questionContents.length === 0 ? (
-                <div className="w-full flex flex-col justify-center items-center">
-                  <p className="text-xl text-gray-400 font-bold">Oh no, it's empty here!</p>
+                <div className="w-full flex flex-col justify-center items-center gap-4 py-8">
+                  <p className="text-xl font-semibold text-amber-800">This test is empty and not ready yet.</p>
+                  <p className="text-gray-600">Please try again later.</p>
                   <img
                   className="max-w-[12vh] max-h-[12vh] md:max-w-[24vh] md:max-h-[24vh]"
                   src="https://res.cloudinary.com/dv2izp0a3/image/upload/v1750227722/empty-box_xv3l4d.png"
                   alt="no test data"
                   />
+                  {mode === "attempt" && (
+                    <Link
+                      href={`/test/${testID}`}
+                      className="mt-2 text-blue-600 hover:underline font-medium"
+                    >
+                      Back to test
+                    </Link>
+                  )}
                 </div>
             ) : (
               <div className="question-content flex flex-col gap-5">
@@ -186,7 +196,7 @@ const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProp
               </div>
             )}
           </div>
-          {mode === "attempt" && (
+          {mode === "attempt" && Array.isArray(questionContents) && questionContents.length > 0 && (
             <div className="flex justify-center items-center mt-10">
               <SubmitTestBtn
                 testID={testID}

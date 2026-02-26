@@ -8,7 +8,7 @@ import { useUser } from "@/hooks/querys/useUser";
 import { useUnits, usePublicUnits } from "@/hooks/querys/useCourses";
 import { useEnrolledCourses } from "@/hooks/querys/useEnrollCourse";
 import { useCourseData } from "@/hooks/querys/useCourseData";
-import { UnitActionDropdown } from "@/components/common/buttons/UnitBtn";
+import { UnitActionDropdown, TestActionDropdown } from "@/components/common/buttons/UnitBtn";
 import { CreateUnitBtn } from "@/components/common/buttons/UnitBtn";
 import { formatDateTime } from "@/lib/dateUtils";
 
@@ -26,13 +26,12 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
   }, [params]);
 
   const { data: userInfo } = useUser();
-  const { data: enrolledCourses } = useEnrolledCourses();
+  const { data: enrolledCourses, isError: enrollError, isLoading: enrollLoading } = useEnrolledCourses();
   const { data: courseData } = useCourseData(courseID as string);
 
-  const isEnrolled =
-    enrolledCourses?.some((c: { courseID: string }) => c.courseID === courseID) ||
-    (userInfo?.role === "COLLAB" && courseData?.authorID === userInfo?.id) ||
-    userInfo?.role === "ADMIN";
+  const enrolled = Array.isArray(enrolledCourses) && enrolledCourses.some((c: { courseID: string }) => String(c.courseID) === String(courseID));
+  const isCollabOrAdmin = (userInfo?.role === "COLLAB" && courseData?.authorID === userInfo?.id) || userInfo?.role === "ADMIN";
+  const isEnrolled = !enrollError && !enrollLoading && (enrolled || isCollabOrAdmin);
 
   const unitsWithAuth = useUnits(courseID as string, { enabled: !!isEnrolled && !!courseID });
   const unitsPublic = usePublicUnits(courseID as string, { enabled: !isEnrolled && !!courseID });
@@ -94,7 +93,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
             >
             <AccordionItem value={`unit-${unit.unitID}`}>
               <AccordionTrigger className="text-xl">{unit.numericalOrder}. {unit.unitName}</AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="overflow-y-auto max-h-[60vh]">
                 <div className="flex flex-col min-h-[10rem]">
                   <div className={`flex flex-col md:flex-row w-full pb-4`}>
                     <div className="w-full md:hidden flex justify-center">
@@ -104,7 +103,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                     <div className="w-full md:w-1/2">
                     {[
                     { iconType: "download", bulletType:"borderText", text: `Created at: ${formatDateTime(unit.createdAt)}` },
-                    { iconType: "infinity", bulletType:"borderText", text: `Updated at: ${formatDateTime(unit.updatedAt)}` },
+                    { iconType: "infinity", bulletType:"borderText", text: `Updated at: ${formatDateTime(unit.contentUpdatedAt ?? unit.updatedAt)}` },
                     ].map((item, itemIndex) => (
                       <BulletItem key={itemIndex} {...item}/>
                     ))}
@@ -121,13 +120,27 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                     <BulletItem bulletType="borderText" iconType="certificate" text={unit.description || ""} />
                     {Array.isArray(unit.unit_tests) &&
                       unit.unit_tests.map(({ testName, testID }, testIndex: number) => (
-                        <TestLink
-                          key={testIndex}
-                          testID={testID}
-                          testName={testName || ""}
-                          courseID={courseID || ""}
-                          isEnrolled={!!isEnrolled}
-                        />
+                        <div key={testIndex} className="flex items-center gap-2 w-full border-t-2 border-dotted border-solid border-gray-300 py-4">
+                          <div className="flex-1 min-w-0">
+                            <TestLink
+                              testID={testID}
+                              testName={testName || ""}
+                              courseID={courseID || ""}
+                              isEnrolled={!!isEnrolled}
+                              noBorder
+                            />
+                          </div>
+                          {(userInfo?.role === "COLLAB" || userInfo?.role === "ADMIN") && (
+                            <div className="flex-shrink-0">
+                              <TestActionDropdown
+                                testID={testID}
+                                unitID={unit.unitID}
+                                refetchUnits={refetch}
+                                deleteOnly
+                              />
+                            </div>
+                          )}
+                        </div>
                       ))}
                   <div>
 
