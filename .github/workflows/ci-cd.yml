@@ -24,5 +24,9 @@ jobs:
           IMAGE=${{ secrets.DOCKER_USERNAME }}/openbk-fe
           VERSION=${GITHUB_REF_NAME#v}
 
-          docker build -t $IMAGE:$VERSION .
+          docker build -t $IMAGE:$VERSION \
+            --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
+            --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }} \
+            --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET }} \
+            .
           docker push $IMAGE:$VERSION
