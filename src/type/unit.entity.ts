@@ -1,3 +1,9 @@
+export interface UnitDocument {
+    documentID: string;
+    documentName: string;
+    downloadUrl: string;
+}
+
 export class UnitEntity {
     unitID: string;
     courseID: string;
@@ -8,8 +14,9 @@ export class UnitEntity {
     updatedAt: string;
     contentUpdatedAt?: string;
     unit_tests: { testID: string; testName: string }[];
+    unit_documents?: UnitDocument[];
 
-    constructor(data: Partial<UnitEntity> & { unit_tests?: { testID: string; testName: string }[] }) {
+    constructor(data: Partial<UnitEntity> & { unit_tests?: { testID: string; testName: string }[]; unit_documents?: UnitDocument[] }) {
         this.unitID = data.unitID || "";
         this.courseID = data.courseID || "";
         this.numericalOrder = data.numericalOrder || 0;
@@ -22,5 +29,6 @@ export class UnitEntity {
             ? new Date(data.updatedAt).toLocaleString("de-DE")
             : "-";
         this.unit_tests = data.unit_tests || [];
+        this.unit_documents = data.unit_documents || [];
     }
 }

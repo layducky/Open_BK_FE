@@ -8,7 +8,7 @@ import { useUser } from "@/hooks/querys/useUser";
 import { useUnits, usePublicUnits } from "@/hooks/querys/useCourses";
 import { useEnrolledCourses } from "@/hooks/querys/useEnrollCourse";
 import { useCourseData } from "@/hooks/querys/useCourseData";
-import { UnitActionDropdown, TestActionDropdown } from "@/components/common/buttons/UnitBtn";
+import { UnitActionDropdown, TestActionDropdown, DocumentActionDropdown } from "@/components/common/buttons/UnitBtn";
 import { CreateUnitBtn } from "@/components/common/buttons/UnitBtn";
 import { formatDateTime } from "@/lib/dateUtils";
 
@@ -137,6 +137,31 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                                 unitID={unit.unitID}
                                 refetchUnits={refetch}
                                 deleteOnly
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    {Array.isArray(unit.unit_documents) &&
+                      unit.unit_documents.map(({ documentID, documentName }, docIndex: number) => (
+                        <div key={docIndex} className="flex items-center gap-2 w-full border-t-2 border-dotted border-solid border-gray-300 py-4">
+                          <div className="flex-1 min-w-0">
+                            <a
+                              href={`${process.env.NEXT_PUBLIC_API_URL || ""}/course/public/document/${documentID}/download`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline font-medium"
+                            >
+                              📄 {documentName}
+                            </a>
+                          </div>
+                          {(userInfo?.role === "COLLAB" || userInfo?.role === "ADMIN") && (
+                            <div className="flex-shrink-0">
+                              <DocumentActionDropdown
+                                documentID={documentID}
+                                unitID={unit.unitID}
+                                courseID={courseID || undefined}
+                                refetchUnits={refetch}
                               />
                             </div>
                           )}

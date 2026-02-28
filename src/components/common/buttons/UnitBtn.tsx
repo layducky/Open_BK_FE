@@ -7,7 +7,9 @@ import { useHandleUnit } from "@/hooks/handleMutations/handleUnit";
 import { useUnitMutations } from "@/hooks/mutations/useUnitMutation";
 import CreateUnitModal from "../../modals/createUnit";
 import { useHandleTest } from "@/hooks/handleMutations/handleTest";
+import { useHandleDocument } from "@/hooks/handleMutations/handleDocument";
 import CreateTestModal from "@/components/modals/createTest";
+import CreateDocumentModal from "@/components/modals/createDocument";
 import { SelectionOption } from "@/type/selection.entity";
 
 
@@ -112,14 +114,15 @@ interface unitActionDropdownProps {
 }
 
 export function UnitActionDropdown({courseID, unitID, refetchUnits} : unitActionDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isTestOpen, setIsTestOpen] = useState(false);
+  const [isDocumentOpen, setIsDocumentOpen] = useState(false);
   const { handleDeleteUnit } = useHandleUnit({courseID, refetchUnits});
 
   const options = [
     { label: "Edit description", action: () => {}, color: "hover:bg-gray-100", textColor: "hover:text-black-800" },
-    { label: "Upload TEST", action: () => {setIsOpen(true);}, color: "hover:bg-green-100", textColor: "hover:text-black-800" },
+    { label: "Upload TEST", action: () => {setIsTestOpen(true);}, color: "hover:bg-green-100", textColor: "hover:text-black-800" },
     { label: "Upload LINK", action: () => {}, color: "hover:bg-blue-100", textColor: "hover:text-black-800" },
-    { label: "Upload FILE", action: () => {}, color: "hover:bg-orange-100", textColor: "hover:text-black-800" },
+    { label: "Upload FILE", action: () => {setIsDocumentOpen(true);}, color: "hover:bg-orange-100", textColor: "hover:text-black-800" },
     { label: "Upload VIDEO", action: () => {}, color: "hover:bg-yellow-100", textColor: "hover:text-black-800" },
     { label: "DELETE UNIT", action: () => handleDeleteUnit(unitID), color: "hover:bg-red-500", textColor: "hover:text-white" },
   ];
@@ -128,12 +131,45 @@ export function UnitActionDropdown({courseID, unitID, refetchUnits} : unitAction
       <ActionDropdown options={options} />
       <CreateTestModal 
         unitID={unitID}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
+        isOpen={isTestOpen}
+        setIsOpen={setIsTestOpen}
         refetchTests={refetchUnits}
         setNewTestID={() => {}}
       />
+      <CreateDocumentModal
+        unitID={unitID}
+        courseID={courseID}
+        refetchUnits={refetchUnits}
+        isOpen={isDocumentOpen}
+        setIsOpen={setIsDocumentOpen}
+      />
     </>
+  );
+}
+
+interface DocumentActionDropdownProps {
+  documentID: string;
+  unitID?: string;
+  courseID?: string;
+  refetchUnits?: () => void;
+}
+
+export function DocumentActionDropdown({ documentID, unitID, courseID, refetchUnits }: DocumentActionDropdownProps) {
+  const { handleDeleteDocument } = useHandleDocument({
+    unitID: unitID ?? "",
+    courseID,
+    refetchUnits,
+    setIsOpen: () => {},
+  });
+
+  const options = [
+    { label: "DELETE DOCUMENT", action: () => handleDeleteDocument(documentID), color: "hover:bg-red-500", textColor: "hover:text-white" },
+  ];
+
+  return (
+    <div>
+      <ActionDropdown options={options} />
+    </div>
   );
 }
 
