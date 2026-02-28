@@ -8,8 +8,10 @@ import { useUnitMutations } from "@/hooks/mutations/useUnitMutation";
 import CreateUnitModal from "../../modals/createUnit";
 import { useHandleTest } from "@/hooks/handleMutations/handleTest";
 import { useHandleDocument } from "@/hooks/handleMutations/handleDocument";
+import { useHandleVideo } from "@/hooks/handleMutations/handleVideo";
 import CreateTestModal from "@/components/modals/createTest";
 import CreateDocumentModal from "@/components/modals/createDocument";
+import CreateVideoModal from "@/components/modals/createVideo";
 import { SelectionOption } from "@/type/selection.entity";
 
 
@@ -116,6 +118,7 @@ interface unitActionDropdownProps {
 export function UnitActionDropdown({courseID, unitID, refetchUnits} : unitActionDropdownProps) {
   const [isTestOpen, setIsTestOpen] = useState(false);
   const [isDocumentOpen, setIsDocumentOpen] = useState(false);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
   const { handleDeleteUnit } = useHandleUnit({courseID, refetchUnits});
 
   const options = [
@@ -123,7 +126,7 @@ export function UnitActionDropdown({courseID, unitID, refetchUnits} : unitAction
     { label: "Upload TEST", action: () => {setIsTestOpen(true);}, color: "hover:bg-green-100", textColor: "hover:text-black-800" },
     { label: "Upload LINK", action: () => {}, color: "hover:bg-blue-100", textColor: "hover:text-black-800" },
     { label: "Upload FILE", action: () => {setIsDocumentOpen(true);}, color: "hover:bg-orange-100", textColor: "hover:text-black-800" },
-    { label: "Upload VIDEO", action: () => {}, color: "hover:bg-yellow-100", textColor: "hover:text-black-800" },
+    { label: "Upload VIDEO", action: () => {setIsVideoOpen(true);}, color: "hover:bg-yellow-100", textColor: "hover:text-black-800" },
     { label: "DELETE UNIT", action: () => handleDeleteUnit(unitID), color: "hover:bg-red-500", textColor: "hover:text-white" },
   ];
   return (
@@ -142,6 +145,13 @@ export function UnitActionDropdown({courseID, unitID, refetchUnits} : unitAction
         refetchUnits={refetchUnits}
         isOpen={isDocumentOpen}
         setIsOpen={setIsDocumentOpen}
+      />
+      <CreateVideoModal
+        unitID={unitID}
+        courseID={courseID}
+        refetchUnits={refetchUnits}
+        isOpen={isVideoOpen}
+        setIsOpen={setIsVideoOpen}
       />
     </>
   );
@@ -164,6 +174,32 @@ export function DocumentActionDropdown({ documentID, unitID, courseID, refetchUn
 
   const options = [
     { label: "DELETE DOCUMENT", action: () => handleDeleteDocument(documentID), color: "hover:bg-red-500", textColor: "hover:text-white" },
+  ];
+
+  return (
+    <div>
+      <ActionDropdown options={options} />
+    </div>
+  );
+}
+
+interface VideoActionDropdownProps {
+  videoID: string;
+  unitID?: string;
+  courseID?: string;
+  refetchUnits?: () => void;
+}
+
+export function VideoActionDropdown({ videoID, unitID, courseID, refetchUnits }: VideoActionDropdownProps) {
+  const { handleDeleteVideo } = useHandleVideo({
+    unitID: unitID ?? "",
+    courseID,
+    refetchUnits,
+    setIsOpen: () => {},
+  });
+
+  const options = [
+    { label: "DELETE VIDEO", action: () => handleDeleteVideo(videoID), color: "hover:bg-red-500", textColor: "hover:text-white" },
   ];
 
   return (

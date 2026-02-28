@@ -4,6 +4,13 @@ export interface UnitDocument {
     downloadUrl: string;
 }
 
+export interface UnitVideo {
+    videoID: string;
+    videoName: string;
+    fileUrl: string;
+    fileType: string;
+}
+
 export class UnitEntity {
     unitID: string;
     courseID: string;
@@ -15,8 +22,9 @@ export class UnitEntity {
     contentUpdatedAt?: string;
     unit_tests: { testID: string; testName: string }[];
     unit_documents?: UnitDocument[];
+    unit_videos?: UnitVideo[];
 
-    constructor(data: Partial<UnitEntity> & { unit_tests?: { testID: string; testName: string }[]; unit_documents?: UnitDocument[] }) {
+    constructor(data: Partial<UnitEntity> & { unit_tests?: { testID: string; testName: string }[]; unit_documents?: UnitDocument[]; unit_videos?: UnitVideo[] }) {
         this.unitID = data.unitID || "";
         this.courseID = data.courseID || "";
         this.numericalOrder = data.numericalOrder || 0;
@@ -30,5 +38,6 @@ export class UnitEntity {
             : "-";
         this.unit_tests = data.unit_tests || [];
         this.unit_documents = data.unit_documents || [];
+        this.unit_videos = data.unit_videos || [];
     }
 }

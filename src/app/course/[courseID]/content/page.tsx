@@ -8,13 +8,15 @@ import { useUser } from "@/hooks/querys/useUser";
 import { useUnits, usePublicUnits } from "@/hooks/querys/useCourses";
 import { useEnrolledCourses } from "@/hooks/querys/useEnrollCourse";
 import { useCourseData } from "@/hooks/querys/useCourseData";
-import { UnitActionDropdown, TestActionDropdown, DocumentActionDropdown } from "@/components/common/buttons/UnitBtn";
+import { UnitActionDropdown, TestActionDropdown, DocumentActionDropdown, VideoActionDropdown } from "@/components/common/buttons/UnitBtn";
+import { VideoPlayerModal } from "@/components/common/VideoPlayer";
 import { CreateUnitBtn } from "@/components/common/buttons/UnitBtn";
 import { formatDateTime } from "@/lib/dateUtils";
 
 export default function CourseContentPage({ params }: { params: Promise<{ courseID: string }> }) {
   const [courseID, setCourseID] = React.useState<string | null>(null);
   const [newUnitID, setNewUnitID] = React.useState<string | null>(null);
+  const [videoPlayerOpen, setVideoPlayerOpen] = React.useState<{ videoID: string; videoName: string } | null>(null);
 
   React.useEffect(() => {
     const fetchCourseID = async () => {
@@ -167,6 +169,39 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                           )}
                         </div>
                       ))}
+                    {Array.isArray(unit.unit_videos) &&
+                      unit.unit_videos.map(({ videoID, videoName }, vidIndex: number) => (
+                        <div key={vidIndex} className="flex items-center gap-2 w-full border-t-2 border-dotted border-solid border-gray-300 py-4">
+                          <div className="flex-1 min-w-0 flex items-center gap-2 flex-wrap">
+                            <button
+                              type="button"
+                              onClick={() => setVideoPlayerOpen({ videoID, videoName })}
+                              className="text-blue-600 hover:underline font-medium"
+                            >
+                              ▶️ {videoName} (Xem)
+                            </button>
+                            <span className="text-gray-400">|</span>
+                            <a
+                              href={`${process.env.NEXT_PUBLIC_API_URL || ""}/course/public/video/${videoID}/download`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline font-medium"
+                            >
+                              ⬇️ Tải về
+                            </a>
+                          </div>
+                          {(userInfo?.role === "COLLAB" || userInfo?.role === "ADMIN") && (
+                            <div className="flex-shrink-0">
+                              <VideoActionDropdown
+                                videoID={videoID}
+                                unitID={unit.unitID}
+                                courseID={courseID || undefined}
+                                refetchUnits={refetch}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
                   <div>
 
                     </div>
@@ -179,6 +214,14 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
           ))}
         </AnimatePresence>
       </Accordion>
+      {videoPlayerOpen && (
+        <VideoPlayerModal
+          videoID={videoPlayerOpen.videoID}
+          videoName={videoPlayerOpen.videoName}
+          isOpen={!!videoPlayerOpen}
+          onClose={() => setVideoPlayerOpen(null)}
+        />
+      )}
     </div>
   );
 }
