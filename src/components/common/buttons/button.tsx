@@ -1,4 +1,5 @@
 "use-client";
+import { useQueryClient } from "@tanstack/react-query";
 import { enrollCourse } from "@/services/course/courseEnroll";
 export const ButtonForm: React.FC<
   {
@@ -74,6 +75,8 @@ export const ButtonClick: React.FC<
   courseID,
   onClick,
 }) => {
+  const queryClient = useQueryClient();
+
   const handleClick = async () => {
     if (courseID === null) {
       return;
@@ -82,9 +85,21 @@ export const ButtonClick: React.FC<
     if (learnerID) {
       try {
         const response = await enrollCourse(learnerID, courseID);
-        alert(response.message || response.error);
+        const isError = response?.response != null;
+        if (isError) {
+          const errMsg = response?.response?.data?.error || response?.message || "Enrollment failed";
+          alert(errMsg);
+        } else {
+          alert(response?.message || "Enrolled successfully!");
+          queryClient.invalidateQueries({ queryKey: ["EnrollCourses"] });
+          queryClient.invalidateQueries({ queryKey: ["EnrollStats"] });
+          if (courseID) {
+            queryClient.invalidateQueries({ queryKey: ["getAllUnits", courseID] });
+            queryClient.invalidateQueries({ queryKey: ["getPublicUnits", courseID] });
+          }
+        }
       } catch (error: any) {
-        alert(error);
+        alert(error?.message || error?.response?.data?.error || "Enrollment failed");
       }
     } else {
       alert("Please log in to enroll in a course!");
