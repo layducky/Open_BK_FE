@@ -4,6 +4,7 @@ import { ButtonClick } from "../buttons/button";
 import * as React from "react";
 import ArrowRight from "/public/svg/arrow_right.svg";
 import { useEnrolledCourses } from "@/hooks/querys/useEnrollCourse";
+import { formatPrice } from "@/lib/formatPrice";
 
 export const PublicFootBar: React.FC<{ price: string; courseID?: string | null }> = ({ price, courseID }) => {
   const { data: enrolledList } = useEnrolledCourses();
@@ -22,7 +23,7 @@ export const PublicFootBar: React.FC<{ price: string; courseID?: string | null }
         </ButtonClick>
       )}
       <div className="self-stretch my-auto text-xl font-bold text-green-600">
-        {price}$
+        {formatPrice(price)}
       </div>
     </div>
   );

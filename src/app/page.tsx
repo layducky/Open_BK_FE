@@ -5,27 +5,95 @@ import Link from "next/link";
 import { useCourses } from "@/hooks/querys/useCourses";
 import { RenderPublicCourses } from "@/components/ui/renderPublicCourses";
 import { AnimatedSection } from "@/components/landing/AnimatedSection";
+import { useSession } from "next-auth/react";
+import { roleString } from "@/lib/roleUtils";
 
 export default function Page() {
   const { data: courses } = useCourses();
+  const { data: session, status } = useSession();
+
+  const user = session?.user;
 
   return (
     <main className="min-h-screen">
-      {/* Hero / Slogan - no scroll animation, first thing visible */}
+      {/* Hero */}
       <section className="flex flex-col justify-center items-start py-16 px-6 md:px-12 lg:px-20 w-full bg-gradient-to-br from-slate-100 to-slate-200 min-h-[280px]">
         <div className="max-w-2xl">
           <h1 className="text-4xl md:text-5xl font-bold my-4 text-slate-900 tracking-tight">
             Learn today, succeed tomorrow!
           </h1>
-          <p className="text-lg text-slate-700 tracking-wide leading-relaxed">
+          <p className="text-lg text-slate-700 tracking-wide leading-relaxed mb-6">
             Quality courses, brighter future.
           </p>
+          {!user && status !== "loading" && (
+            <div className="flex gap-3 flex-wrap">
+              <Link
+                href="/auth/login"
+                className="inline-flex items-center px-5 py-2.5 rounded-xl bg-dodger-blue-500 text-white font-medium hover:bg-dodger-blue-600 transition"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/auth/register"
+                className="inline-flex items-center px-5 py-2.5 rounded-xl border-2 border-dodger-blue-500 text-dodger-blue-600 font-medium hover:bg-dodger-blue-50 transition"
+              >
+                Sign up (Learner)
+              </Link>
+            </div>
+          )}
+          {user && (
+            <Link
+              href={`/${roleString(user?.role)?.toLowerCase()}/dashboard`}
+              className="inline-flex items-center px-5 py-2.5 rounded-xl bg-dodger-blue-500 text-white font-medium hover:bg-dodger-blue-600 transition"
+            >
+              Go to Dashboard
+            </Link>
+          )}
         </div>
       </section>
 
+      {/* Default Collaborator Account */}
       <AnimatedSection
         direction="up"
-        className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-16 w-full bg-white min-h-[400px]"
+        className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-12 w-full bg-amber-50/90 min-h-[200px] border-y border-amber-200"
+      >
+        <h2 className="text-2xl font-bold text-slate-900 mb-4">Default Collaborator Account</h2>
+        <p className="text-slate-600 mb-4 max-w-2xl">
+          Use this account to log in as a Collaborator (create and manage courses).
+        </p>
+        <div className="inline-flex flex-col gap-1 p-4 bg-white rounded-xl border border-amber-200 font-mono text-sm">
+          <span><strong>Email:</strong> collab@gmail.com</span>
+          <span><strong>Password:</strong> collab</span>
+        </div>
+        <Link
+          href="/auth/login"
+          className="mt-4 inline-flex items-center text-dodger-blue-600 font-medium hover:underline"
+        >
+          Log in as Collaborator →
+        </Link>
+      </AnimatedSection>
+
+      {/* Learner - Create Account */}
+      <AnimatedSection
+        direction="up"
+        className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-12 w-full bg-white min-h-[200px]"
+      >
+        <h2 className="text-2xl font-bold text-slate-900 mb-4">Learner</h2>
+        <p className="text-slate-600 mb-4 max-w-2xl">
+          Create your own account to enroll in courses, learn, and take quizzes.
+        </p>
+        <Link
+          href="/auth/register"
+          className="inline-flex items-center px-5 py-2.5 rounded-xl bg-emerald-500 text-white font-medium hover:bg-emerald-600 transition w-fit"
+        >
+          Sign up as Learner
+        </Link>
+      </AnimatedSection>
+
+      {/* New Courses */}
+      <AnimatedSection
+        direction="up"
+        className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-16 w-full bg-slate-50 min-h-[400px]"
       >
         <h2 className="text-3xl font-bold text-slate-900 mb-2 text-center">What&apos;s new</h2>
         <p className="text-slate-600 mb-8 max-w-xl mx-auto text-center">Discover the latest courses and start learning.</p>
@@ -42,99 +110,16 @@ export default function Page() {
         </div>
       </AnimatedSection>
 
-      <AnimatedSection
-        direction="left"
-        className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-16 w-full bg-slate-100 min-h-[320px]"
-      >
-        <h2 className="text-3xl font-bold text-slate-900 mb-4">About OpenBK</h2>
-        <div className="max-w-2xl space-y-4 text-slate-700 text-lg leading-relaxed">
-          <p>
-            OpenBK is a <strong>test creation and learning platform</strong> where users can enroll in
-            courses to access learning materials and take quizzes.
-          </p>
-          <p>
-            Whether you want to study a new subject, practice with quizzes, or create and manage your
-            own courses as an instructor, OpenBK provides the tools and content to support your goals.
-          </p>
-        </div>
-      </AnimatedSection>
-
-      <AnimatedSection
-        direction="right"
-        className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-16 w-full bg-white min-h-[340px] border-t border-slate-200"
-      >
-        <h2 className="text-3xl font-bold text-slate-900 mb-4">For Learners</h2>
-        <p className="text-slate-600 mb-6 max-w-2xl">
-          Get started as a learner to browse courses and take quizzes.
-        </p>
-        <ul className="space-y-3 max-w-2xl text-slate-700 list-disc list-inside">
-          <li>
-            <strong>Log in</strong> with the <strong>Learner</strong> role (or sign up and choose Learner).
-          </li>
-          <li>
-            Go to <strong>Courses</strong> to browse available courses and read descriptions.
-          </li>
-          <li>
-            <strong>Enroll</strong> in a course by clicking &quot;Enroll now&quot; on the course page.
-          </li>
-          <li>
-            Access course content and units, and take tests to check your progress.
-          </li>
-        </ul>
-        <Link
-          href="/course"
-          className="mt-6 inline-flex items-center text-dodger-blue-600 font-medium hover:underline"
-        >
-          Browse courses →
-        </Link>
-      </AnimatedSection>
-
+      {/* About */}
       <AnimatedSection
         direction="up"
-        className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-16 w-full bg-amber-50/80 min-h-[300px]"
+        className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-12 w-full bg-white min-h-[240px] border-t border-slate-200"
       >
-        <h2 className="text-3xl font-bold text-slate-900 mb-4">Taking tests</h2>
-        <div className="max-w-2xl space-y-3 text-slate-700 text-lg leading-relaxed">
-          <p>
-            After enrolling in a course, you can access <strong>units</strong> and their <strong>tests</strong>.
-          </p>
-          <p>
-            Each test has a time limit and multiple questions. Complete tests to reinforce what you
-            learned and track your progress. Your results are saved so you can review your performance
-            and retake tests when needed.
-          </p>
-        </div>
-      </AnimatedSection>
-
-      <AnimatedSection
-        direction="scale"
-        className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-16 w-full bg-dodger-blue-50/70 min-h-[360px]"
-      >
-        <h2 className="text-3xl font-bold text-slate-900 mb-4">For Collaborators</h2>
-        <p className="text-slate-600 mb-6 max-w-2xl">
-          Collaborators are instructors who create and manage their own courses on OpenBK.
+        <h2 className="text-2xl font-bold text-slate-900 mb-4">About OpenBK</h2>
+        <p className="text-slate-700 max-w-2xl leading-relaxed">
+          OpenBK is a learning and quiz platform. Collaborators create courses, add units and tests.
+          Learners enroll in courses, study content, and take quizzes to reinforce their knowledge.
         </p>
-        <ul className="space-y-3 max-w-2xl text-slate-700 list-disc list-inside">
-          <li>
-            <strong>Log in</strong> with the <strong>Collaborator</strong> role to access your dashboard.
-          </li>
-          <li>
-            <strong>Create courses</strong>, add units, and attach tests to units so learners can practice.
-          </li>
-          <li>
-            <strong>Manage your courses</strong>: edit content, add or remove units, and see how many
-            learners have enrolled.
-          </li>
-          <li>
-            Use the collaborator dashboard to view your created courses and learner enrollment at a glance.
-          </li>
-        </ul>
-        <Link
-          href="/collaborator/dashboard"
-          className="mt-6 inline-flex items-center text-dodger-blue-600 font-medium hover:underline"
-        >
-          Collaborator dashboard →
-        </Link>
       </AnimatedSection>
     </main>
   );

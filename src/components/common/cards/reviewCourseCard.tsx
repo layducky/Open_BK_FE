@@ -5,6 +5,7 @@ import { useEnrolledCourses } from '@/hooks/querys/useEnrollCourse';
 import { usePublicUnits } from '@/hooks/querys/useCourses';
 import { useUser } from '@/hooks/querys/useUser';
 import { PublicCourseEntity } from '@/type/course.entity';
+import { formatPrice } from '@/lib/formatPrice';
 
 export const ReviewCourseCard = ({
     courseID,
@@ -46,7 +47,7 @@ export const ReviewCourseCard = ({
                         <>
                             <div className="flex justify-center items-center w-full pb-2">
                                 <span className="text-xl font-bold text-green-600">
-                                    {courseData?.price != null && courseData?.price !== '' ? `${courseData.price}$` : 'Free'}
+                                    {formatPrice(courseData?.price)}
                                 </span>
                             </div>
                             <div className="flex justify-center items-center w-full pb-6">
