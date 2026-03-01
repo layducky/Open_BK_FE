@@ -1,4 +1,5 @@
 import { useVideoMutations } from "@/hooks/mutations/useVideoMutation";
+import { useMultipartVideoUpload } from "@/hooks/useMultipartVideoUpload";
 
 interface HandleVideoProps {
   unitID: string;
@@ -13,22 +14,20 @@ export const useHandleVideo = ({
   refetchUnits,
   setIsOpen,
 }: HandleVideoProps) => {
-  const { uploadMutation, deleteMutation, isAllowedFile } = useVideoMutations(unitID, courseID);
+  const { deleteMutation, isAllowedFile } = useVideoMutations(unitID, courseID);
+  const { upload, progress, status, isUploading } = useMultipartVideoUpload({
+    unitID,
+    courseID,
+    refetchUnits,
+    setIsOpen,
+  });
 
   const handleUploadVideo = (file: File) => {
     if (!isAllowedFile(file)) {
       alert("Invalid file type. Allowed: .mp4, .webm, .ogg, .mov");
       return;
     }
-    uploadMutation.mutate(
-      { file },
-      {
-        onSuccess: () => {
-          refetchUnits?.();
-          setIsOpen(false);
-        },
-      }
-    );
+    upload(file);
   };
 
   const handleDeleteVideo = (videoID: string) => {
@@ -44,7 +43,9 @@ export const useHandleVideo = ({
   return {
     handleUploadVideo,
     handleDeleteVideo,
-    isUploading: uploadMutation.isPending,
+    isUploading,
+    progress,
+    status,
     isAllowedFile,
   };
 };

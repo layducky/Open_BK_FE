@@ -23,12 +23,21 @@ const CreateVideoModal: React.FC<CreateVideoModalProps> = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const { handleUploadVideo, isUploading } = useHandleVideo({
+  const { handleUploadVideo, isUploading, progress, status } = useHandleVideo({
     unitID,
     courseID,
     refetchUnits,
     setIsOpen,
   });
+
+  const statusLabel =
+    status === "preparing"
+      ? "Preparing..."
+      : status === "uploading"
+        ? "Uploading..."
+        : status === "finalizing"
+          ? "Finalizing..."
+          : "Upload";
 
   const onClose = () => {
     setIsOpen(false);
@@ -78,6 +87,20 @@ const CreateVideoModal: React.FC<CreateVideoModalProps> = ({
               Selected: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
             </p>
           )}
+          {isUploading && (
+            <div className="mt-4">
+              <div className="flex justify-between text-sm text-gray-600 mb-1">
+                <span>{statusLabel}</span>
+                <span>{progress}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  className="bg-yellow-500 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          )}
         </div>
         <div className="flex justify-center gap-2">
           <button
@@ -92,7 +115,7 @@ const CreateVideoModal: React.FC<CreateVideoModalProps> = ({
             disabled={!selectedFile || isUploading}
             className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isUploading ? "Uploading..." : "Upload"}
+            {isUploading ? statusLabel : "Upload"}
           </button>
         </div>
       </form>
