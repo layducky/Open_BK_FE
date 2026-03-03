@@ -1,5 +1,5 @@
 "use client";
-import google from '/public/images/google.png';
+import google from "../../../public/images/google.png";
 import { signIn } from 'next-auth/react';
 
 

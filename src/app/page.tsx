@@ -17,7 +17,7 @@ export default function Page() {
   return (
     <main className="min-h-screen">
       {/* Hero */}
-      <section className="flex flex-col justify-center items-start py-16 px-6 md:px-12 lg:px-20 w-full bg-gradient-to-br from-slate-100 to-slate-200 min-h-[280px]">
+      <section className="flex flex-col justify-center items-start py-16 px-6 md:px-12 lg:px-20 w-full bg-linear-to-br from-slate-100 to-slate-200 min-h-[280px]">
         <div className="max-w-2xl">
           <h1 className="text-4xl md:text-5xl font-bold my-4 text-slate-900 tracking-tight">
             Learn today, succeed tomorrow!

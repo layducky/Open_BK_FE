@@ -96,7 +96,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
             <AccordionItem value={`unit-${unit.unitID}`}>
               <AccordionTrigger className="text-xl">{unit.numericalOrder}. {unit.unitName}</AccordionTrigger>
               <AccordionContent className="overflow-y-auto max-h-[60vh]">
-                <div className="flex flex-col min-h-[10rem]">
+                <div className="flex flex-col min-h-40">
                   <div className={`flex flex-col md:flex-row w-full pb-4`}>
                     <div className="w-full md:hidden flex justify-center">
                     { unit.unitID && userInfo?.role === "COLLAB"
@@ -133,7 +133,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                             />
                           </div>
                           {(userInfo?.role === "COLLAB" || userInfo?.role === "ADMIN") && (
-                            <div className="flex-shrink-0">
+                            <div className="shrink-0">
                               <TestActionDropdown
                                 testID={testID}
                                 unitID={unit.unitID}
@@ -158,7 +158,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                             </a>
                           </div>
                           {(userInfo?.role === "COLLAB" || userInfo?.role === "ADMIN") && (
-                            <div className="flex-shrink-0">
+                            <div className="shrink-0">
                               <DocumentActionDropdown
                                 documentID={documentID}
                                 unitID={unit.unitID}
@@ -191,7 +191,7 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                             </a>
                           </div>
                           {(userInfo?.role === "COLLAB" || userInfo?.role === "ADMIN") && (
-                            <div className="flex-shrink-0">
+                            <div className="shrink-0">
                               <VideoActionDropdown
                                 videoID={videoID}
                                 unitID={unit.unitID}

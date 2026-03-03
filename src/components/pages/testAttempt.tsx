@@ -152,7 +152,7 @@ const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProp
   return (
     <main>
       <div className="flex gap-10 p-1 md:pt-0 md:p-10">
-        <div className="flex flex-col pt-6 md:p-10 gap-6 max-h-[100vh] overflow-y-auto rounded-lg border border-solid border-black border-opacity-20 bg-white w-9/12 max-md:w-full transition-all ease-in-out duration-300">
+        <div className="flex flex-col pt-6 md:p-10 gap-6 max-h-screen overflow-y-auto rounded-lg border border-solid border-black border-opacity-20 bg-white w-9/12 max-md:w-full transition-all ease-in-out duration-300">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <h1 className="text-2xl md:text-5xl font-semibold">
               {mode === "attempt" ? "Unit Test Attempt" : "Unit Test Overview"}

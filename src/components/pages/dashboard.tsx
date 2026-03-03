@@ -94,7 +94,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
             <div key={index} className={statCardClasses}>
               <div className="rounded-full w-[6vw] max-w-[70px] min-w-fit aspect-square flex items-center justify-center">
                 <img
-                  className="rounded-full w-14 h-14 object-cover border-[4px] border-white"
+                  className="rounded-full w-14 h-14 object-cover border-4 border-white"
                   src={getIconForLabel(item.label)}
                   alt="Icon"
                 />

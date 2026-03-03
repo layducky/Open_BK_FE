@@ -209,7 +209,7 @@ export default function TestPage() {
 
   return (
     <div className="bg-white flex justify-center min-h-screen p-2 pt-6 md:p-6">
-      <div className="w-full md:w-[60rem]">
+      <div className="w-full md:w-240">
         <div className="flex items-center gap-2 mb-6 border-b border-gray-300 pb-4">
           <div className="bg-pink-100 text-pink-600 rounded-full p-2">
             <svg width="28" height="28" fill="none" viewBox="0 0 24 24">

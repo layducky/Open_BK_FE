@@ -1,8 +1,8 @@
 "use client";
 import * as React from "react";
-import Search from "/public/svg/search.svg";
-import Cart from "/public/svg/cart.svg";
-import BkIcon from "/public/images/BkIcon.png";
+import Search from "../../../public/svg/search.svg";
+import Cart from "../../../public/svg/cart.svg";
+import BkIcon from "../../../public/images/BkIcon.png";
 import Link from "next/link";
 import SigninButton from "../common/buttons/SigninButton";
 import SignupButton from "../common/buttons/SignupButton";
@@ -15,7 +15,7 @@ const CartCount: React.FC = () => {
   return (
     <div
       id="count"
-      className="flex absolute bg-blue-500 text-white border-1 border-black rounded-lg px-1 w-25
+      className="flex absolute bg-blue-500 text-white border border-black rounded-lg px-1 w-25
     items-center justify-center left-4 bottom-3"
     >
       2
@@ -75,7 +75,7 @@ export const Navbar: React.FC = () => {
               type="search"
               id="search"
               placeholder="Search"
-              className="bg-transparent border-none outline-none flex-grow"
+              className="bg-transparent border-none outline-none grow"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />

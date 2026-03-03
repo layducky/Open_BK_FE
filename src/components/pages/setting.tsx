@@ -58,7 +58,7 @@ const SettingsPage: React.FC<{
               src={user?.image}
             />
             <button
-              className="rounded-full border-1 aspect-square border-white w-7 absolute right-[2px] bottom-2 bg-white flex items-center justify-center text-stone-600 duration-200 hover:bg-dodger-blue-500 hover:text-white"
+              className="rounded-full border aspect-square border-white w-7 absolute right-[2px] bottom-2 bg-white flex items-center justify-center text-stone-600 duration-200 hover:bg-dodger-blue-500 hover:text-white"
               onClick={() => openModal("UploadProfileModal")}
             >
               <FaCamera />
@@ -81,7 +81,7 @@ const SettingsPage: React.FC<{
                 <motion.div
                   layoutId="active"
                   className="absolute bottom-0 left-0 bg-dodger-blue-500 h-[3px] w-full"
-                  transition={{ durration: 0.6 }}
+                  transition={{ duration: 0.6 }}
                 />
               )}
             </div>

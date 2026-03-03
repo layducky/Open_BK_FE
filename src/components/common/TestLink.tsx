@@ -4,7 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/context/ModalContext";
 import { useSession } from "next-auth/react";
-import Test from "/public/svg/test.svg";
+import Test from "../../../public/svg/test.svg";
 
 interface TestLinkProps {
   testID: string;

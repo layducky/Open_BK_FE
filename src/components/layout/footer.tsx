@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
             <SocialIcon key={index} {...icon} />
           ))}
         </div>
-        <p className="mt-14 leading-6 text-white font-[number:var(--sds-typography-body-font-weight-regular)] text-[length:var(--sds-typography-body-size-medium)] max-md:mt-10">
+        <p className="mt-14 leading-6 text-white font-(--sds-typography-body-font-weight-regular) text-(length:--sds-typography-body-size-medium) max-md:mt-10">
           © 2024 OpenBK. All rights reserved.
         </p>
       </div>

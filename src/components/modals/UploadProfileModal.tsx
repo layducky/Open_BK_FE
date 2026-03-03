@@ -97,14 +97,14 @@ const UploadProfileModal: React.FC<{
 
           <div className="flex flex-row flex-1 items-end w-full justify-between max-lg:px-0 min-h-20 mt-6">
             <button
-              className="navigateBtn px-6 py-3 bg-stone-600 text-white rounded-xl font-semibold hover:bg-gradient-to-r hover:from-stone-500 hover:via-stone-400 hover:to-stone-500 duration-300 shadow-md transform hover:scale-105 transition"
+              className="navigateBtn px-6 py-3 bg-stone-600 text-white rounded-xl font-semibold hover:bg-linear-to-r hover:from-stone-500 hover:via-stone-400 hover:to-stone-500 duration-300 shadow-md transform hover:scale-105 transition"
               onClick={onClose}
             >
               Cancel
             </button>
 
             <button
-              className="navigateBtn px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-gradient-to-r hover:from-blue-500 hover:via-blue-400 hover:to-blue-500 duration-300 shadow-md transform hover:scale-105 transition"
+              className="navigateBtn px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-linear-to-r hover:from-blue-500 hover:via-blue-400 hover:to-blue-500 duration-300 shadow-md transform hover:scale-105 transition"
               onClick={handleUpload}
             >
               Upload

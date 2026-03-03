@@ -2,7 +2,7 @@
 
 import { ButtonClick } from "../buttons/button";
 import * as React from "react";
-import ArrowRight from "/public/svg/arrow_right.svg";
+import ArrowRight from "../../../../public/svg/arrow_right.svg";
 import { useEnrolledCourses } from "@/hooks/querys/useEnrollCourse";
 import { formatPrice } from "@/lib/formatPrice";
 
