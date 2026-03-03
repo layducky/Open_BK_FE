@@ -38,6 +38,7 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^25",
     "@types/react-dom": "^19",
