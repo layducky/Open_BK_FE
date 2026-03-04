@@ -15,7 +15,7 @@ const CartCount: React.FC = () => {
   return (
     <div
       id="count"
-      className="flex absolute bg-blue-500 text-white border border-black rounded-lg px-1 w-25
+      className="flex absolute bg-blue-500 text-white border border-black rounded-lg px-1
     items-center justify-center left-4 bottom-3"
     >
       2
