@@ -47,80 +47,68 @@ export const Navbar: React.FC = () => {
   sessionStorage.setItem("accessToken", session?.accessToken || "");
 
   return (
-    <div className="flex overflow-hidden flex-wrap items-center py-4 pl-8 w-full text-base leading-none bg-white text-black shadow-sm max-md:pl-5 max-md:max-w-full">
-      <div className="w-3/12 flex justify-start" >
+    <header className="flex flex-wrap items-center gap-2 md:gap-4 py-2 md:py-3 px-4 md:px-6 lg:px-8 w-full text-sm md:text-base leading-none bg-white text-black shadow-sm">
+      {/* Logo + Courses */}
+      <div className="flex items-center gap-3 md:gap-6 shrink-0 order-1">
         <Link
           href="/"
-          className="flex gap-1.5 justify-center items-center pl-0 text-2xl w-4/6 text-sky-600"
+          className="flex gap-1.5 items-center text-xl md:text-2xl text-sky-600"
         >
-          <img src={BkIcon.src} className=""></img>
+          <img src={BkIcon.src} alt="OpenBK" className="h-7 md:h-8 w-auto" />
           <span className="font-bold">OpenBK</span>
         </Link>
-
-        <Link href="/course" className="self-stretch my-auto w-2/6 tracking-wide">
+        <Link href="/course" className="text-black hover:text-sky-600 transition-colors">
           Courses
         </Link>
       </div>
 
-      <div className="w-6/12 flex justify-center" >
-        <form
-          className="flex flex-wrap gap-10 justify-between items-center self-stretch px-4 py-2 my-auto tracking-wide whitespace-nowrap rounded-2xl bg-stone-100 min-w-[240px] text-black text-opacity-70 w-[607px] max-md:px-5 max-md:max-w-full"
-          onSubmit={handleSearchSubmit}
-        >
-          <label htmlFor="search" className="sr-only">
-            Search courses
-          </label>
-          <div className="flex items-center w-full">
-            <input
-              type="search"
-              id="search"
-              placeholder="Search"
-              className="bg-transparent border-none outline-none grow"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <Search />
-          </div>
-        </form>
-      </div>
+      {/* Search - center on desktop, full width on mobile */}
+      <form
+        className="flex-1 min-w-0 order-3 md:order-2 flex items-center px-3 py-1.5 md:py-2 rounded-xl bg-stone-100 text-black/70 max-w-full md:max-w-md mx-auto"
+        onSubmit={handleSearchSubmit}
+      >
+        <label htmlFor="search" className="sr-only">Search courses</label>
+        <input
+          type="search"
+          id="search"
+          placeholder="Search"
+          className="bg-transparent border-none outline-none flex-1 min-w-0 text-sm md:text-base"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <Search />
+      </form>
 
-      <div className="w-3/12 flex gap-4 justify-between items-center self-stretch my-auto tracking-wide min-w-[240px] w-[325px]">
-        <div className="w-2/6 relative">
+      {/* Cart + User / Auth */}
+      <div className="flex items-center gap-3 md:gap-4 shrink-0 order-2 md:order-3 ml-auto">
+        <div className="relative">
           <Cart />
           <CartCount />
         </div>
-        <div className="w-4/6 flex justify-between">
-          {user ? (
-            <div className="flex items-center gap-10 justify-around ">
-              <div className="w-4/6">                
-                <Link
-                  href={`/${roleString(user?.role)?.toLowerCase()}/dashboard`}
-                  className="self-stretch my-auto tracking-wide"
-                >
-                  <div className="flex flex-col justify-center">
-                    <img
-                      className="rounded-full bg-black w-10 aspect-square object-cover border-[6px] border-white"
-                      src={user?.image}
-                    />
-                    <button className="self-stretch my-auto">{user?.name ?? "User's name"}</button>
-                  </div>
-                </Link>
-              </div>
-              <div className="flex justify-center w-2/6">
-                <LogoutButton />
-              </div>
-            </div>
-            
-          ) : (
-            <>
-              <div className="flex justify-center gap-10">
-                <SigninButton />
-                <SignupButton />
-              </div>
-            </>
-          )}
-        </div>
+        {user ? (
+          <div className="flex items-center gap-2 md:gap-4">
+            <Link
+              href={`/${roleString(user?.role)?.toLowerCase()}/dashboard`}
+              className="flex items-center gap-2 min-w-0"
+            >
+              <img
+                className="rounded-full w-8 h-8 md:w-9 md:h-9 object-cover border-2 border-gray-200 shrink-0"
+                src={user?.image}
+                alt=""
+              />
+              <span className="hidden sm:inline truncate max-w-[100px] md:max-w-[120px] font-medium">
+                {user?.name ?? "User"}
+              </span>
+            </Link>
+            <LogoutButton />
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <SigninButton />
+            <SignupButton />
+          </div>
+        )}
       </div>
-    </div>
+    </header>
   );
 };

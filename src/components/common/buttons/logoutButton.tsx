@@ -15,11 +15,12 @@ export const LogoutButton = () => {
   };
 
   return (
-    <button className="flex items-center gap-2" onClick={handleLogout}>
-      <div className="flex flex-col">
-        <IoLogOutOutline className="self-stretch my-auto text-3xl" />
-        Logout
-      </div>
+    <button
+      className="flex items-center gap-1.5 text-sm md:text-base hover:opacity-80 transition-opacity"
+      onClick={handleLogout}
+    >
+      <IoLogOutOutline className="text-xl md:text-2xl shrink-0" />
+      <span className="hidden sm:inline">Logout</span>
     </button>
   );
 };
