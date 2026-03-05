@@ -12,6 +12,7 @@ import { UnitActionDropdown, TestActionDropdown, DocumentActionDropdown, VideoAc
 import { VideoPlayerModal } from "@/components/common/VideoPlayer";
 import { CreateUnitBtn } from "@/components/common/buttons/UnitBtn";
 import { formatDateTime } from "@/lib/dateUtils";
+import { useModal } from "@/context/ModalContext";
 
 export default function CourseContentPage({ params }: { params: Promise<{ courseID: string }> }) {
   const [courseID, setCourseID] = React.useState<string | null>(null);
@@ -31,9 +32,15 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
   const { data: enrolledCourses, isError: enrollError, isLoading: enrollLoading } = useEnrolledCourses();
   const { data: courseData } = useCourseData(courseID as string);
 
+  const { openModal } = useModal();
   const enrolled = Array.isArray(enrolledCourses) && enrolledCourses.some((c: { courseID: string }) => String(c.courseID) === String(courseID));
   const isCollabOrAdmin = (userInfo?.role === "COLLAB" && courseData?.authorID === userInfo?.id) || userInfo?.role === "ADMIN";
   const isEnrolled = !enrollError && !enrollLoading && (enrolled || isCollabOrAdmin);
+
+  const handleLockedContentClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    openModal("NotEnrolledModal", { redirectTo: null });
+  };
 
   const unitsWithAuth = useUnits(courseID as string, { enabled: !!isEnrolled && !!courseID });
   const unitsPublic = usePublicUnits(courseID as string, { enabled: !isEnrolled && !!courseID });
@@ -148,14 +155,25 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                       unit.unit_documents.map(({ documentID, documentName }, docIndex: number) => (
                         <div key={docIndex} className="flex items-center gap-2 w-full border-t-2 border-dotted border-solid border-gray-300 py-4">
                           <div className="flex-1 min-w-0">
-                            <a
-                              href={`${process.env.NEXT_PUBLIC_API_URL || ""}/course/public/document/${documentID}/download`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline font-medium"
-                            >
-                              📄 {documentName}
-                            </a>
+                            {isEnrolled ? (
+                              <a
+                                href={`${process.env.NEXT_PUBLIC_API_URL || ""}/course/public/document/${documentID}/download`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline font-medium"
+                              >
+                                📄 {documentName}
+                              </a>
+                            ) : (
+                              <span
+                                role="button"
+                                onClick={handleLockedContentClick}
+                                className="text-gray-500 cursor-not-allowed select-none font-medium"
+                                title="Enroll in the course to view"
+                              >
+                                📄 {documentName} <span className="text-sm">(Enroll in the course to view)</span>
+                              </span>
+                            )}
                           </div>
                           {(userInfo?.role === "COLLAB" || userInfo?.role === "ADMIN") && (
                             <div className="shrink-0-flex">
@@ -173,22 +191,47 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
                       unit.unit_videos.map(({ videoID, videoName }, vidIndex: number) => (
                         <div key={vidIndex} className="flex items-center gap-2 w-full border-t-2 border-dotted border-solid border-gray-300 py-4">
                           <div className="flex-1 min-w-0 flex items-center gap-2 flex-wrap">
-                            <button
-                              type="button"
-                              onClick={() => setVideoPlayerOpen({ videoID, videoName })}
-                              className="text-blue-600 hover:underline font-medium"
-                            >
-                              ▶️ {videoName} (Xem)
-                            </button>
-                            <span className="text-gray-400">|</span>
-                            <a
-                              href={`${process.env.NEXT_PUBLIC_API_URL || ""}/course/public/video/${videoID}/download`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline font-medium"
-                            >
-                              ⬇️ Tải về
-                            </a>
+                            {isEnrolled ? (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => setVideoPlayerOpen({ videoID, videoName })}
+                                  className="text-blue-600 hover:underline font-medium"
+                                >
+                                  ▶️ {videoName} (Xem)
+                                </button>
+                                <span className="text-gray-400">|</span>
+                                <a
+                                  href={`${process.env.NEXT_PUBLIC_API_URL || ""}/course/public/video/${videoID}/download`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:underline font-medium"
+                                >
+                                  ⬇️ Tải về
+                                </a>
+                              </>
+                            ) : (
+                              <>
+                                <span
+                                  role="button"
+                                  onClick={handleLockedContentClick}
+                                  className="text-gray-500 cursor-not-allowed select-none font-medium"
+                                  title="Enroll in the course to view"
+                                >
+                                  ▶️ {videoName} (Xem)
+                                </span>
+                                <span className="text-gray-400">|</span>
+                                <span
+                                  role="button"
+                                  onClick={handleLockedContentClick}
+                                  className="text-gray-500 cursor-not-allowed select-none font-medium"
+                                  title="Enroll in the course to view"
+                                >
+                                  ⬇️ Tải về
+                                </span>
+                                <span className="text-sm text-gray-500">(Enroll in the course to view)</span>
+                              </>
+                            )}
                           </div>
                           {(userInfo?.role === "COLLAB" || userInfo?.role === "ADMIN") && (
                             <div className="shrink-0-flex">

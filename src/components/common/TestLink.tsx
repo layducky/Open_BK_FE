@@ -30,13 +30,24 @@ export function TestLink({ testID, testName, courseID, isEnrolled, noBorder }: T
     }
   };
 
+  const showDisabled = !isLoggedIn || !isEnrolled;
+
   return (
     <div className={`flex-1 min-w-0 ${!noBorder ? "w-full md:w-[98%] border-t-2 border-dotted border-solid border-gray-300 py-4" : ""}`}>
       <div className="flex gap-2.5 items-center mt-1.5">
         <Test />
         {status === "loading" ? (
           <span className="text-gray-500">{testName}</span>
-        ) : isLoggedIn ? (
+        ) : showDisabled ? (
+          <span
+            role={isLoggedIn ? "button" : undefined}
+            onClick={isLoggedIn ? handleClick : undefined}
+            className="text-gray-500 cursor-not-allowed select-none"
+            title="Enroll in the course to view"
+          >
+            {testName} <span className="text-sm">(Enroll in the course to view)</span>
+          </span>
+        ) : (
           <button
             type="button"
             onClick={handleClick}
@@ -44,10 +55,6 @@ export function TestLink({ testID, testName, courseID, isEnrolled, noBorder }: T
           >
             {testName}
           </button>
-        ) : (
-          <span className="text-gray-500 cursor-not-allowed" title="Enroll in the course to view">
-            {testName} <span className="text-sm">(Enroll in the course to view)</span>
-          </span>
         )}
       </div>
     </div>
