@@ -33,27 +33,25 @@ const FilterSection: React.FC<{
   onChange: (value: string) => void;
 }> = ({ title, items, selectedValue, onChange }) => {
   return (
-    <div className="flex overflow-hidden flex-col justify-center p-8 max-w-full bg-gray-100 rounded-3xl w-[260px] max-md:px-5">
-      <div className="self-start text-xl font-bold leading-none text-black">
+    <div className="flex flex-col flex-1 min-w-[140px] p-5 bg-gray-50 rounded-2xl border border-gray-200/80 shadow-sm">
+      <div className="text-base font-semibold text-slate-800 mb-4">
         {title}
       </div>
-      <div className="flex overflow-hidden flex-col mt-5 w-full">
-        <RadioGroup
-          className="flex overflow-hidden flex-col items-start w-full text-base text-black"
-          value={selectedValue}
-          onValueChange={onChange}
-        >
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="flex overflow-hidden text-m gap-2 items-center first:mt-0"
-            >
-              <RadioGroupItem value={item.value}></RadioGroupItem>
-              {item.label}
-            </div>
-          ))}
-        </RadioGroup>
-      </div>
+      <RadioGroup
+        className="flex flex-col items-start gap-3 w-full text-sm text-slate-700"
+        value={selectedValue}
+        onValueChange={onChange}
+      >
+        {items.map((item) => (
+          <label
+            key={item.id}
+            className="flex gap-2.5 items-center cursor-pointer hover:text-slate-900 transition-colors"
+          >
+            <RadioGroupItem value={item.value} />
+            {item.label}
+          </label>
+        ))}
+      </RadioGroup>
     </div>
   );
 };
@@ -99,30 +97,28 @@ function CoursePageContent() {
   const endIndex = totalCourses === 0 ? 0 : Math.min(totalCourses, current * pageSize);
 
   return (
-    <main className="flex flex-col bg-white">
-      <div className="flex overflow-hidden flex-wrap gap-8 px-5 py-6 w-full max-md:max-w-full">
-        <aside className="flex overflow-hidden flex-col items-end px-8 py-2.5 text-center min-w-[240px] w-[348px] max-md:px-5">
+    <main className="flex flex-col bg-white min-w-0 overflow-x-hidden">
+      <div className="flex flex-col lg:flex-row flex-wrap gap-6 lg:gap-8 px-4 sm:px-6 py-6 w-full min-w-0">
+        <aside className="flex flex-row lg:flex-col gap-4 shrink-0 w-full lg:w-[280px] max-w-full min-w-0 items-stretch">
           <FilterSection
             title="Categories"
             items={categories}
             selectedValue={selectedCategory}
             onChange={handleCategoryChange}
           />
-          <div className="mt-8">
-            <FilterSection
-              title="Price"
-              items={prices}
-              selectedValue={selectedPrice}
-              onChange={handlePriceChange}
-            />
-          </div>
+          <FilterSection
+            title="Price"
+            items={prices}
+            selectedValue={selectedPrice}
+            onChange={handlePriceChange}
+          />
         </aside>
 
-        <section className="flex overflow-hidden flex-col flex-1 shrink self-start px-2.5 pt-2.5 basis-10 min-h-[812px] min-w-[240px] max-md:max-w-full">
-          <h1 className="self-start text-2xl font-bold text-center text-black">
+        <section className="flex flex-col flex-1 min-w-0 basis-0">
+          <h1 className="text-2xl font-bold text-black">
             Courses in Development
           </h1>
-          <div className="flex overflow-hidden self-stretch pt-2 mt-2 w-full text-base text-center text-black min-h-[40px] max-md:max-w-full">
+          <div className="pt-2 text-base text-black min-h-[24px]">
             {totalCourses > 0
               ? `Showing ${startIndex}-${endIndex} of ${totalCourses} Results`
               : ""}
@@ -130,7 +126,7 @@ function CoursePageContent() {
 
           <div
             id="Course lists"
-            className="grid grid-cols-3 px-2 gap-8 w-full max-md:max-w-full"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 w-full min-w-0 justify-items-center"
           >
             <RenderPublicCourses
               courses={courses}
@@ -138,7 +134,6 @@ function CoursePageContent() {
               end={current * pageSize}
               viewType="PREVIEW-COURSE"
             />
-
           </div>
 
           <div className="flex justify-center mt-8">
