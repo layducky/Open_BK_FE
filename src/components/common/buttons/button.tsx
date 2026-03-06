@@ -2,6 +2,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { enrollCourse } from "@/services/course/courseEnroll";
 import { showAlert } from "@/lib/alertService";
+import { showConfirm } from "@/lib/confirmService";
 export const ButtonForm: React.FC<
   {
     children: React.ReactNode;
@@ -78,35 +79,41 @@ export const ButtonClick: React.FC<
 }) => {
   const queryClient = useQueryClient();
 
-  const handleClick = async (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (courseID === null) {
+    if (courseID === null) return;
+
+    const learnerID = sessionStorage.getItem("userID");
+    if (!learnerID) {
+      showAlert("Please log in to enroll in a course!", "warning");
       return;
     }
-    const learnerID = sessionStorage.getItem("userID");
-    if (learnerID) {
-      try {
-        const response = await enrollCourse(learnerID, courseID);
-        const isError = response?.response != null;
-        if (isError) {
-          const errMsg = response?.response?.data?.error || response?.message || "Enrollment failed";
-          showAlert(errMsg, "error");
-        } else {
-          showAlert(response?.message || "Enrolled successfully!", "success");
-          queryClient.invalidateQueries({ queryKey: ["EnrollCourses"] });
-          queryClient.invalidateQueries({ queryKey: ["EnrollStats"] });
-          if (courseID) {
-            queryClient.invalidateQueries({ queryKey: ["getAllUnits", courseID] });
-            queryClient.invalidateQueries({ queryKey: ["getPublicUnits", courseID] });
+
+    showConfirm(
+      "Are you sure you want to enroll in this course?",
+      async () => {
+        try {
+          const response = await enrollCourse(learnerID, courseID);
+          const isError = response?.response != null;
+          if (isError) {
+            const errMsg = response?.response?.data?.error || response?.message || "Enrollment failed";
+            showAlert(errMsg, "error");
+          } else {
+            showAlert(response?.message || "Enrolled successfully!", "success");
+            queryClient.invalidateQueries({ queryKey: ["EnrollCourses"] });
+            queryClient.invalidateQueries({ queryKey: ["EnrollStats"] });
+            if (courseID) {
+              queryClient.invalidateQueries({ queryKey: ["getAllUnits", courseID] });
+              queryClient.invalidateQueries({ queryKey: ["getPublicUnits", courseID] });
+            }
           }
+        } catch (error: any) {
+          showAlert(error?.message || error?.response?.data?.error || "Enrollment failed", "error");
         }
-      } catch (error: any) {
-        showAlert(error?.message || error?.response?.data?.error || "Enrollment failed", "error");
-      }
-    } else {
-      showAlert("Please log in to enroll in a course!", "warning");
-    }
+      },
+      { title: "Confirm enrollment", confirmLabel: "Enroll", cancelLabel: "Cancel" }
+    );
   };
 
   return (
