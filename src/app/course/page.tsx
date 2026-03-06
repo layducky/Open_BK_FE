@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCourses } from "@/hooks/querys/useCourses";
 import { RenderPublicCourses } from "@/components/ui/renderPublicCourses";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Pagination from "@/components/common/pagination";
 import { LoadingScreen } from "@/components/ui/LoadingSpinner";
 import { MinDelay } from "@/components/ui/MinDelay";
@@ -61,6 +61,7 @@ const FilterSection: React.FC<{
 
 function CoursePageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = React.useState<string>(""); 
   const [selectedCategory, setSelectedCategory] = React.useState<string>(
     searchParams.get("category") ?? "ALL"
@@ -73,7 +74,11 @@ function CoursePageContent() {
 
   React.useEffect(() => {
     const nextSearch = searchParams.get("search") ?? "";
+    const nextCat = searchParams.get("category") ?? "ALL";
+    const nextPrice = searchParams.get("price") ?? "ALL";
     setSearchQuery(nextSearch);
+    setSelectedCategory(nextCat);
+    setSelectedPrice(nextPrice);
     setCurrentPage(1);
   }, [searchParams]);
 
@@ -83,14 +88,38 @@ function CoursePageContent() {
     priceType: selectedPrice === "ALL" ? undefined : selectedPrice,
   });
 
+  const updateUrl = React.useCallback(
+    (updates: { category?: string; price?: string; search?: string }) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (updates.category !== undefined) {
+        if (updates.category === "ALL") params.delete("category");
+        else params.set("category", updates.category);
+      }
+      if (updates.price !== undefined) {
+        if (updates.price === "ALL") params.delete("price");
+        else params.set("price", updates.price);
+      }
+      if (updates.search !== undefined) {
+        if (!updates.search.trim()) params.delete("search");
+        else params.set("search", updates.search);
+      }
+      params.delete("page");
+      const q = params.toString();
+      router.replace(q ? `/course?${q}` : "/course", { scroll: false });
+    },
+    [searchParams, router]
+  );
+
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
     setCurrentPage(1);
+    updateUrl({ category: value });
   };
 
   const handlePriceChange = (value: string) => {
     setSelectedPrice(value);
     setCurrentPage(1);
+    updateUrl({ price: value });
   };
 
   const showLoading = useMinimumLoading(isLoading);

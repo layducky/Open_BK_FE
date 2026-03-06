@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import Search from "../../../public/svg/search.svg";
+import { Suspense } from "react";
 import Cart from "../../../public/svg/cart.svg";
 import BkIcon from "../../../public/images/BkIcon.png";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import SignupButton from "../common/buttons/SignupButton";
 import { roleString } from "@/lib/roleUtils";
 import { useSession } from "next-auth/react";
 import { LogoutButton } from "../common/buttons/logoutButton";
-import { useRouter } from "next/navigation";
+import { CourseSearchDropdown } from "./CourseSearchDropdown";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
@@ -27,20 +27,6 @@ const CartCount: React.FC = () => {
 
 export const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
-  const router = useRouter();
-
-  const [search, setSearch] = React.useState("");
-
-  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const query = search.trim();
-    const params = new URLSearchParams();
-    if (query) {
-      params.set("search", query);
-    }
-    const url = params.toString() ? `/course?${params.toString()}` : "/course";
-    router.push(url);
-  };
 
   const showLoading = useMinimumLoading(status === 'loading');
   if (showLoading) return (
@@ -70,21 +56,15 @@ export const Navbar: React.FC = () => {
       </div>
 
       {/* Search - center on desktop, full width on mobile */}
-      <form
-        className="flex-1 min-w-0 order-3 md:order-2 flex items-center px-3 py-1.5 md:py-2 rounded-xl bg-stone-100 text-black/70 max-w-full md:max-w-md mx-auto"
-        onSubmit={handleSearchSubmit}
-      >
-        <label htmlFor="search" className="sr-only">Search courses</label>
-        <input
-          type="search"
-          id="search"
-          placeholder="Search"
-          className="bg-transparent border-none outline-none flex-1 min-w-0 text-sm md:text-base"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <Search />
-      </form>
+      <div className="flex-1 min-w-0 order-3 md:order-2 flex justify-center mx-auto">
+        <Suspense
+          fallback={
+            <div className="flex items-center px-3 py-1.5 md:py-2 rounded-xl bg-stone-100 text-black/70 max-w-full md:max-w-md w-full min-h-[40px]" />
+          }
+        >
+          <CourseSearchDropdown />
+        </Suspense>
+      </div>
 
       {/* Cart + User / Auth */}
       <div className="flex items-center gap-3 md:gap-4 shrink-0 order-2 md:order-3 ml-auto">
