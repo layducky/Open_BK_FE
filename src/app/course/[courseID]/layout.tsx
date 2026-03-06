@@ -6,6 +6,8 @@ import { usePathname, notFound } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useCourseData } from '@/hooks/querys/useCourseData';
 import { NotFoundError } from "@/lib/errors";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 import { CourseInfoBar } from '@/components/ui/infoBar';
 import { ReviewCourseCard } from '@/components/common/cards/reviewCourseCard';
 
@@ -36,6 +38,9 @@ export default function CourseLayout({
             }
         }, [courseLoading, courseError]);
 
+        const showLoading = useMinimumLoading(courseLoading || !courseID);
+        const currentRoute = usePathname();
+
         const tabs = courseID
             ? [
                 { id: 'overview', label: 'Overview', href: `/course/${courseID}/overview` },
@@ -43,7 +48,11 @@ export default function CourseLayout({
                 { id: 'about', label: 'About', href: `/course/${courseID}/about` },
               ]
             : [];
-        const currentRoute = usePathname();
+
+        if (showLoading) {
+            return <LoadingScreen message="Loading course..." />;
+        }
+
         return (
             <main className='min-h-screen grid grid-cols-1 md:grid-cols-10'>
                 <div className='col-span-1 md:col-span-8 p-2'>

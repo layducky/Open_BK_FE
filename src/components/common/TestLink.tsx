@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useModal } from "@/context/ModalContext";
 import { useSession } from "next-auth/react";
 import Test from "../../../public/svg/test.svg";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 interface TestLinkProps {
   testID: string;
@@ -31,13 +33,17 @@ export function TestLink({ testID, testName, courseID, isEnrolled, noBorder }: T
   };
 
   const showDisabled = !isLoggedIn || !isEnrolled;
+  const showLoading = useMinimumLoading(status === "loading");
 
   return (
     <div className={`flex-1 min-w-0 ${!noBorder ? "w-full md:w-[98%] border-t-2 border-dotted border-solid border-gray-300 py-4" : ""}`}>
       <div className="flex gap-2.5 items-center mt-1.5">
         <Test />
-        {status === "loading" ? (
-          <span className="text-gray-500">{testName}</span>
+        {showLoading ? (
+          <span className="flex items-center gap-2 text-gray-500">
+            <LoadingSpinner size="sm" className="shrink-0" />
+            {testName}
+          </span>
         ) : showDisabled ? (
           <span
             role={isLoggedIn ? "button" : undefined}

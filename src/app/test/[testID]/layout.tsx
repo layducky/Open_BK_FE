@@ -1,5 +1,7 @@
 'use client'
 import { ToggleBtn } from '@/components/common/buttons/toggleBtn';
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 import { TestProvider } from '@/context/TestContext';
 import { useUser } from '@/hooks/querys/useUser';
 import * as React from 'react'
@@ -27,13 +29,10 @@ export default function TestLayout({
         }, [params]);
 
         const canEdit = user?.role === 'COLLAB' || user?.role === 'ADMIN';
+        const showLoading = useMinimumLoading(isLoading);
 
-        if (isLoading) {
-            return (
-            <main className="flex flex-col">
-                <div>Loading...</div>
-            </main>
-            );
+        if (showLoading) {
+            return <LoadingScreen />;
         }
 
         return (

@@ -6,6 +6,8 @@ import { PasswordForm } from "./settingTabs/PasswordForm";
 import { FaCamera } from "react-icons/fa";
 import { useModal } from "@/context/ModalContext";
 import { UserEntity } from "@/type/user.entity";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 const tabs: Array<{
   id: string;
@@ -22,6 +24,7 @@ const SettingsPage: React.FC<{
   isLoading: boolean;
   isError: boolean;
 }> = ({ data, isLoading, isError }) => {
+  const showLoading = useMinimumLoading(isLoading);
   const [selectedTab, setSelectedTab] = React.useState(tabs[0].id);
   const { openModal } = useModal();
 
@@ -34,8 +37,8 @@ const SettingsPage: React.FC<{
     }
   }, [user]);
   
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (showLoading) {
+    return <LoadingScreen />;
   }
   
   if (isError) {

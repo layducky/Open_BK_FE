@@ -6,6 +6,9 @@ import { useCourses } from "@/hooks/querys/useCourses";
 import { RenderPublicCourses } from "@/components/ui/renderPublicCourses";
 import { useSearchParams } from "next/navigation";
 import Pagination from "@/components/common/pagination";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { MinDelay } from "@/components/ui/MinDelay";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 interface FilterItem {
   id: number;
@@ -74,7 +77,7 @@ function CoursePageContent() {
     setCurrentPage(1);
   }, [searchParams]);
 
-  const { data: courses } = useCourses({
+  const { data: courses, isLoading } = useCourses({
     search: searchQuery || undefined,
     category: selectedCategory === "ALL" ? undefined : selectedCategory,
     priceType: selectedPrice === "ALL" ? undefined : selectedPrice,
@@ -89,6 +92,9 @@ function CoursePageContent() {
     setSelectedPrice(value);
     setCurrentPage(1);
   };
+
+  const showLoading = useMinimumLoading(isLoading);
+  if (showLoading) return <LoadingScreen message="Loading courses..." />;
 
   const totalCourses = courses?.length ?? 0;
   const totalPages = Math.max(1, totalCourses > 0 ? Math.ceil(totalCourses / pageSize) : 1);
@@ -150,9 +156,12 @@ function CoursePageContent() {
 }
 
 export default function Page() {
+  const mountTimeRef = React.useRef(Date.now());
   return (
-    <Suspense fallback={<div className="flex min-h-[400px] items-center justify-center">Loading...</div>}>
-      <CoursePageContent />
+    <Suspense fallback={<LoadingScreen />}>
+      <MinDelay startTime={mountTimeRef.current}>
+        <CoursePageContent />
+      </MinDelay>
     </Suspense>
   );
 }

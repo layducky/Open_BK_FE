@@ -2,17 +2,20 @@
 import { useUser } from "@/hooks/querys/useUser";
 import { useState, useEffect } from "react";
 import { UserEntity } from "@/type/user.entity";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 const Profile: React.FC = () => {
   const [profile, setProfile] = useState<UserEntity>();
   const { data: user, isLoading, isError } = useUser();
+  const showLoading = useMinimumLoading(isLoading);
   useEffect(() => {
     if (user) {
       setProfile(user);
     }
   }, [user]);
   
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (showLoading) {
+    return <LoadingScreen />;
   }
   
   if (isError) {

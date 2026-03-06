@@ -3,6 +3,8 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 import { useQuestions, useUserTest } from "@/hooks/querys/useCourses";
 import { useUser } from "@/hooks/querys/useUser";
 import { useSubmissionTiming } from "@/hooks/useSubmissionTiming";
@@ -27,6 +29,7 @@ const DEBOUNCE_SAVE_MS = 30000;
 
 const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProps) => {
   const { data: questionContents, isLoading, error, refetch } = useQuestions(testID);
+  const showLoading = useMinimumLoading(isLoading);
   const { data: userInfo } = useUser();
   const { data: userTest, error: userTestError } = useUserTest(testID);
 
@@ -113,7 +116,7 @@ const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProp
     };
   }, [mode, submissionID, questionContents, saveDraft]);
 
-  if (isLoading) return <div>Loading questions...</div>;
+  if (showLoading) return <LoadingScreen message="Loading questions..." />;
   if (error) return <div>Error loading questions: {error.message}</div>;
 
   const handleQuestionCreated = () => {

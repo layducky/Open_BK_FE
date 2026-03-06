@@ -12,6 +12,8 @@ import { createSubmission, forceEndAndCreate, NotEnrolledError, OngoingSubmissio
 import { TestActionDropdown } from "@/components/common/buttons/UnitBtn";
 import { formatDateTime } from "@/lib/dateUtils";
 import Pagination from "@/components/common/pagination";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 
 const attemptLabels: Record<string, string> = {
@@ -92,6 +94,7 @@ export default function TestPage() {
   const { data: userInfo } = useUser();
   const { openModal, closeModal } = useModal();
   const { data: userTest, isLoading, error } = useUserTest(testID as string);
+  const showLoading = useMinimumLoading(!testID || isLoading);
   const [attemptPage, setAttemptPage] = useState(1);
 
   const submissions = userTest?.submissions ?? [];
@@ -117,7 +120,6 @@ export default function TestPage() {
     setTimingFromCreate(null);
   }, [setTimingFromCreate]);
 
-  if (!testID) return <div>Loading test ID...</div>;
   if (error && (error as any)?.response?.status === 404) notFound();
   if (error instanceof NotEnrolledError) {
     return (
@@ -126,7 +128,7 @@ export default function TestPage() {
       </div>
     );
   }
-  if (isLoading) return <div>Loading...</div>;
+  if (showLoading) return <LoadingScreen />;
   if (error) return <div>Error: {error.message}</div>;
 
   const isEmptyTest = (userTest?.numQuests ?? 0) === 0;

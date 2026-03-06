@@ -6,6 +6,8 @@ import Pagination from "@/components/common/pagination";
 import { EnrolledCourseEntity } from "@/type/course.entity";
 import { RenderEnrollCourses } from "../ui/renderEnrollCourses";
 import { transformToCourse } from "@/lib/utils";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 const tabs = [
   { id: "all", label: "All" },
@@ -20,6 +22,7 @@ const EnrolledCoursesPage: React.FC<{
   isLoading: boolean;
   isError: boolean;
 }> = ({ data, isLoading, isError }) => {
+  const showLoading = useMinimumLoading(isLoading);
   const [selectedTabId, setSelectedTabId] = useState<string>(tabs[0].id);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [courses, setCourses] = useState<EnrolledCourseEntity[]>([]);
@@ -32,8 +35,8 @@ const EnrolledCoursesPage: React.FC<{
     }
   }, [data]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (showLoading) {
+    return <LoadingScreen />;
   }
 
   if (isError) {

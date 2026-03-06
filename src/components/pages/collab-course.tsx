@@ -5,6 +5,8 @@ import Pagination from "@/components/common/pagination";
 import { PublicCourseEntity } from "@/type/course.entity";
 import { RenderPublicCourses } from "../ui/renderPublicCourses";
 import { CreateCourseBtn } from "../common/buttons/CourseBtn";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 const tabs = [
   { id: "all", label: "All" },
 //   { id: "activeCourses", label: "Active Courses" },
@@ -18,6 +20,7 @@ const CollabCoursesPage: React.FC<{
   isLoading: boolean;
   isError: boolean;
 }> = ({ data, isLoading, isError }) => {
+  const showLoading = useMinimumLoading(isLoading);
   const [selectedTabId, setSelectedTabId] = useState<string>(tabs[0].id);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [courses, setCourses] = useState<PublicCourseEntity[]>([]);
@@ -30,8 +33,8 @@ const CollabCoursesPage: React.FC<{
     }
   }, [data]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (showLoading) {
+    return <LoadingScreen />;
   }
 
   if (isError) {

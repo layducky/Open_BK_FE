@@ -10,6 +10,8 @@ import { roleString } from "@/lib/roleUtils";
 import { useSession } from "next-auth/react";
 import { LogoutButton } from "../common/buttons/logoutButton";
 import { useRouter } from "next/navigation";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 const CartCount: React.FC = () => {
   return (
@@ -40,7 +42,12 @@ export const Navbar: React.FC = () => {
     router.push(url);
   };
 
-  if (status === 'loading') return <div>Loading...</div>;
+  const showLoading = useMinimumLoading(status === 'loading');
+  if (showLoading) return (
+    <header className="flex items-center justify-center py-3 px-4 md:px-6 w-full bg-white shadow-sm min-h-[52px]">
+      <LoadingSpinner size="sm" />
+    </header>
+  );
 
   const user = session?.user;
   sessionStorage.setItem("userID", user?.id || "");

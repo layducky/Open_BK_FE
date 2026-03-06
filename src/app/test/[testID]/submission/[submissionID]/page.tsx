@@ -3,6 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import { useParams, notFound } from "next/navigation";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 import { useQuery } from "@tanstack/react-query";
 import { getSubmissionReview } from "@/services/course/test";
 import { formatDateTime } from "@/lib/dateUtils";
@@ -20,7 +22,8 @@ export default function SubmissionReviewPage() {
     enabled: !!submissionID,
   });
 
-  if (isLoading) return <div className="p-6">Loading...</div>;
+  const showLoading = useMinimumLoading(isLoading);
+  if (showLoading) return <LoadingScreen />;
   if (error && (error as any)?.response?.status === 404) notFound();
   if (error) return <div className="p-6 text-red-600">Error: {(error as Error).message}</div>;
   if (!submission) return <div className="p-6">Submission not found.</div>;

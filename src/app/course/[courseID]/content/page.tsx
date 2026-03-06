@@ -13,6 +13,8 @@ import { VideoPlayerModal } from "@/components/common/VideoPlayer";
 import { CreateUnitBtn } from "@/components/common/buttons/UnitBtn";
 import { formatDateTime } from "@/lib/dateUtils";
 import { useModal } from "@/context/ModalContext";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 export default function CourseContentPage({ params }: { params: Promise<{ courseID: string }> }) {
   const [courseID, setCourseID] = React.useState<string | null>(null);
@@ -59,7 +61,8 @@ export default function CourseContentPage({ params }: { params: Promise<{ course
     fetchNewUnitID();
   }, [newUnitID, unitContents]);
 
-  if (isLoading) return <div>Loading units...</div>;
+  const showLoading = useMinimumLoading(isLoading);
+  if (showLoading) return <LoadingScreen message="Loading content..." />;
   if (error) {
     return (
       <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">

@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { getVideoViewUrl } from "@/services/course/video";
 import Modal from "@/components/modals/formModal";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 interface VideoPlayerProps {
   videoID: string;
@@ -19,6 +21,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerProps> = ({
 }) => {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const showLoading = useMinimumLoading(loading);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -43,15 +46,16 @@ export const VideoPlayerModal: React.FC<VideoPlayerProps> = ({
   return (
     <Modal modelTitle={videoName} isOpen={isOpen} onClose={onClose}>
       <div className="space-y-4">
-        {loading && (
-          <div className="flex justify-center py-8">
+        {showLoading && (
+          <div className="flex flex-col items-center gap-3 py-8">
+            <LoadingSpinner size="lg" />
             <span className="text-gray-500">Loading video...</span>
           </div>
         )}
         {error && (
           <div className="rounded-lg bg-red-50 p-4 text-red-700">{error}</div>
         )}
-        {videoUrl && !loading && (
+        {videoUrl && !showLoading && (
           <video
             controls
             className="w-full rounded-lg"

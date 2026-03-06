@@ -1,5 +1,6 @@
 "use client";
 import { Suspense } from "react";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { roleString } from "@/lib/roleUtils";
 import { useUser } from "@/hooks/querys/useUser";
 import { PublicCourseEntity } from "@/type/course.entity";
@@ -20,7 +21,7 @@ export const UserInforBar = () => {
           className="rounded-full bg-black w-28 aspect-square object-cover border-[6px] border-white"
           src={user?.image} alt="Avatar"
         />
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<div className="flex items-center gap-2"><LoadingSpinner size="sm" /></div>}>
           <div className="flex flex-col gap-1 self-center">
             <span className="font-semibold text-xl">
               {user?.name ?? "Name"}

@@ -5,6 +5,8 @@ import { EnrolledCourseEntity } from "@/type/course.entity";
 import { RenderEnrollCourses } from "../ui/renderEnrollCourses";
 import { useUser } from "@/hooks/querys/useUser";
 import { useEnrollStats } from "@/hooks/querys/useEnrollCourse";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 const ITEMS_PER_PAGE = 3;
 
@@ -37,6 +39,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   isLoading,
   isError,
 }) => {
+  const showLoading = useMinimumLoading(isLoading);
   const { data: user } = useUser();
   const { data: stats } = useEnrollStats();
 
@@ -51,8 +54,8 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
     }
   }, [data]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (showLoading) {
+    return <LoadingScreen />;
   }
 
   if (isError) {

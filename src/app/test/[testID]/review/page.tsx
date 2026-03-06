@@ -1,6 +1,8 @@
 "use client";
 import * as React from "react";
 import { useRouter } from "next/navigation";
+import { LoadingScreen } from "@/components/ui/LoadingSpinner";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 import { useTest } from '@/context/TestContext';
 import { useUser } from "@/hooks/querys/useUser";
 import TestPage from "@/components/pages/testAttempt";
@@ -17,8 +19,9 @@ export default function TestReviewPage() {
     }
   }, [userInfo?.role, userLoading, router, testID]);
 
-  if (!testID) {
-    return <div>Loading test ID...</div>;
+  const showTestLoading = useMinimumLoading(!testID);
+  if (showTestLoading) {
+    return <LoadingScreen message="Loading test..." />;
   }
 
   if (!userLoading && userInfo?.role !== "COLLAB") {
