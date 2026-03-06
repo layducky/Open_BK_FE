@@ -5,6 +5,8 @@ import NotEnrolledModal from "./NotEnrolledModal";
 import OngoingSubmissionModal from "./OngoingSubmissionModal";
 import UnansweredQuestionModal from "./UnansweredQuestionModal";
 import SubmitSuccessModal from "./SubmitSuccessModal";
+import AlertModal from "./AlertModal";
+import ConfirmModal from "./ConfirmModal";
 
 const ModalLookup: Record<string, React.FC<any>> = {
   UploadProfileModal: UploadProfileModal,
@@ -12,6 +14,8 @@ const ModalLookup: Record<string, React.FC<any>> = {
   OngoingSubmissionModal: OngoingSubmissionModal,
   UnansweredQuestionModal: UnansweredQuestionModal,
   SubmitSuccessModal: SubmitSuccessModal,
+  AlertModal: AlertModal,
+  ConfirmModal: ConfirmModal,
 };
 
 const ModalManager = () => {

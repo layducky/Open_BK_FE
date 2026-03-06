@@ -1,4 +1,6 @@
 import { useDocumentMutations } from "@/hooks/mutations/useDocumentMutation";
+import { showAlert } from "@/lib/alertService";
+import { showConfirm } from "@/lib/confirmService";
 
 interface HandleDocumentProps {
   unitID: string;
@@ -17,7 +19,7 @@ export const useHandleDocument = ({
 
   const handleUploadDocument = (file: File) => {
     if (!isAllowedFile(file)) {
-      alert("Invalid file type. Allowed: .pdf, .doc, .txt, .docx");
+      showAlert("Invalid file type. Allowed: .pdf, .doc, .txt, .docx", "warning");
       return;
     }
     uploadMutation.mutate(
@@ -32,13 +34,13 @@ export const useHandleDocument = ({
   };
 
   const handleDeleteDocument = (documentID: string) => {
-    if (confirm("Are you sure you want to delete this document?")) {
+    showConfirm("Are you sure you want to delete this document?", () => {
       deleteMutation.mutate(documentID, {
         onSuccess: () => {
           refetchUnits?.();
         },
       });
-    }
+    }, { variant: "danger", confirmLabel: "Delete", title: "Delete document" });
   };
 
   return {

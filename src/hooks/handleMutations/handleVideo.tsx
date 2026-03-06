@@ -1,4 +1,6 @@
 import { useVideoMutations } from "@/hooks/mutations/useVideoMutation";
+import { showAlert } from "@/lib/alertService";
+import { showConfirm } from "@/lib/confirmService";
 import { useMultipartVideoUpload } from "@/hooks/useMultipartVideoUpload";
 
 interface HandleVideoProps {
@@ -24,20 +26,20 @@ export const useHandleVideo = ({
 
   const handleUploadVideo = (file: File) => {
     if (!isAllowedFile(file)) {
-      alert("Invalid file type. Allowed: .mp4, .webm, .ogg, .mov");
+      showAlert("Invalid file type. Allowed: .mp4, .webm, .ogg, .mov", "warning");
       return;
     }
     upload(file);
   };
 
   const handleDeleteVideo = (videoID: string) => {
-    if (confirm("Are you sure you want to delete this video?")) {
+    showConfirm("Are you sure you want to delete this video?", () => {
       deleteMutation.mutate(videoID, {
         onSuccess: () => {
           refetchUnits?.();
         },
       });
-    }
+    }, { variant: "danger", confirmLabel: "Delete", title: "Delete video" });
   };
 
   return {

@@ -1,6 +1,7 @@
 "use client";
 import useDisableBodyScroll from "@/hooks/useDisableBodyScroll";
 import { uploadProfilePic } from "@/services/upload";
+import { showAlert } from "@/lib/alertService";
 import { useMutation } from "@tanstack/react-query";
 import { useState, useRef } from "react";
 
@@ -18,12 +19,12 @@ const UploadProfileModal: React.FC<{
       return uploadProfilePic(formData);
     },
     onSuccess: () => {
-      alert("Image uploaded successfully!");
+      showAlert("Image uploaded successfully!", "success");
       onClose(); // Đóng modal sau khi upload thành công
       location.reload();
     },
     onError: () => {
-      alert("Failed to upload image. Please try again.");
+      showAlert("Failed to upload image. Please try again.", "error");
     },
   });
 
@@ -45,7 +46,7 @@ const UploadProfileModal: React.FC<{
     if (selectedImage) {
       uploadMutation.mutate(selectedImage); // Gọi mutation để upload ảnh
     } else {
-      alert("Please select an image to upload.");
+      showAlert("Please select an image to upload.", "warning");
     }
   };
 

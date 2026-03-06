@@ -13,6 +13,7 @@ import GradientButton from "@/components/common/buttons/GradientButton";
 import { SubmissionAnsEntity, SubmissionEntity } from "@/type/submission.entity";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSubmissionMutation } from "@/hooks/mutations/useSubmissionMutation";
+import { showConfirm } from "@/lib/confirmService";
 
 interface CreateQuesBtnProps {
   testID: string;
@@ -129,13 +130,13 @@ export const DeleteQuesBtn: React.FC<DeleteQuesBtnProps> = ({ questionID, testID
   const { deleteMutation } = useQuestionMutations(testID);
 
   const handleClick = () => {
-    if (confirm("Are you sure you want to delete this question?")) {
+    showConfirm("Are you sure you want to delete this question?", () => {
       deleteMutation.mutate(questionID, {
         onSuccess: () => {
           refetchQuestions?.();
         },
       });
-    }
+    }, { variant: "danger", confirmLabel: "Delete", title: "Delete question" });
   };
 
   return (

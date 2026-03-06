@@ -50,10 +50,10 @@ export const ReviewCourseCard = ({
                                     {formatPrice(courseData?.price)}
                                 </span>
                             </div>
-                            <div className="flex justify-center items-center w-full pb-6">
+                            <div className="flex justify-center items-center w-full min-w-0 pb-6 px-2">
                                 <ButtonClick
                                     courseID={courseID}
-                                    className="w-[200px]"
+                                    className="w-full max-w-[200px] min-w-0"
                                 >
                                     Enroll now
                                 </ButtonClick>

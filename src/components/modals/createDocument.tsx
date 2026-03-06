@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import Modal from "@/components/modals/formModal";
+import { showAlert } from "@/lib/alertService";
 import { useHandleDocument } from "@/hooks/handleMutations/handleDocument";
 
 type CreateDocumentModalProps = {
@@ -43,7 +44,7 @@ const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
         setSelectedFile(file);
       } else {
         setSelectedFile(null);
-        alert(`Invalid file type. Allowed: ${ALLOWED_EXTENSIONS}`);
+        showAlert(`Invalid file type. Allowed: ${ALLOWED_EXTENSIONS}`, "warning");
       }
     } else {
       setSelectedFile(null);
@@ -53,7 +54,7 @@ const CreateDocumentModal: React.FC<CreateDocumentModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedFile) {
-      alert("Please select a file to upload.");
+      showAlert("Please select a file to upload.", "warning");
       return;
     }
     handleUploadDocument(selectedFile);

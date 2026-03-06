@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useMemo } from "react";
 import { useModal } from "@/context/ModalContext";
+import { showConfirm } from "@/lib/confirmService";
 import Link from "next/link";
 import { useTest } from "@/context/TestContext";
 import { useUserTest } from "@/hooks/querys/useCourses";
@@ -173,10 +174,9 @@ export default function TestPage() {
     router.push(`/test/${testID}/attempt`);
   };
 
-  const handleStartNew = async () => {
+  const doStartNew = async () => {
     if (isEmptyTest) return;
     if (userTest?.status !== "allow" && userTest?.status !== "continue") return;
-    if (userTest?.status === "allow" && !confirm("Are you sure you want to take this test?")) return;
     try {
       const response = await createSubmission(userTest?.userTestID as string);
       closeModal();
@@ -205,6 +205,20 @@ export default function TestPage() {
         });
       }
     }
+  };
+
+  const handleStartNew = () => {
+    if (isEmptyTest) return;
+    if (userTest?.status !== "allow" && userTest?.status !== "continue") return;
+    if (userTest?.status === "allow") {
+      showConfirm("Are you sure you want to take this test?", doStartNew, {
+        title: "Confirm attempt",
+        confirmLabel: "Start test",
+        cancelLabel: "Cancel",
+      });
+      return;
+    }
+    doStartNew();
   };
 
   return (

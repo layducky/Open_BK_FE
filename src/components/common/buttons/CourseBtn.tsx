@@ -1,6 +1,8 @@
 "use client";
 
 import { createCourse, deleteCourse } from "@/services/course/courseCollab";
+import { showAlert } from "@/lib/alertService";
+import { showConfirm } from "@/lib/confirmService";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -28,7 +30,7 @@ export const CreateCourseBtn: React.FC = () => {
             price: data.price,
         }),
         onSuccess: () => {
-            alert("Course created successfully!");
+            showAlert("Course created successfully!", "success");
             setIsOpen(false);
             window.location.reload();
         },
@@ -119,10 +121,16 @@ export const CreateCourseBtn: React.FC = () => {
 
 export const DeleteCourseBtn: React.FC<{ courseID: string }> = ({ courseID }) => {
 
-    const handleClick = async() => {
-        const response = await deleteCourse(courseID);
-        alert(response.message || response.error);
-        window.location.reload();
+    const handleClick = () => {
+        showConfirm(
+            "Are you sure you want to delete this course? This action cannot be undone.",
+            async () => {
+                const response = await deleteCourse(courseID);
+                showAlert(response.message || response.error, response.error ? "error" : "info");
+                window.location.reload();
+            },
+            { variant: "danger", confirmLabel: "Delete", title: "Delete course" }
+        );
     };
 
     return (

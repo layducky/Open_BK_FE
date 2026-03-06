@@ -1,5 +1,6 @@
 'use client';
 import axios from "axios";
+import { showAlert } from "@/lib/alertService";
 
 const server_url = process.env.NEXT_PUBLIC_API_URL || "http://backend:5000/api/v1";
 const apiClient = axios.create({
@@ -48,7 +49,7 @@ function forceLogoutSessionExpired() {
   if (typeof window === "undefined") return;
   sessionStorage.removeItem("accessToken");
   sessionStorage.removeItem("userID");
-  alert("Your session has expired. You have been logged out.");
+  showAlert("Your session has expired. You have been logged out.", "warning");
   window.location.href = "/api/auth/signout?callbackUrl=/auth/login?sessionExpired=1";
 }
 
@@ -62,12 +63,12 @@ apiClientWithAuth.interceptors.response.use(
         return Promise.reject(error);
       }
       if (statusCode === 500) {
-        alert("Đã xảy ra lỗi trên máy chủ. Vui lòng thử lại sau.");
+        showAlert("Đã xảy ra lỗi trên máy chủ. Vui lòng thử lại sau.", "error");
       }
     } else if (error.request) {
-      alert("Không thể kết nối với máy chủ. Vui lòng thử lại sau.");
+      showAlert("Không thể kết nối với máy chủ. Vui lòng thử lại sau.", "error");
     } else {
-      alert("Có lỗi xảy ra: " + error.message);
+      showAlert("Có lỗi xảy ra: " + error.message, "error");
     }
     return Promise.reject(error);
   }

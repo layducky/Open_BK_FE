@@ -1,6 +1,7 @@
 "use-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { enrollCourse } from "@/services/course/courseEnroll";
+import { showAlert } from "@/lib/alertService";
 export const ButtonForm: React.FC<
   {
     children: React.ReactNode;
@@ -77,7 +78,9 @@ export const ButtonClick: React.FC<
 }) => {
   const queryClient = useQueryClient();
 
-  const handleClick = async () => {
+  const handleClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (courseID === null) {
       return;
     }
@@ -88,9 +91,9 @@ export const ButtonClick: React.FC<
         const isError = response?.response != null;
         if (isError) {
           const errMsg = response?.response?.data?.error || response?.message || "Enrollment failed";
-          alert(errMsg);
+          showAlert(errMsg, "error");
         } else {
-          alert(response?.message || "Enrolled successfully!");
+          showAlert(response?.message || "Enrolled successfully!", "success");
           queryClient.invalidateQueries({ queryKey: ["EnrollCourses"] });
           queryClient.invalidateQueries({ queryKey: ["EnrollStats"] });
           if (courseID) {
@@ -99,17 +102,17 @@ export const ButtonClick: React.FC<
           }
         }
       } catch (error: any) {
-        alert(error?.message || error?.response?.data?.error || "Enrollment failed");
+        showAlert(error?.message || error?.response?.data?.error || "Enrollment failed", "error");
       }
     } else {
-      alert("Please log in to enroll in a course!");
+      showAlert("Please log in to enroll in a course!", "warning");
     }
   };
 
   return (
-    <button className={`group relative ${align} w-fit flex`} onClick={handleClick}>
+    <button type="button" className={`group relative ${align} w-fit min-w-0 flex shrink`} onClick={handleClick}>
       <div
-        className={`flex justify-center items-center gap-2 p-1.5 bg-saffron-400 font-semibold text-md rounded-3xl border-2 z-20 border-black ${className}`}
+        className={`flex justify-center items-center gap-2 p-1.5 bg-saffron-400 font-semibold text-md rounded-3xl border-2 z-20 border-black min-w-0 max-w-full ${className}`}
       >
         {children}
       </div>

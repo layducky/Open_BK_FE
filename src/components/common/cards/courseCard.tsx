@@ -11,9 +11,11 @@ export const CourseCard: React.FC<{ course: Course | null; type?: string }> = ({
 }) => {
   const learnersCount = course?.learnersCount ?? 0;
 
+  const hasInteractiveFootbar = type === "PREVIEW-COURSE" || type === "COLLAB-COURSE";
+
   return (
-    <Link href={`/course/${course?.courseID}/overview`} className="block">
-      <div className="flex overflow-hidden flex-col self-stretch px-5 pt-3 pb-3 my-auto rounded-2xl border border-solid border-zinc-600 min-w-[200px] w-[250px] shadow-lg drop-shadow-md duration-300 transition-transform hover:-translate-y-2 hover:shadow-xl">
+    <div className="relative flex overflow-hidden flex-col self-stretch px-5 pt-3 pb-3 my-auto rounded-2xl border border-solid border-zinc-600 min-w-[200px] w-[250px] shadow-lg drop-shadow-md duration-300 transition-transform hover:-translate-y-2 hover:shadow-xl">
+      <Link href={`/course/${course?.courseID}/overview`} className="block">
         <img
           loading="lazy"
           src={course?.image}
@@ -54,13 +56,18 @@ export const CourseCard: React.FC<{ course: Course | null; type?: string }> = ({
             </div>
           </div>
 
-          {type === "PREVIEW-COURSE" && (
-            <PublicFootBar price={course?.price ?? "0"} courseID={course?.courseID} />
-          )}
           {type === "ENROLLED-COURSE" && (
             <EnrolledFootBar
               progress={(course as EnrolledCourseEntity)?.status === "COMPLETED" ? 100 : 0}
             />
+          )}
+        </div>
+      </Link>
+      {/* Footbar với nút - nằm NGOÀI Link để click Enroll/Delete không điều hướng */}
+      {hasInteractiveFootbar && (
+        <div className="relative z-10 flex flex-col self-center mt-1 w-full max-w-[270px]">
+          {type === "PREVIEW-COURSE" && (
+            <PublicFootBar price={course?.price ?? "0"} courseID={course?.courseID} />
           )}
           {type === "COLLAB-COURSE" && (
             <CollabFootBar
@@ -69,7 +76,7 @@ export const CourseCard: React.FC<{ course: Course | null; type?: string }> = ({
             />
           )}
         </div>
-      </div>
-    </Link>
+      )}
+    </div>
   );
 };

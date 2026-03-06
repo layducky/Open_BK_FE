@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import Modal from "@/components/modals/formModal";
+import { showAlert } from "@/lib/alertService";
 import { useHandleVideo } from "@/hooks/handleMutations/handleVideo";
 
 type CreateVideoModalProps = {
@@ -52,7 +53,7 @@ const CreateVideoModal: React.FC<CreateVideoModalProps> = ({
         setSelectedFile(file);
       } else {
         setSelectedFile(null);
-        alert(`Invalid file type. Allowed: ${ALLOWED_EXTENSIONS}`);
+        showAlert(`Invalid file type. Allowed: ${ALLOWED_EXTENSIONS}`, "warning");
       }
     } else {
       setSelectedFile(null);
@@ -62,7 +63,7 @@ const CreateVideoModal: React.FC<CreateVideoModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedFile) {
-      alert("Please select a video file to upload.");
+      showAlert("Please select a video file to upload.", "warning");
       return;
     }
     handleUploadVideo(selectedFile);

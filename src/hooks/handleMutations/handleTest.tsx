@@ -1,4 +1,6 @@
 import { useTestMutations } from "@/hooks/mutations/useTestMutation";
+import { showAlert } from "@/lib/alertService";
+import { showConfirm } from "@/lib/confirmService";
 
 interface HandleTestProps {
     unitID: string;
@@ -20,14 +22,14 @@ export const useHandleTest = ({ unitID, refetchTests, setNewTestID, setIsOpen }:
             },
             onError: (error) => {
                 console.error("Error creating test:", error);
-                alert("Failed to create test. Please try again.");
+                showAlert("Failed to create test. Please try again.", "error");
             },
             }
         );
     };
 
     const handleDeleteTest = (testID: string) => {
-        if (confirm("Are you sure you want to delete this test?")) {
+        showConfirm("Are you sure you want to delete this test?", () => {
             deleteMutation.mutate(testID, {
                 onSuccess: () => {
                     refetchTests?.();
@@ -35,10 +37,10 @@ export const useHandleTest = ({ unitID, refetchTests, setNewTestID, setIsOpen }:
                 },
                 onError: (error) => {
                     console.error("Error deleting test:", error);
-                    alert("Failed to delete test. Please try again.");
+                    showAlert("Failed to delete test. Please try again.", "error");
                 },
             });
-        }
+        }, { variant: "danger", confirmLabel: "Delete", title: "Delete test" });
     };
 
     return {

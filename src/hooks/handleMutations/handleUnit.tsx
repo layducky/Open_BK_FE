@@ -1,4 +1,6 @@
 import { useUnitMutations } from "@/hooks/mutations/useUnitMutation";
+import { showAlert } from "@/lib/alertService";
+import { showConfirm } from "@/lib/confirmService";
 
 interface HandleUnitProps {
     courseID: string;
@@ -19,24 +21,24 @@ export const useHandleUnit = ({ courseID, refetchUnits, setNewUnitID }: HandleUn
             },
             onError: (error) => {
                 console.error("Error creating unit:", error);
-                alert("Failed to create unit. Please try again.");
+                showAlert("Failed to create unit. Please try again.", "error");
             },
             }
         );
     };
 
     const handleDeleteUnit = (unitID: string) => {
-        if (confirm("Are you sure you want to delete this unit?")) {
+        showConfirm("Are you sure you want to delete this unit?", () => {
             deleteMutation.mutate(unitID, {
                 onSuccess: () => {
                     refetchUnits?.();
                 },
                 onError: (error) => {
                     console.error("Error deleting unit:", error);
-                    alert("Failed to delete unit. Please try again.");
+                    showAlert("Failed to delete unit. Please try again.", "error");
                 },
             });
-        }
+        }, { variant: "danger", confirmLabel: "Delete", title: "Delete unit" });
     };
 
     return {
