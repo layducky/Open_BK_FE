@@ -2,14 +2,14 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useCourses } from "@/hooks/querys/useCourses";
+import { useCoursesPage } from "@/hooks/querys/useCourses";
 import { RenderPublicCourses } from "@/components/ui/renderPublicCourses";
 import { AnimatedSection } from "@/components/landing/AnimatedSection";
 import { useSession } from "next-auth/react";
 import { roleString } from "@/lib/roleUtils";
 
 export default function Page() {
-  const { data: courses } = useCourses();
+  const { courses } = useCoursesPage({ page: 1, limit: 3 });
   const { data: session, status } = useSession();
 
   const user = session?.user;

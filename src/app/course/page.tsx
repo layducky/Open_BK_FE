@@ -2,7 +2,7 @@
 import * as React from "react";
 import { Suspense } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useCourses } from "@/hooks/querys/useCourses";
+import { useCoursesPage } from "@/hooks/querys/useCourses";
 import { RenderPublicCourses } from "@/components/ui/renderPublicCourses";
 import { useSearchParams, useRouter } from "next/navigation";
 import Pagination from "@/components/common/pagination";
@@ -70,7 +70,6 @@ function CoursePageContent() {
     searchParams.get("price") ?? "ALL"
   );
   const [currentPage, setCurrentPage] = React.useState(1);
-  const pageSize = 6;
 
   React.useEffect(() => {
     const nextSearch = searchParams.get("search") ?? "";
@@ -82,10 +81,13 @@ function CoursePageContent() {
     setCurrentPage(1);
   }, [searchParams]);
 
-  const { data: courses, isLoading } = useCourses({
+  const pageSize = 6;
+  const { courses, total: totalCourses, isLoading } = useCoursesPage({
     search: searchQuery || undefined,
     category: selectedCategory === "ALL" ? undefined : selectedCategory,
     priceType: selectedPrice === "ALL" ? undefined : selectedPrice,
+    page: currentPage,
+    limit: pageSize,
   });
 
   const updateUrl = React.useCallback(
@@ -125,7 +127,6 @@ function CoursePageContent() {
   const showLoading = useMinimumLoading(isLoading);
   if (showLoading) return <LoadingScreen message="Loading courses..." />;
 
-  const totalCourses = courses?.length ?? 0;
   const totalPages = Math.max(1, totalCourses > 0 ? Math.ceil(totalCourses / pageSize) : 1);
   const current = Math.min(currentPage, totalPages);
   const startIndex = totalCourses === 0 ? 0 : (current - 1) * pageSize + 1;
@@ -165,8 +166,8 @@ function CoursePageContent() {
           >
             <RenderPublicCourses
               courses={courses}
-              start={(current - 1) * pageSize}
-              end={current * pageSize}
+              start={0}
+              end={courses.length}
               viewType="PREVIEW-COURSE"
             />
           </div>

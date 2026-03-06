@@ -7,20 +7,40 @@ export interface CourseFilters {
   search?: string;
   category?: string;
   priceType?: string;
+  page?: number;
+  limit?: number;
 }
 
-const getAllCourses = async (filters?: CourseFilters) => {
+export interface CoursesPageResponse {
+  courses: import("@/type/course.entity").PublicCourseEntity[];
+  total: number;
+}
+
+/** Trả về toàn bộ courses (dùng cho search dropdown). Không truyền page/limit. */
+const getAllCourses = async (filters?: Omit<CourseFilters, "page" | "limit">) => {
   try {
-    const res = await apiClient.get(`${url}`, {
-      params: filters,
-    });
-    if (res.status === 200) {
-      return res.data;
-    } else {
-      return res.data;
-    }
+    const res = await apiClient.get(`${url}`, { params: filters });
+    if (res.status === 200) return res.data;
+    return res.data;
   } catch (error) {
     return { message: "Network error" };
+  }
+};
+
+/** Lấy 1 trang courses - chỉ fetch đúng số cần thiết. */
+const getCoursesPage = async (filters: CourseFilters & { page: number; limit: number }): Promise<CoursesPageResponse> => {
+  try {
+    const res = await apiClient.get(`${url}`, { params: filters });
+    if (res.status === 200) {
+      const data = res.data;
+      if (data && typeof data === "object" && "courses" in data && "total" in data) {
+        return { courses: data.courses, total: data.total };
+      }
+      return { courses: Array.isArray(data) ? data : [], total: 0 };
+    }
+    return { courses: [], total: 0 };
+  } catch (error) {
+    return { courses: [], total: 0 };
   }
 };
 
@@ -104,6 +124,7 @@ const deleteCourse = async (id: number) => {
 
 export {
   getAllCourses,
+  getCoursesPage,
   getCourseCategories,
   getCourseById,
   updateCourse,
