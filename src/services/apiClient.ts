@@ -62,7 +62,9 @@ apiClientWithAuth.interceptors.response.use(
         forceLogoutSessionExpired();
         return Promise.reject(error);
       }
-      if (statusCode === 500) {
+      if (statusCode === 404) {
+        // 404 handled by not-found page - don't show alert
+      } else if (statusCode === 500) {
         showAlert("Đã xảy ra lỗi trên máy chủ. Vui lòng thử lại sau.", "error");
       }
     } else if (error.request) {

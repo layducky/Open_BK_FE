@@ -1,4 +1,5 @@
 import { apiClient } from "@/services/apiClient";
+import { NotFoundError } from "@/lib/errors";
 
 const url = `/course/public`;
 
@@ -53,7 +54,10 @@ const getCourseById = async (courseID?: string) => {
     } else {
       return res.data;
     }
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.response?.status === 404) {
+      throw new NotFoundError("Course not found");
+    }
     return { message: "Network error" };
   }
 };

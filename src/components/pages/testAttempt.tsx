@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { useQuestions, useUserTest } from "@/hooks/querys/useCourses";
 import { useUser } from "@/hooks/querys/useUser";
 import { useSubmissionTiming } from "@/hooks/useSubmissionTiming";
@@ -27,7 +28,9 @@ const DEBOUNCE_SAVE_MS = 30000;
 const TestPage = ({ testID, submissionID, mode, timingFromCreate }: TestPageProps) => {
   const { data: questionContents, isLoading, error, refetch } = useQuestions(testID);
   const { data: userInfo } = useUser();
-  const { data: userTest } = useUserTest(testID);
+  const { data: userTest, error: userTestError } = useUserTest(testID);
+
+  if (userTestError && (userTestError as any)?.response?.status === 404) notFound();
   const [newQuestionIDs, setNewQuestionIDs] = useState<string[]>([]);
   const [submission, setSubmission] = useState<Record<string, string>>({});
   const [answersLoaded, setAnswersLoaded] = useState(false);

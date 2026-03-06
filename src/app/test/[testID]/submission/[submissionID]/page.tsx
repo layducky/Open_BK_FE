@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getSubmissionReview } from "@/services/course/test";
 import { formatDateTime } from "@/lib/dateUtils";
@@ -21,6 +21,7 @@ export default function SubmissionReviewPage() {
   });
 
   if (isLoading) return <div className="p-6">Loading...</div>;
+  if (error && (error as any)?.response?.status === 404) notFound();
   if (error) return <div className="p-6 text-red-600">Error: {(error as Error).message}</div>;
   if (!submission) return <div className="p-6">Submission not found.</div>;
 

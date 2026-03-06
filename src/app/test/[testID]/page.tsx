@@ -7,7 +7,7 @@ import { useTest } from "@/context/TestContext";
 import { useUserTest } from "@/hooks/querys/useCourses";
 import { useUser } from "@/hooks/querys/useUser";
 import { SubmissionStatusEntity } from "@/type/test.entity";
-import { useRouter } from "next/navigation";
+import { useRouter, notFound } from "next/navigation";
 import { createSubmission, forceEndAndCreate, NotEnrolledError, OngoingSubmissionError } from "@/services/course/test";
 import { TestActionDropdown } from "@/components/common/buttons/UnitBtn";
 import { formatDateTime } from "@/lib/dateUtils";
@@ -118,6 +118,7 @@ export default function TestPage() {
   }, [setTimingFromCreate]);
 
   if (!testID) return <div>Loading test ID...</div>;
+  if (error && (error as any)?.response?.status === 404) notFound();
   if (error instanceof NotEnrolledError) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">

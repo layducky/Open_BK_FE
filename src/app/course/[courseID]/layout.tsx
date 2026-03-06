@@ -2,9 +2,10 @@
 
 import * as React from 'react'
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, notFound } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useCourseData } from '@/hooks/querys/useCourseData';
+import { NotFoundError } from "@/lib/errors";
 import { CourseInfoBar } from '@/components/ui/infoBar';
 import { ReviewCourseCard } from '@/components/common/cards/reviewCourseCard';
 
@@ -26,7 +27,14 @@ export default function CourseLayout({
             fetchCourseID();
         }, [params]);
 
-        const {data: courseData} = useCourseData(courseID as string);
+        const { data: courseData, isLoading: courseLoading, error: courseError } = useCourseData(courseID as string);
+
+        React.useEffect(() => {
+            if (!courseLoading && courseError) {
+                const is404 = courseError instanceof NotFoundError || (courseError as any)?.response?.status === 404;
+                if (is404) notFound();
+            }
+        }, [courseLoading, courseError]);
 
         const tabs = courseID
             ? [
