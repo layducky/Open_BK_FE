@@ -41,7 +41,7 @@ apiClientWithAuth.interceptors.request.use(
     return config;
   },
   (error) => {
-    // Promise.reject({status: error.status, massage: error.message})
+    // Promise.reject({status: error.status, massage: error.message}
   }
 );
 
